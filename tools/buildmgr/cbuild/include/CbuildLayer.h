@@ -87,7 +87,7 @@ public:
    * @param saveBackup if true save the original file with extension '.bak'
    * @return true if xml file is written successfully, otherwise false
   */
-  bool WriteXmlFile(const std::string &file, XMLTree* tree, const bool saveBackup=false);
+  static bool WriteXmlFile(const std::string &file, XMLTree* tree, const bool saveBackup=false);
 
   /**
    * @brief initialize header (tool and timestamp) information
