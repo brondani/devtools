@@ -62,7 +62,7 @@ list packs [--filter "<filter words>"]
 list devices [--filter "<filter words>"]
 ```
 
-- Print list of available components. The list can be filtered by a selected device in the `cproject.yml` file with the option `--input` and/or by words provided with the option `-filter`:
+- Print list of available components. The list can be filtered by a selected device in the `cproject.yml` file with the option `--input` and/or by words provided with the option `--filter`:
 ```
 list components [--input <example.cproject.yml> --filter "<filter words>"]
 ```

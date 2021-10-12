@@ -10,7 +10,9 @@ compiler:
 components:
   - attributes: 
       Cvariant: "C Startup"
-  - filter: "Keil RTX Source"
+  - filter: "Keil RTX"
+    attributes: 
+      Cvariant: "Source"
   - filter: "ARM CMSIS CORE"
     
 files:
