@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema#",
+  "id": "csolution.schema.json",
+  "title": "CMSIS Project Manager csolution",
+  "version": "0.9.0",
+  "type": "object",
+  "properties": {
+    "created":   { "$ref": "./common.schema.json#/$defs/CreationInfoType" },
+    "info":      { "$ref": "./common.schema.json#/$defs/InfoType" },
+    "projects":  { "$ref": "#/$defs/ProjectsType" },
+    "resources": { "$ref": "#/$defs/ResourcesType" },
+    "templates": { "$ref": "#/$defs/TemplatesType" }
+  },
+  "additionalProperties": false,
+  "required": [ "info", "projects" ],
+  "$defs": {
+    "ProjectsType": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/ProjectType" }
+    },
+    "ProjectType": {
+      "type": "object",
+      "properties": {
+        "path":    { "type": "string" },
+        "info":        { "$ref": "./common.schema.json#/$defs/InfoType" },
+        "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType" },
+        "packages":    { "$ref": "./common.schema.json#/$defs/PackagesType" },
+        "compiler":    { "$ref": "./common.schema.json#/$defs/CompilerType" },
+        "target" :     { "$ref": "./common.schema.json#/$defs/TargetType" },
+        "components":  { "$ref": "./common.schema.json#/$defs/ComponentsType" },
+        "files":       { "$ref": "./common.schema.json#/$defs/FilesType" },
+        "layers":      { "$ref": "./cproject.schema.json#/$defs/LayersType" }
+      },
+      "additionalProperties": false
+    },
+    "ResourcesType": {
+      "type": "object",
+      "uniqueItems": true
+    },
+    "TemplatesType": {
+      "type": "object",
+      "uniqueItems": true
+    }
+  }
+}

@@ -74,7 +74,7 @@ list dependencies --input <example.cproject.yml> [--filter "<filter words>"]
 
 Convert cproject.yml in cprj file:
 ```
-list convert --input <example.cproject.yml>
+convert --input <example.cproject.yml>
 ```
 
 

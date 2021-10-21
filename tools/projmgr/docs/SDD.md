@@ -2,14 +2,19 @@
 
 ## Table of Contents
 
-[Introduction](#introduction)</br>
-[Design Overview](#design-overview)</br>
-[Use cases](#use-cases)</br>
-- [ Use Case 1](#use-case-1)</br>
-- [ Use Case 2](#use-case-2)</br>
-[System Architecture](#system-architecture)</br>
-[System Interfaces](#system-interfaces)</br>
-[Input YAML Files](#input-yaml-files)</br>
+[Introduction](#introduction)
+
+[Design Overview](#design-overview)
+
+[Use cases](#use-cases)
+- [ Use Case 1](#use-case-1)
+- [ Use Case 2](#use-case-2)
+
+[System Architecture](#system-architecture)
+
+[System Interfaces](#system-interfaces)
+
+[Input YAML Files](#input-yaml-files)
 
 
 ## Introduction
@@ -97,7 +102,7 @@ info:
   title: <value>
   description: <value>
   doc: <value>
-  category: [<list>]
+  category: <value>
   license: <value>
 
 projects:
@@ -121,10 +126,10 @@ info:
   title: <value>
   description: <value>
   doc: <value>
-  category: [<list>]
+  category: <value>
   license: <value>
 
-output:
+artifacts:
   - label: <value>
     filter: <value>
 
@@ -146,7 +151,7 @@ target:
     outdir: <value>
     intdir: <value>
   includes: [<list>]
-  defines: {<key:value list>}
+  defines: [<list>]
   cflags: 
     add: [<list>]
   cxxflags:
@@ -170,7 +175,7 @@ components:
     asflags:
       add: [<list>]
       remove: [<list>]
-    instances: <value>      
+    instances: <value>
     
 files:
   - file: <value>
@@ -185,7 +190,6 @@ files:
       remove: [<list>]
     category: <value>
     path: <value>
-    label: <value>
     source: <value>
   - group: <value>
     cflags:
@@ -217,10 +221,10 @@ info:
   title: <value>
   description: <value>
   doc: <value>
-  category: [<list>]
+  category: <value>
   license: <value>
 
-output:
+artifacts:
   - label: <value>
     filter: <value>
 
@@ -238,7 +242,7 @@ compiler:
   version: <value>
 
 target:
-  filter:  [<list>]
+  filter: <value>
   attributes: {<key:value list>}
   output:
     name: <value>
@@ -246,7 +250,7 @@ target:
     outdir: <value>
     intdir: <value>
   includes: [<list>]
-  defines: {<key:value list>}
+  defines: [<list>]
   cflags: 
     add: [<list>]
   cxxflags:
@@ -259,7 +263,7 @@ target:
     add: [<list>]
 
 components:
-  - filter: [<list>]
+  - filter: <value>
     attributes: {<key:value list>}
     cflags: 
       add: [<list>]
@@ -270,7 +274,7 @@ components:
     asflags:
       add: [<list>]
       remove: [<list>]
-    instances: <value>      
+    instances: <value>
     
 files:
   - file: <value>
@@ -315,7 +319,7 @@ files:
 | title           | Display name for the element
 | description     | Brief description
 | doc             | Documentation pointing to *.md file or URL
-| category        | List of predefined categories
+| category        | Predefined categories
 | license         | License ruling according to [spdx license names](https://spdx.org/licenses/)
 <br/>
 
@@ -338,7 +342,7 @@ files:
 | TBD (placeholder) 
 <br/>
 
-### output
+### artifacts
 | Argument        | Description
 |:----------------|:----------------------------------------
 | label           | Unique identifier of an output shared file in the solution context

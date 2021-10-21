@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema#",
+  "id": "cproject.schema.json",
+  "title": "CMSIS Project Manager cproject",
+  "version": "0.9.0",
+  "$defs": {
+    "RestrictedString": {
+      "type": "string",
+      "pattern": "^[-_A-Za-z0-9]+$"
+    },
+    "VersionType": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(((\\-|\\+)[0-9A-Za-z\\-\\+\\.]+)|())$"
+    },
+    "VersionRangeType": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(((\\-|\\+)[0-9A-Za-z\\-\\+\\.]+)|())(:[0-9]+\\.[0-9]+\\.[0-9]+(((\\-|\\+)[0-9A-Za-z\\-\\+\\.]+)|())|())$"
+    },
+    "ArtifactsType": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/ArtifactType" }
+    },
+    "ArtifactType": {
+      "type": "object",
+      "properties": {
+        "label":  { "type": "string" },
+        "filter": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "OutputType": {
+      "type": "object",
+      "properties": {
+        "name":   { "type": "string" },
+        "type":   { "enum": ["lib", "exe"] },
+        "intdir": { "type": "string" },
+        "outdir": { "type": "string" }
+      },
+      "required": [ "name" ],
+      "additionalProperties": false
+    },
+    "FlagsType": {
+      "type": "object",
+      "properties": {
+        "add": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "remove": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CreationInfoType": {
+      "type": "object",
+      "properties": {
+        "tool":      { "type": "string"},
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false,
+      "required": [ "tool", "timestamp" ]
+    },
+    "InfoType": {
+      "type": "object",
+      "properties": {
+        "name":         { "$ref": "#/$defs/RestrictedString" },
+        "title":        { "type": "string" },
+        "description":  { "type": "string" },
+        "doc":          { "type": "string" },
+        "category":     { "type": "string" },
+        "license":      { "type": "string" }
+      },
+      "additionalProperties": false,
+      "required": [ "description" ]
+    },
+    "PackagesType": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/PackageType" }
+    },
+    "PackageType":{
+      "type": "object",
+        "properties": {
+          "name":    { "type": "string" },
+          "vendor":  { "type": "string" },
+          "version": { "$ref": "#/$defs/VersionRangeType" }
+        },
+        "additionalProperties": false,
+        "required": [ "name", "vendor" ]
+    },
+    "CompilerType": {
+      "type": "object",
+      "properties": {
+        "name": { "enum": [ "GCC", "AC5", "AC6" ] },
+        "version": { "$ref": "#/$defs/VersionRangeType" }
+      },
+      "additionalProperties": false,
+      "required": [ "name" ]
+    },
+    "TargetType": {
+      "type": "object",
+      "properties": {
+        "filter": { "type": "string" },
+        "attributes": {
+          "properties": {
+            "Bvendor":  { "type": "string" },
+            "Bname":    { "type": "string" },
+            "Bversion": { "type": "string" },
+            "Dvendor":  { "type": "string" },
+            "Dname":    { "type": "string" },
+            "Pname":    { "type": "string" },
+            "Dfpu":     { "enum": ["FPU", "NO_FPU", "SP_FPU", "DP_FPU"] },
+            "Dendian":  { "enum": ["Little-endian", "Big-endian"] },
+            "Dmpu":     { "enum": ["MPU", "NO_MPU"] },
+            "Ddsp":     { "enum": ["DSP", "NO_DSP"] },
+            "Dmve":     { "enum": ["NO_MVE", "MVE", "FP_MVE"] },
+            "Dtz":      { "enum": ["TZ", "NO_TZ"] },
+            "Dsecure":  { "enum": ["Secure", "Non-secure", "TZ-disabled"] }
+          },
+          "additionalProperties": false
+        },
+        "output": { "$ref" : "#/$defs/OutputType" },
+        "includes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "defines": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "ldflags":  {"$ref": "#/$defs/FlagsType" },
+        "cflags":   {"$ref": "#/$defs/FlagsType" },
+        "cxxflags": {"$ref": "#/$defs/FlagsType" },
+        "asflags":  {"$ref": "#/$defs/FlagsType" },
+        "arflags":  {"$ref": "#/$defs/FlagsType" }
+      }
+    },
+    "ComponentsType": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/ComponentType" }
+    },
+    "ComponentType": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "attributes": {
+          "properties": {
+            "Cvendor":     { "type": "string" },
+            "Cbundle":     { "type": "string" },
+            "Cclass":      { "type": "string" },
+            "Cgroup":      { "type": "string" },
+            "Csub":        { "type": "string" },
+            "Cvariant":    { "type": "string" },        
+            "Cversion":    { "$ref": "#/$defs/VersionType" },
+            "Capiversion": { "$ref": "#/$defs/VersionType" }
+          },
+          "required": ["Cclass", "Cgroup"]
+        },
+        "cflags":    { "$ref": "#/$defs/FlagsType" },
+        "cxxflags":  { "$ref": "#/$defs/FlagsType" },
+        "asflags":   { "$ref": "#/$defs/FlagsType" },
+        "instances": { "type": "string" }
+      }
+    },
+    "FilesType": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/FileType" },
+          { "$ref": "#/$defs/GroupType" }
+        ]
+      }
+    },
+    "FileType": {
+      "type": "object",
+      "properties": {
+        "file":     { "type": "string" },
+        "cflags":   { "$ref": "#/$defs/FlagsType" },
+        "cxxflags": { "$ref": "#/$defs/FlagsType" },
+        "asflags":  { "$ref": "#/$defs/FlagsType" },
+        "category": { "enum": ["doc", "header", "library", "object", "source", "sourceC", "sourceCpp", "sourceAsm", "linkerScript", "utility", "image", "other", "preIncludeGlobal", "preIncludeLocal"] },
+        "path":     { "type": "string" },
+        "source" :  { "type": "string" }
+      },
+      "additionalProperties": false,
+      "required": [ "file" ]
+    },
+    "GroupType": {
+      "type": "object",
+      "properties": {
+        "group":    { "type": "string" },
+        "cflags":   { "$ref": "#/$defs/FlagsType" },
+        "cxxflags": { "$ref": "#/$defs/FlagsType" },
+        "asflags":  { "$ref": "#/$defs/FlagsType" },
+        "files":    { "$ref": "#/$defs/FilesType" }
+      },
+      "additionalProperties": false,
+      "required": [ "group" ]
+    }
+  }
+}
