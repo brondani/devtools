@@ -427,6 +427,13 @@ files:
 |:----------------|:----------------------------------------
 | path            | Path to `clayer.yml` file
 | clayer          | Accept and merge any child item according to `clayer` schema
+
+### interfaces
+| Argument        | Description
+|:----------------|:----------------------------------------
+| provides        | List of interfaces provided by the layer
+| consumes        | List of interfaces consumed by the layer
+
 <br/>
 
 

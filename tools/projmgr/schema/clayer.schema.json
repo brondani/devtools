@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft/2020-12/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "clayer.schema.json",
   "title": "CMSIS Project Manager clayer",
   "version": "0.9.0",
@@ -20,10 +20,21 @@
     "InterfacesType": {
       "type": "object",
       "properties": {
-        "provides": { "$ref": "#/$defs/InterfaceType" },
-        "consumes": { "$ref": "#/$defs/InterfaceType" }
+        "provides": {
+          "$ref": "#/$defs/InterfaceListType",
+          "description": "Interfaces provided by the layer"
+         },
+        "consumes": {
+          "$ref": "#/$defs/InterfaceListType",
+          "description": "Interfaces consumed by the layer"
+         }
       },
       "additionalProperties": false
+    },
+    "InterfaceListType": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/InterfaceType" }
     },
     "InterfaceType": {
       "type": "object",
