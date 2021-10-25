@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft/2020-12/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "csolution.schema.json",
   "title": "CMSIS Project Manager csolution",
   "version": "0.9.0",
@@ -7,6 +7,7 @@
   "properties": {
     "created":   { "$ref": "./common.schema.json#/$defs/CreationInfoType" },
     "info":      { "$ref": "./common.schema.json#/$defs/InfoType" },
+    "target" :   { "$ref": "#/$defs/SolutionTargetType" },
     "projects":  { "$ref": "#/$defs/ProjectsType" },
     "resources": { "$ref": "#/$defs/ResourcesType" },
     "templates": { "$ref": "#/$defs/TemplatesType" }
@@ -19,10 +20,27 @@
       "uniqueItems": true,
       "items": { "$ref": "#/$defs/ProjectType" }
     },
+    "SolutionTargetType": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "type": "string",
+          "description": "Device valid for all child projects"
+        },
+        "attributes": {
+          "$ref" : "./common.schema.json#/$defs/TargetAttributesType",
+          "description": "Device and board attributes valid for all child projects"
+        }
+      },
+      "additionalProperties": false
+    },
     "ProjectType": {
       "type": "object",
       "properties": {
-        "path":    { "type": "string" },
+        "path": {
+          "type": "string",
+          "description": "Path to cproject.yml file"
+        },
         "info":        { "$ref": "./common.schema.json#/$defs/InfoType" },
         "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType" },
         "packages":    { "$ref": "./common.schema.json#/$defs/PackagesType" },

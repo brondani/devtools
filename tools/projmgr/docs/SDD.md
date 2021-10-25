@@ -105,6 +105,10 @@ info:
   category: <value>
   license: <value>
 
+target:
+  device: <value>
+  attributes: {<key:value list>}
+
 projects:
   - path: <value>
     "$ref": "/cproject" # Reference to cproject.yml schema
@@ -131,7 +135,7 @@ info:
 
 artifacts:
   - label: <value>
-    filter: <value>
+    pattern: <value>
 
 packages:
   - name: <value>
@@ -143,7 +147,7 @@ compiler:
   version: <value>
 
 target:
-  filter: <value>
+  device: <value>
   attributes: {<key:value list>}
   output:
     name: <value>
@@ -164,8 +168,7 @@ target:
     add: [<list>]
 
 components:
-  - filter: <value>
-    attributes: {<key:value list>}
+  - id: <value>
     cflags: 
       add: [<list>]
       remove: [<list>]
@@ -226,7 +229,7 @@ info:
 
 artifacts:
   - label: <value>
-    filter: <value>
+    pattern: <value>
 
 interfaces:
   provides: {<key:value list>}
@@ -242,7 +245,7 @@ compiler:
   version: <value>
 
 target:
-  filter: <value>
+  device: <value>
   attributes: {<key:value list>}
   output:
     name: <value>
@@ -263,8 +266,7 @@ target:
     add: [<list>]
 
 components:
-  - filter: <value>
-    attributes: {<key:value list>}
+  - id: <value>
     cflags: 
       add: [<list>]
       remove: [<list>]
@@ -308,15 +310,15 @@ files:
 ### created
 | Argument        | Description
 |:----------------|:----------------------------------------
-| tool            | Name of the tool that has written the file. The string shall include version information.
+| tool            | Name of the tool that has written the file. The string shall include version information
 | timestamp       | Date and Time information of the last update. Format: YYYY-MM-DDThh:mm:ss with optional fractional seconds and timezone
 <br/>
 
 ### info
 | Argument        | Description
 |:----------------|:----------------------------------------
-| name            | Name of the element
-| title           | Display name for the element
+| name            | Name of the solution, project or layer
+| title           | Display name for the solution, project or layer
 | description     | Brief description
 | doc             | Documentation pointing to *.md file or URL
 | category        | Predefined categories
@@ -346,7 +348,7 @@ files:
 | Argument        | Description
 |:----------------|:----------------------------------------
 | label           | Unique identifier of an output shared file in the solution context
-| filter          | Free text that unambiguously points to a file in the `outdir`
+| pattern         | Free text that unambiguously points to a file in the `outdir`
 <br/>
 
 ### packages
@@ -367,8 +369,8 @@ files:
 ### target
 | Argument        | Description
 |:----------------|:----------------------------------------
-| filter          | Free text that unambiguously points to device name
-| attributes      | Device and board attributes Dvendor, Dname, Pname, [Dfpu](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DfpuEnum), [Dmpu](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DmpuEnum), [Dendian](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DendianEnum), [Dsecure](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DsecureEnum), [Dmve](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DmveEnum), Bvendor, Bname, Bversion
+| device          | Free text that unambiguously points to device name
+| attributes      | Device and board attributes Dvendor, Dname, [Dfpu](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DfpuEnum), [Dmpu](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DmpuEnum), [Dendian](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DendianEnum), [Dsecure](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DsecureEnum), [Dmve](https://arm-software.github.io/CMSIS_5/Build/html/cprj_types.html#DmveEnum), Bvendor, Bname, Bversion
 | output          | Build output directories, output file and type (executable or library)
 | includes        | List of include paths that are valid for the compilation of all modules in the project
 | defines         | List of preprocessor definitions that are valid for all project modules undergoing preprocessing
@@ -391,8 +393,7 @@ files:
 ### components
 | Argument        | Description
 |:----------------|:----------------------------------------
-| filter          | Free text that unambiguously points to a CMSIS Pack component
-| attributes      | List of components attributes
+| id              | Component identifier `Cvendor::Cclass:Cbundle:Cgroup:Csub:Cvariant@Cversion` or a free text that unambiguously points to a component
 | cflags          | C compiler additional command line options
 | cxxflags        | C++ compiler additional command line options
 | asflags         | Assembler additional command line options

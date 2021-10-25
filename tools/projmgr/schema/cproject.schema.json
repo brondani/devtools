@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft/2020-12/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "cproject.schema.json",
   "title": "CMSIS Project Manager cproject",
   "version": "0.9.0",
@@ -7,7 +7,7 @@
   "properties": {
     "created":     { "$ref": "./common.schema.json#/$defs/CreationInfoType" },
     "info":        { "$ref": "./common.schema.json#/$defs/InfoType "},
-    "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType " },
+    "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType" },
     "packages":    { "$ref": "./common.schema.json#/$defs/PackagesType" },
     "compiler":    { "$ref": "./common.schema.json#/$defs/CompilerType" },
     "target" :     { "$ref": "./common.schema.json#/$defs/TargetType" },
@@ -25,9 +25,12 @@
     "LayerType": {
       "type": "object",
       "properties": {
-        "path":        { "type": "string" },
+        "path": {
+          "type": "string",
+          "description": "Path to clayer.yml file"
+        },
         "info":        { "$ref": "./common.schema.json#/$defs/InfoType" },
-        "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType " },
+        "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType" },
         "interfaces":  { "$ref": "./clayer.schema.json#/$defs/InterfacesType" },
         "packages" :   { "$ref": "./common.schema.json#/$defs/PackagesType" },
         "compiler" :   { "$ref": "./common.schema.json#/$defs/CompilerType" },
