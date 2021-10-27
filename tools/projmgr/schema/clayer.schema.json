@@ -7,10 +7,10 @@
   "properties": {
     "created":     { "$ref": "./common.schema.json#/$defs/CreationInfoType" },
     "info":        { "$ref": "./common.schema.json#/$defs/InfoType" },
-    "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType " },
+    "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType" },
     "interfaces":  { "$ref": "#/$defs/InterfacesType" },
     "packages" :   { "$ref": "./common.schema.json#/$defs/PackagesType" },
-    "compilers" :  { "$ref": "./common.schema.json#/$defs/CompilersType" },
+    "compiler" :  { "$ref": "./common.schema.json#/$defs/CompilerType" },
     "target" :     { "$ref": "./common.schema.json#/$defs/TargetType" },
     "components":  { "$ref": "./common.schema.json#/$defs/ComponentsType" },
     "files":       { "$ref": "./common.schema.json#/$defs/FilesType" }
