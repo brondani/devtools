@@ -6,7 +6,7 @@
   "type": "object",
   "properties": {
     "created":     { "$ref": "./common.schema.json#/$defs/CreationInfoType" },
-    "info":        { "$ref": "./common.schema.json#/$defs/InfoType "},
+    "info":        { "$ref": "./common.schema.json#/$defs/InfoType"},
     "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType" },
     "packages":    { "$ref": "./common.schema.json#/$defs/PackagesType" },
     "compiler":    { "$ref": "./common.schema.json#/$defs/CompilerType" },
