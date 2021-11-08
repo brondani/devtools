@@ -6,6 +6,10 @@ according to the standard
 and provides commands to search packs, devices and components from installed packs
 as well as unresolved component dependencies.
 
+## Overview
+[Overview](Overview.md) explains the top-level concept and the project file formats.
+
+## Prototype
 The initial MVP prototype proposal can be found in the following Open-CMSIS-Pack forked branch:
 <br/>
 https://github.com/brondani/devtools/tree/mvp-prototype
