@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "clayer.schema.json",
+  "title": "CMSIS Project Manager clayer",
+  "version": "0.9.0",
+  "type": "object",
+  "properties": {
+    "created":     { "$ref": "./common.schema.json#/$defs/CreationInfoType" },
+    "info":        { "$ref": "./common.schema.json#/$defs/InfoType" },
+    "artifacts":   { "$ref": "./common.schema.json#/$defs/ArtifactsType" },
+    "interfaces":  { "$ref": "#/$defs/InterfacesType" },
+    "packages" :   { "$ref": "./common.schema.json#/$defs/PackagesType" },
+    "compiler" :  { "$ref": "./common.schema.json#/$defs/CompilerType" },
+    "target" :     { "$ref": "./common.schema.json#/$defs/TargetType" },
+    "components":  { "$ref": "./common.schema.json#/$defs/ComponentsType" },
+    "files":       { "$ref": "./common.schema.json#/$defs/FilesType" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "InterfacesType": {
+      "type": "object",
+      "properties": {
+        "provides": {
+          "$ref": "#/$defs/InterfaceListType",
+          "description": "Interfaces provided by the layer"
+         },
+        "consumes": {
+          "$ref": "#/$defs/InterfaceListType",
+          "description": "Interfaces consumed by the layer"
+         }
+      },
+      "additionalProperties": false
+    },
+    "InterfaceListType": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/InterfaceType" }
+    },
+    "InterfaceType": {
+      "type": "object",
+      "properties": {
+        "id":    { "type": "string" },
+        "value": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

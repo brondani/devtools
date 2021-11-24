@@ -1,0 +1,334 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "cproject.schema.json",
+  "title": "CMSIS Project Manager cproject",
+  "version": "0.9.0",
+  "$defs": {
+    "RestrictedString": {
+      "type": "string",
+      "pattern": "^[-_A-Za-z0-9]+$"
+    },
+    "VersionType": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(((\\-|\\+)[0-9A-Za-z\\-\\+\\.]+)|())$"
+    },
+    "VersionRangeType": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(((\\-|\\+)[0-9A-Za-z\\-\\+\\.]+)|())(:[0-9]+\\.[0-9]+\\.[0-9]+(((\\-|\\+)[0-9A-Za-z\\-\\+\\.]+)|())|())$"
+    },
+    "ArtifactsType": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/ArtifactType" }
+    },
+    "ArtifactType": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Unique identifier of an output shared file in the solution context"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Free text that unambiguously points to a file in the outdir"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OutputType": {
+      "type": "object",
+      "properties": {
+        "name":   {
+          "type": "string",
+          "description": "Name of the main output file"
+        },
+        "type":   {
+          "enum": ["lib", "exe"],
+          "description": "Main build artifact type: lib for library or exe for executable"
+        },
+        "intdir": {
+          "type": "string",
+          "description": "Relative path of the folder containing intermediate files (such as object files)"
+        },
+        "outdir": {
+          "type": "string",
+          "description": "Relative path of the folder containing the final build artifacts"
+        }
+      },
+      "required": [ "name" ],
+      "additionalProperties": false
+    },
+    "FlagsType": {
+      "type": "object",
+      "properties": {
+        "add": {
+          "type": "array",
+          "description": "Add command line options",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "remove": {
+          "type": "array",
+          "description": "Remove command line options",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CreationInfoType": {
+      "type": "object",
+      "properties": {
+        "tool": {
+          "type": "string",
+          "description": "Name of the tool that has written the file. The string shall include version information"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Date and Time information of the last update. Format: YYYY-MM-DDThh:mm:ss with optional fractional seconds and timezone",
+          "format": "date-time" }
+        },
+      "additionalProperties": false,
+      "required": [ "tool", "timestamp" ]
+    },
+    "InfoType": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/RestrictedString",
+          "description": "Name of the solution, project or layer" },
+        "title": {
+          "type": "string",
+          "description": "Display name for the solution, project or layer"
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description"
+        },
+        "doc": {
+          "type": "string",
+          "description": "Documentation pointing to *.md file or URL"
+        },
+        "category": {
+          "type": "string",
+          "description": "Predefined categories"
+        },
+        "license": {
+          "type": "string",
+          "description": "License ruling according to spdx license names"
+        }
+      },
+      "additionalProperties": false,
+      "required": [ "description" ]
+    },
+    "PackagesType": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/PackageType" }
+    },
+    "PackageType":{
+      "type": "object",
+        "properties": {
+          "name":    {
+            "type": "string",
+            "description": "Name of a required CMSIS Software Pack"
+          },
+          "vendor":  {
+            "type": "string",
+            "description": "Pack's vendor"
+          },
+          "version": {
+            "$ref": "#/$defs/VersionRangeType",
+            "description": "Pack's version, which can be a minimum version or a version range"
+          }
+        },
+        "additionalProperties": false,
+        "required": [ "name", "vendor" ]
+    },
+    "CompilerType": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "enum": [ "GCC", "AC5", "AC6" ],
+          "description": "Name of a required compiler"
+        },
+        "version": {
+          "$ref": "#/$defs/VersionRangeType",
+          "description": "Compiler's version, which can be a minimum version or a version range"
+        }
+      },
+      "additionalProperties": false,
+      "required": [ "name" ]
+    },
+    "TargetAttributesType": {
+      "type": "object",
+      "properties": {
+        "Bvendor":  { "type": "string" },
+        "Bname":    { "type": "string" },
+        "Bversion": { "type": "string" },
+        "Dvendor":  { "type": "string" },
+        "Dname":    { "type": "string" },
+        "Dfpu":     { "enum": ["FPU", "NO_FPU", "SP_FPU", "DP_FPU"] },
+        "Dendian":  { "enum": ["Little-endian", "Big-endian"] },
+        "Dmpu":     { "enum": ["MPU", "NO_MPU"] },
+        "Ddsp":     { "enum": ["DSP", "NO_DSP"] },
+        "Dmve":     { "enum": ["NO_MVE", "MVE", "FP_MVE"] },
+        "Dtz":      { "enum": ["TZ", "NO_TZ"] },
+        "Dsecure":  { "enum": ["Secure", "Non-secure", "TZ-disabled"] }
+      },
+      "additionalProperties": false
+    },
+    "TargetType": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "type": "string",
+          "description": "Free text that unambiguously points to device name"
+        },
+        "attributes": {
+          "$ref" : "#/$defs/TargetAttributesType",
+          "description": "Device and board attributes Dvendor, Dname, Dfpu, Dmpu, Dendian, Dsecure, Dmve, Bvendor, Bname, Bversion"
+        },
+        "output": {
+          "$ref" : "#/$defs/OutputType",
+          "description": "Build output directories, output file and type (executable or library)"
+        },
+        "includes": {
+          "type": "array",
+          "description": "List of include paths that are valid for the compilation of all modules in the project",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "defines": {
+          "type": "array",
+          "description": "List of preprocessor definitions that are valid for all project modules undergoing preprocessing",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "ldflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "Linker additional command line options"
+        },
+        "cflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "C compiler additional command line options"
+        },
+        "cxxflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "C++ compiler additional command line options"
+        },
+        "asflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "Assembler additional command line options"
+        },
+        "arflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "Archiver additional command line options"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ComponentsType": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/ComponentType" }
+    },
+    "ComponentType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Component identifier Cvendor::Cclass:Cbundle:Cgroup:Csub:Cvariant@Cversion or a free text that unambiguously points to a component"
+        },
+        "cflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "C compiler additional command line options"
+        },
+        "cxxflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "C++ compiler additional command line options"
+        },
+        "asflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "Assembler additional command line options"
+        },
+        "instances": {
+          "type": "string",
+          "description": "Number of instances, only for components that are multi-instance capable"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FilesType": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/FileType" },
+          { "$ref": "#/$defs/GroupType" }
+        ]
+      }
+    },
+    "FileType": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Path and name of the file, relative to location of the project file"
+        },
+        "cflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "C compiler additional command line options"
+        },
+        "cxxflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "C++ compiler additional command line options"
+        },
+        "asflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "Assembler additional command line options"
+        },
+        "category": {
+          "enum": ["doc", "header", "library", "object", "source", "sourceC", "sourceCpp", "sourceAsm", "linkerScript", "utility", "image", "other", "preIncludeGlobal", "preIncludeLocal"],
+          "description": "Type of file according to File Categories"
+        },
+        "path": {
+          "type": "string",
+          "description": "Include path for a file with header category"
+        },
+        "source": {
+          "type": "string",
+          "description": "Source path(s) to find source files for a library"
+        }
+      },
+      "additionalProperties": false,
+      "required": [ "file" ]
+    },
+    "GroupType": {
+      "type": "object",
+      "properties": {
+        "group": {
+          "type": "string",
+          "description": "Unique name of the group of files"
+        },
+        "cflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "C compiler additional command line options"
+        },
+        "cxxflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "C++ compiler additional command line options"
+        },
+        "asflags": {
+          "$ref": "#/$defs/FlagsType",
+          "description": "Assembler additional command line options"
+        },
+        "files": {
+          "$ref": "#/$defs/FilesType",
+          "description": "Unlimited recursive files children"
+        }
+      },
+      "additionalProperties": false,
+      "required": [ "group" ]
+    }
+  }
+}

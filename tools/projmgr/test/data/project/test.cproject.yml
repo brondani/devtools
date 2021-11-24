@@ -1,0 +1,22 @@
+### CMSIS Project Description ###
+
+project:
+  device: ARMCM3
+
+compiler:
+  name: AC6
+  version: "6.16.0"
+
+components:
+  - attributes: 
+      Cvariant: "C Startup"
+  - filter: "Keil RTX"
+    attributes: 
+      Cvariant: "Source"
+  - filter: "ARM CMSIS CORE"
+    
+files:
+  - group: "Sources"
+    files: 
+      - file: "main.c"
+        category: sourceC
