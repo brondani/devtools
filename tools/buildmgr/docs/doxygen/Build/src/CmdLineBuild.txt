@@ -5,7 +5,7 @@
 The following \b Bash scripts and command line tools can be used for managing the build of CMSIS Projects from the command line.
 These scripts can be easily adopted to specific environments and are intended as a minimal reference.
 CMSIS-Build tools are available for download among 
-<a href="https://github.com/Open-CMSIS-Pack/devtools/releases" target="_blank"><b>Open-CMSIS-Pack devtools releases</b></a>.
+<a href="https://github.com/Open-CMSIS-Pack/devtools/releasesAAA" target="_blank"><b>Open-CMSIS-Pack devtools releases</b></a>.
 
 For command line build with software packs, the following tools and utilities are provided.
 
@@ -16,6 +16,7 @@ For command line build with software packs, the following tools and utilities ar
 | \subpage cbuildgen "cbuildgen"              | Create Make or CMakeLists.txt file and manage software layers             |
 | \subpage cmake "CMake"                      | CMake utility to generate binary images                                   |
 | \subpage cpackget "cpackget"                | Download and install software packs in CMSIS-Pack format                  |
+\subpage aaaaa
 
 \note
 - For the above command line build tools and scripts  a
