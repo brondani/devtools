@@ -38,6 +38,7 @@ else()
   endif(MSVC)
   set_property(TARGET projmgr PROPERTY
     MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  target_link_options(projmgr PUBLIC "-static-libstdc++")
   target_link_libraries(projmgr projmgrlib)
   target_include_directories(projmgr PRIVATE include)
 endif()
