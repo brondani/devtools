@@ -25,11 +25,14 @@ TEST_F(ProjMgrWorkerUnitTests, ProcessToolchain) {
   const string& filename = testinput_folder + "/TestProject/test.cproject.yml";
   EXPECT_TRUE(parser.ParseCproject(filename, true));
   EXPECT_TRUE(AddContexts(parser, descriptor, filename));
-  ContextItem context = GetContexts().begin()->second;
+  map<string, ContextItem> contexts;
+  GetContexts(contexts);
+  ContextItem context = contexts.begin()->second;
   EXPECT_TRUE(ProcessPrecedences(context));
   EXPECT_TRUE(ProcessToolchain(context));
   EXPECT_EQ(expected.name, context.toolchain.name);
   EXPECT_EQ(expected.version, context.toolchain.version);
+
 }
 
 TEST_F(ProjMgrWorkerUnitTests, ProcessToolchainOptions) {
@@ -73,7 +76,9 @@ TEST_F(ProjMgrWorkerUnitTests, ProcessDevice) {
   const string& filename = testinput_folder + "/TestProject/test.cproject.yml";
   EXPECT_TRUE(parser.ParseCproject(filename, true));
   EXPECT_TRUE(AddContexts(parser, descriptor, filename));
-  ContextItem context = GetContexts().begin()->second;
+  map<string, ContextItem> contexts;
+  GetContexts(contexts);
+  ContextItem context = contexts.begin()->second;
   EXPECT_TRUE(LoadPacks());
   EXPECT_TRUE(ProcessPrecedences(context));
   EXPECT_TRUE(ProcessDevice(context));
@@ -92,7 +97,9 @@ TEST_F(ProjMgrWorkerUnitTests, ProcessComponents) {
   const string& filename = testinput_folder + "/TestProject/test.cproject.yml";
   EXPECT_TRUE(parser.ParseCproject(filename, true));
   EXPECT_TRUE(AddContexts(parser, descriptor, filename));
-  ContextItem context = GetContexts().begin()->second;
+  map<string, ContextItem> contexts;
+  GetContexts(contexts);
+  ContextItem context = contexts.begin()->second;
   EXPECT_TRUE(LoadPacks());
   EXPECT_TRUE(ProcessPrecedences(context));
   EXPECT_TRUE(ProcessDevice(context));
@@ -112,7 +119,9 @@ TEST_F(ProjMgrWorkerUnitTests, ProcessDependencies) {
   const string& filename = testinput_folder + "/TestProject/test-dependency.cproject.yml";
   EXPECT_TRUE(parser.ParseCproject(filename, true));
   EXPECT_TRUE(AddContexts(parser, descriptor, filename));
-  ContextItem context = GetContexts().begin()->second;
+  map<string, ContextItem> contexts;
+  GetContexts(contexts);
+  ContextItem context = contexts.begin()->second;
   EXPECT_TRUE(LoadPacks());
   EXPECT_TRUE(ProcessPrecedences(context));
   EXPECT_TRUE(ProcessDevice(context));
@@ -135,7 +144,9 @@ TEST_F(ProjMgrWorkerUnitTests, ProcessDeviceFailed) {
   const string& filename = testinput_folder + "/TestProject/test-unavailable-processor.cproject.yml";
   EXPECT_TRUE(parser.ParseCproject(filename, true));
   EXPECT_TRUE(AddContexts(parser, descriptor, filename));
-  ContextItem context = GetContexts().begin()->second;
+  map<string, ContextItem> contexts;
+  GetContexts(contexts);
+  ContextItem context = contexts.begin()->second;
   EXPECT_TRUE(LoadPacks());
   EXPECT_TRUE(ProcessPrecedences(context));
   EXPECT_FALSE(ProcessDevice(context));
@@ -192,7 +203,7 @@ TEST_F(ProjMgrWorkerUnitTests, LoadPacksNoPackage) {
   EXPECT_TRUE(LoadPacks());
 
   // get list of available packs
-  set<string> availablePacks;
+  vector<string> availablePacks;
   EXPECT_TRUE(ListPacks("", availablePacks));
 
   // by default all packs available should be loaded
