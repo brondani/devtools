@@ -27,10 +27,3 @@
 #ifndef DEF3-FILE
 #error "DEF3-FILE is not defined!"
 #endif
-
-
-int main (void) {
-  return 1;
-}
-
-

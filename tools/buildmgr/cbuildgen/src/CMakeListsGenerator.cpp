@@ -370,6 +370,29 @@ bool CMakeListsGenerator::GenBuildCMakeLists(void) {
           if (as_special_lang) {
             cmakelists << "  set_source_files_properties(${SRC} PROPERTIES LANGUAGE " << lang << ")" << EOL;
           }
+
+          if (asflags) {
+            // file include paths
+            cmakelists << "  if(DEFINED INC_PATHS_${S})" << EOL;
+            cmakelists << "    set(" << lang << "_INC_PATHS_LOCAL \"${INC_PATHS_${S}}\")" << EOL;
+            cmakelists << "    set_source_files_properties(${SRC} PROPERTIES INCLUDE_DIRECTORIES \"${" << lang << "_INC_PATHS_LOCAL}\")" << EOL;
+            cmakelists << "  endif()" << EOL;
+
+            // file defines
+            cmakelists << "  if(DEFINED DEFINES_${S})" << EOL;
+            cmakelists << "    foreach(ELEM ${DEFINES_${S}})" << EOL;
+            cmakelists << "      string(REPLACE \"\\\"\" \"\\\\\\\"\" ENTRY ${ELEM})" << EOL;
+            cmakelists << "      string(REGEX REPLACE \"=.*\" \"\" KEY ${ENTRY})" << EOL;
+            cmakelists << "      if (KEY STREQUAL ENTRY)" << EOL;
+            cmakelists << "        string(APPEND " << lang << "_DEFINES_LOCAL \"${ENTRY};\")" << EOL;
+            cmakelists << "      else()" << EOL;
+            cmakelists << "        string(REGEX REPLACE \".*=\" \"\" VALUE ${ENTRY})" << EOL;
+            cmakelists << "        string(APPEND " << lang << "_DEFINES_LOCAL \"${KEY}=${VALUE};\")" << EOL;
+            cmakelists << "      endif()" << EOL;
+            cmakelists << "    endforeach()" << EOL;
+            cmakelists << "    set_source_files_properties(${SRC} PROPERTIES COMPILE_DEFINITIONS \"${" << lang << "_DEFINES_LOCAL}\")" << EOL;
+            cmakelists << "  endif()" << EOL;
+          }
           cmakelists << "endforeach()" << EOL << EOL;
         }
       }
@@ -398,6 +421,29 @@ bool CMakeListsGenerator::GenBuildCMakeLists(void) {
           cmakelists << "  endif()" << EOL;
         }
         cmakelists << "  set_source_files_properties(${SRC} PROPERTIES COMPILE_FLAGS \"${" << lang << "_FLAGS_LOCAL}\")" << EOL;
+
+        if (ccflags) {
+          // file include paths
+          cmakelists << "  if(DEFINED INC_PATHS_${S})" << EOL;
+          cmakelists << "    set(" << lang << "_INC_PATHS_LOCAL \"${INC_PATHS_${S}}\")" << EOL;
+          cmakelists << "    set_source_files_properties(${SRC} PROPERTIES INCLUDE_DIRECTORIES \"${" << lang << "_INC_PATHS_LOCAL}\")" << EOL;
+          cmakelists << "  endif()" << EOL;
+
+          // file defines
+          cmakelists << "  if(DEFINED DEFINES_${S})" << EOL;
+          cmakelists << "    foreach(ELEM ${DEFINES_${S}})" << EOL;
+          cmakelists << "      string(REPLACE \"\\\"\" \"\\\\\\\"\" ENTRY ${ELEM})" << EOL;
+          cmakelists << "      string(REGEX REPLACE \"=.*\" \"\" KEY ${ENTRY})" << EOL;
+          cmakelists << "      if (KEY STREQUAL ENTRY)" << EOL;
+          cmakelists << "        string(APPEND " << lang << "_DEFINES_LOCAL \"${ENTRY};\")" << EOL;
+          cmakelists << "      else()" << EOL;
+          cmakelists << "        string(REGEX REPLACE \".*=\" \"\" VALUE ${ENTRY})" << EOL;
+          cmakelists << "        string(APPEND " << lang << "_DEFINES_LOCAL \"${KEY}=${VALUE};\")" << EOL;
+          cmakelists << "      endif()" << EOL;
+          cmakelists << "    endforeach()" << EOL;
+          cmakelists << "    set_source_files_properties(${SRC} PROPERTIES COMPILE_DEFINITIONS \"${" << lang << "_DEFINES_LOCAL}\")" << EOL;
+          cmakelists << "  endif()" << EOL;
+        }
         cmakelists << "endforeach()" << EOL << EOL;
       }
     }
