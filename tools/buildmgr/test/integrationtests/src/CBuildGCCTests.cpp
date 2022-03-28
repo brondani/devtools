@@ -21,7 +21,7 @@ class CBuildGCCTests : public CBuildTestFixture {
 
 // Validate successful build of C example
 // using latest pack versions available
-TEST_F(CBuildGCCTests, Build_GCC_TRANSLATION_CONTROL) {
+TEST_F(CBuildGCCTests, Build_GCC_Translation_Control) {
   TestParam param = { "GCC/TranslationControl/Project1", "Project" };
 
   RunCBuildScriptClean       (param);
