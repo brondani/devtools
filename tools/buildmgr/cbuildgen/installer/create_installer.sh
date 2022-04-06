@@ -75,6 +75,13 @@ curl --retry 3 -L ${cpackget_base}_windows_amd64.zip   -o temp.zip && unzip -p t
 curl --retry 3 -L ${cpackget_base}_linux_amd64.tar.gz  -o - | tar xzfO - --wildcards    '*cpackget'     > ${distdir}/bin/cpackget.lin
 curl --retry 3 -L ${cpackget_base}_darwin_amd64.tar.gz -o - | tar xzfO - --wildcards    '*cpackget'     > ${distdir}/bin/cpackget.mac
 
+# Get cbuild
+cbuild_version="0.9.0"
+cbuild_base=https://github.com/brondani/cbuild/releases/download/v${cbuild_version}/cbuild_${cbuild_version}
+curl --retry 3 -L ${cbuild_base}_windows_amd64.zip   -o temp.zip && unzip -p temp.zip '*/cbuild.exe' > ${distdir}/bin/cbuild.exe && rm temp.zip
+curl --retry 3 -L ${cbuild_base}_linux_amd64.tar.gz  -o - | tar xzfO - --wildcards    '*cbuild'     > ${distdir}/bin/cbuild.lin
+curl --retry 3 -L ${cbuild_base}_darwin_amd64.tar.gz -o - | tar xzfO - --wildcards    '*cbuild'     > ${distdir}/bin/cbuild.mac
+
 OS=$(uname -s)
 case $OS in
   'Linux' | 'WSL_Linux')
