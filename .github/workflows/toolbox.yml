@@ -45,8 +45,8 @@ jobs:
       - name: Download cbuild release asset
         uses: dsaltares/fetch-gh-release-asset@master
         with:
-          repo: "Open-CMSIS-Pack/devtools"
-          version: tags/tools/buildmgr/0.10.6
+          repo: "brondani/devtools"
+          version: tags/tools/buildmgr/0.11.0-dev0
           file: cbuild_install.sh
           target: tools/toolbox/cbuild/cbuild_install.sh
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -113,6 +113,63 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           asset_name: cmsis-toolbox.sh
+
+      - name: Extract cmsis-toolbox installer files
+        run: |
+          chmod +x cmsis-toolbox.sh
+          ./cmsis-toolbox.sh -x tools/toolbox/zip
+
+      - name: Copy files separated by target for archiving
+        run: |
+          mkdir -p zip/cmsis-toolbox-windows64/bin zip/cmsis-toolbox-windows64/etc zip/cmsis-toolbox-windows64/doc
+          mkdir -p zip/cmsis-toolbox-linux64/bin   zip/cmsis-toolbox-linux64/etc   zip/cmsis-toolbox-linux64/doc
+          mkdir -p zip/cmsis-toolbox-darwin64/bin  zip/cmsis-toolbox-darwin64/etc  zip/cmsis-toolbox-darwin64/doc
+          cp zip/bin/cbuild.exe    zip/cmsis-toolbox-windows64/bin/cbuild.exe
+          cp zip/bin/cbuildgen.exe zip/cmsis-toolbox-windows64/bin/cbuildgen.exe
+          cp zip/bin/cpackget.exe  zip/cmsis-toolbox-windows64/bin/cpackget.exe
+          cp zip/bin/csolution.exe zip/cmsis-toolbox-windows64/bin/csolution.exe
+          cp zip/bin/cbuild.lin    zip/cmsis-toolbox-linux64/bin/cbuild
+          cp zip/bin/cbuildgen.lin zip/cmsis-toolbox-linux64/bin/cbuildgen
+          cp zip/bin/cpackget.lin  zip/cmsis-toolbox-linux64/bin/cpackget
+          cp zip/bin/csolution.lin zip/cmsis-toolbox-linux64/bin/csolution
+          cp zip/bin/cbuild.mac    zip/cmsis-toolbox-darwin64/bin/cbuild
+          cp zip/bin/cbuildgen.mac zip/cmsis-toolbox-darwin64/bin/cbuildgen
+          cp zip/bin/cpackget.mac  zip/cmsis-toolbox-darwin64/bin/cpackget
+          cp zip/bin/csolution.mac zip/cmsis-toolbox-darwin64/bin/csolution
+          cp zip/LICENSE.txt       zip/cmsis-toolbox-windows64/LICENSE.txt
+          cp zip/LICENSE.txt       zip/cmsis-toolbox-linux64/LICENSE.txt
+          cp zip/LICENSE.txt       zip/cmsis-toolbox-darwin64/LICENSE.txt
+          rm zip/etc/setup
+          cp -r zip/etc/*          zip/cmsis-toolbox-windows64/etc
+          cp -r zip/etc/*          zip/cmsis-toolbox-linux64/etc
+          cp -r zip/etc/*          zip/cmsis-toolbox-darwin64/etc
+          cp -r zip/doc/*          zip/cmsis-toolbox-windows64/doc
+          cp -r zip/doc/*          zip/cmsis-toolbox-linux64/doc
+          cp -r zip/doc/*          zip/cmsis-toolbox-darwin64/doc
+        working-directory: tools/toolbox
+
+      - name: Zip folders
+        run: |
+          zip -r cmsis-toolbox-windows64.zip       cmsis-toolbox-windows64
+          tar -czvf cmsis-toolbox-linux64.tar.gz   cmsis-toolbox-linux64
+          tar -czvf cmsis-toolbox-darwin64.tar.gz  cmsis-toolbox-darwin64
+        working-directory: tools/toolbox/zip
+
+      - name: Calculate checksums
+        run: |
+          sha256sum cmsis-toolbox-windows64.zip --text > cmsis-toolbox-checksums.txt
+          sha256sum cmsis-toolbox-linux64.tar.gz --text >> cmsis-toolbox-checksums.txt
+          sha256sum cmsis-toolbox-darwin64.tar.gz --text >> cmsis-toolbox-checksums.txt
+        working-directory: tools/toolbox/zip
+
+      - name: Attach installer to release assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: tools/toolbox/zip/cmsis-toolbox-*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
 
   tests:
     needs: [ create_installer, matrix_prep ]
