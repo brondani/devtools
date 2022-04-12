@@ -46,7 +46,7 @@ jobs:
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           repo: "brondani/devtools"
-          version: tags/tools/buildmgr/0.11.0-dev0
+          version: tags/tools/buildmgr/0.11.0-dev1
           file: cbuild_install.sh
           target: tools/toolbox/cbuild/cbuild_install.sh
           token: ${{ secrets.GITHUB_TOKEN }}

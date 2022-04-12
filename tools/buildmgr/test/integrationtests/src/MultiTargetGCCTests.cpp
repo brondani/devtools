@@ -27,7 +27,7 @@ void MultiTargetGCCTests::RunCBuildScript(const TestParam& param) {
 
   const string clean = "cd " + testdata_folder + "/" + param.name + " && " +
     SH + " \"source " + testout_folder + "/cbuild/etc/setup && cbuild.sh " +
-    param.targetArg + " clean\"";
+    param.targetArg + " --clean\"";
   ret_val = system(clean.c_str());
   ASSERT_EQ(ret_val, 0);
 
