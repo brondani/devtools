@@ -297,6 +297,8 @@ TEST(RteUtilsTest, AlnumLenCmp) {
 TEST(RteUtilsTest, VendorCompare)
 {
   CheckVendorMatch({ "ARM", "ARM CMSIS" }, false);
+  CheckVendorMatch({ "ARM", "arm" }, false);
+  CheckVendorMatch({ "ONSemiconductor", "onsemi" }, true);
   CheckVendorMatch({ "Cypress", "Cypress:114", "Cypress:100" }, true);
   CheckVendorMatch({ "Atmel", "Atmel:3", "Microchip", "Microchip:3"}, true);
   CheckVendorMatch({ "Milandr", "Milandr:99", "milandr", "milandr:99"}, true);
@@ -318,6 +320,11 @@ TEST(RteUtilsTest, VendorCompare)
                        "Silicon Laboratories, Inc.", "Silicon Laboratories, Inc.:21", "Test:97" }, true);
 
   CheckVendorMatch({ "MyVendor", "MyVendor", "MyVendor:9999" }, true);
+
+  CheckVendorMatch({ "MyVendor", "ThatVendor"}, false);
+  CheckVendorMatch({ "MyVendor:9999", "ThatVendor:9998" }, false);
+  CheckVendorMatch({ "MyVendor:9999", "MyVendor:9998" }, true);
+  CheckVendorMatch({ "MyVendor:9999", "ThatVendor:9999" }, true);
 }
 
 TEST(RteUtilsTest, GetFullVendorString)
@@ -362,4 +369,27 @@ TEST(RteUtilsTest, NameFromPackageId)
   packageId = "VendorNameversion";
   name = RteUtils::NameFromPackageId(packageId);
   EXPECT_EQ(false, (0 == name.compare("Name")) ? true : false);
+}
+
+TEST(RteUtilsTest, RemoveVectorDuplicates)
+{
+  vector<int> testInput = { 1,2,3,2,4,5,3,6 };
+  vector<int> expected  = { 1,2,3,4,5,6 };
+  RteUtils::RemoveVectorDuplicates<int>(testInput);
+  EXPECT_EQ(testInput, expected);
+
+  testInput = { 1,1,3,3,1,2,2 };
+  expected = { 1,3,2 };
+  RteUtils::RemoveVectorDuplicates<int>(testInput);
+  EXPECT_EQ(testInput, expected);
+
+  testInput = { 1,1,1,1,1,1,1,1,1 };
+  expected = { 1 };
+  RteUtils::RemoveVectorDuplicates<int>(testInput);
+  EXPECT_EQ(testInput, expected);
+
+  testInput = { };
+  expected = { };
+  RteUtils::RemoveVectorDuplicates<int>(testInput);
+  EXPECT_EQ(testInput, expected);
 }
