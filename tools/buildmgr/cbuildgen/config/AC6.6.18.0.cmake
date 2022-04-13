@@ -1,6 +1,6 @@
 # This file maps the CMSIS project options to toolchain settings.
 #
-#   - Applies to toolchain: ARM Compiler 6.16
+#   - Applies to toolchain: ARM Compiler 6.18
 
 ############### EDIT BELOW ###############
 # Set base directory of toolchain
@@ -443,7 +443,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMakeASM")
 set(CMAKE_ASM_COMPILER_FORCED TRUE)
 set(CMAKE_C_COMPILER_ID "ARMClang")
 set(CMAKE_C_COMPILER_ID_RUN TRUE)
-set(CMAKE_C_COMPILER_VERSION "6.16.0")
+set(CMAKE_C_COMPILER_VERSION "6.18.0")
 set(CMAKE_C_COMPILER_FORCED TRUE)
 set(CMAKE_C_COMPILER_WORKS TRUE)
 set(CMAKE_CXX_COMPILER_ID "${CMAKE_C_COMPILER_ID}")
