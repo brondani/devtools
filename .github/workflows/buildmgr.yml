@@ -269,11 +269,11 @@ jobs:
     timeout-minutes: 15
     runs-on: ${{ matrix.runs_on }}
     env:
-      arm_gcc_install_base: https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4
+      arm_gcc_install_base: https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/
       CI_CBUILD_DEB_PKG: ${{ github.workspace }}
       CI_CBUILD_INSTALLER: ${{ github.workspace }}/cbuild_install.sh
       CI_PACK_ROOT: ${{ github.workspace }}/packs
-      CI_GCC_TOOLCHAIN_ROOT: ${{ github.workspace }}/gcc-arm-none-eabi-10-2020-q4-major/bin
+      CI_GCC_TOOLCHAIN_ROOT: ${{ github.workspace }}/${{ matrix.toolchain_root }}
     strategy:
       fail-fast: true
       matrix: ${{ fromJson(needs.matrix_prep.outputs.matrix) }}
@@ -319,7 +319,7 @@ jobs:
           installer_name: ${{ matrix.installer_name }}
         run: |
           wget -q $Env:arm_gcc_install_base/$Env:installer_name
-          unzip $Env:installer_name
+          unzip -o $Env:installer_name
           del $Env:installer_name
 
       - name: Cache CMSIS Pack

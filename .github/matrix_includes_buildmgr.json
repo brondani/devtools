@@ -4,7 +4,8 @@
         "target":"darwin64",
         "arch": "amd64",
         "binary_extension":".mac",
-        "installer_name": "gcc-arm-none-eabi-10-2020-q4-major-mac.tar.bz2",
+        "installer_name": "gcc-arm-11.2-2022.02-darwin-x86_64-arm-none-eabi.tar.xz",
+        "toolchain_root": "gcc-arm-11.2-2022.02-darwin-x86_64-arm-none-eabi/bin",
         "runOn": "publicRepo"
     },
     {
@@ -12,7 +13,8 @@
         "target":"linux64",
         "arch": "amd64",
         "binary_extension":".lin",
-        "installer_name": "gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2",
+        "installer_name": "gcc-arm-11.2-2022.02-x86_64-arm-none-eabi.tar.xz",
+        "toolchain_root": "gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin",
         "runOn": "always"
     },
     {
@@ -20,7 +22,8 @@
         "target":"linux64",
         "arch": "aarch64",
         "binary_extension":".lin",
-        "installer_name": "gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2",
+        "installer_name": "gcc-arm-11.2-2022.02-x86_64-arm-none-eabi.tar.xz",
+        "toolchain_root": "gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin",
         "runOn": "always"
     },
     {
@@ -28,7 +31,8 @@
         "target":"windows64",
         "arch": "amd64",
         "binary_extension":".exe",
-        "installer_name": "gcc-arm-none-eabi-10-2020-q4-major-win32.zip",
+        "installer_name": "gcc-arm-11.2-2022.02-mingw-w64-i686-arm-none-eabi.zip",
+        "toolchain_root": "gcc-arm-11.2-2022.02-mingw-w64-i686-arm-none-eabi/bin",
         "runOn": "always"
     }
 ]

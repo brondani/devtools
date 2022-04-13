@@ -26,26 +26,25 @@ The CMSIS-Toolbox uses the CMake build system with a Ninja backend.
 
 The CMSIS-Toolbox works with the following toolchains. Install one or more toolchains depending on your requirements.
 
-- [**GNU Arm Embedded Toolchain**](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads):
-  - [Windows 32-bit ZIP](https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-win32.exe)
-  - [Linux x86_64 Tarball](https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2)
-  - [Mac OS X 64-bit Package](https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-mac.pkg)
+- [**GNU Arm Embedded Toolchain**](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/downloads):
+  - [Windows 32-bit](https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-mingw-w64-i686-arm-none-eabi.exe)
+  - [Linux x86_64 Tarball](https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi.tar.xz)
+  - [Mac OS X 64-bit Package](https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-darwin-x86_64-arm-none-eabi.pkg)
 
 - [**Keil MDK**](http://www.keil.com/mdk5/install) version 5.36 or higher 
 
 - [**ARM Compiler Version 6**](https://developer.arm.com/tools-and-software/embedded/arm-compiler/downloads/version-6) **license managed**:
 
-  Version 6.16 (Mar. 10th 2020)
-  - [Windows 32-bit Installer](https://developer.arm.com/-/media/Files/downloads/compiler/DS500-BN-00025-r5p0-18rel0.zip)
-
+  Version 6.18 (Mar. 31th 2022)
+  - Windows 32-bit Installer
     - Download installer
-    - Extract archive unzip DS500-BN-00025-r5p0-18rel0.zip
+    - Extract archive
     - Run win-x86_32\setup.exe
-    - Default installation path: C:\Program Files (x86)\ARMCompiler6.16\
+    - Default installation path: C:\Program Files (x86)\ARMCompiler6.18\
 
-  - [Linux x86_64 Installer](https://developer.arm.com/-/media/Files/downloads/compiler/DS500-BN-00026-r5p0-18rel0.tgz)
+  - Linux x86_64 Installer
     - Download installer
-    - Extract the archive tar -xzf DS500-BN-00026-r5p0-18rel0.tgz
+    - Extract the archive
     - Run install_x86_64.sh
 
 ## Installation
