@@ -398,14 +398,14 @@ TEST_F(ProjMgrUnitTests, RunProjMgrSolution) {
 
   // Check generated CPRJs
   CompareFile(testoutput_folder + "/test1.Debug+CM0/test1.Debug+CM0.cprj",
-    testinput_folder + "/TestSolution/TestProject1/test1.Debug+CM0.cprj");
+    testinput_folder + "/TestSolution/ref/test1.Debug+CM0/test1.Debug+CM0.cprj");
   CompareFile(testoutput_folder + "/test1.Release+CM0/test1.Release+CM0.cprj",
-    testinput_folder + "/TestSolution/TestProject1/test1.Release+CM0.cprj");
+    testinput_folder + "/TestSolution/ref/test1.Release+CM0/test1.Release+CM0.cprj");
 
   CompareFile(testoutput_folder + "/test2.Debug+CM0/test2.Debug+CM0.cprj",
-    testinput_folder + "/TestSolution/TestProject2/test2.Debug+CM0.cprj");
+    testinput_folder + "/TestSolution/ref/test2.Debug+CM0/test2.Debug+CM0.cprj");
   CompareFile(testoutput_folder + "/test2.Debug+CM3/test2.Debug+CM3.cprj",
-    testinput_folder + "/TestSolution/TestProject2/test2.Debug+CM3.cprj");
+    testinput_folder + "/TestSolution/ref/test2.Debug+CM3/test2.Debug+CM3.cprj");
 }
 
 TEST_F(ProjMgrUnitTests, RunProjMgrSolutionContext) {
@@ -459,6 +459,23 @@ TEST_F(ProjMgrUnitTests, RunProjMgrLayers) {
     testinput_folder + "/TestLayers/ref/testlayers.Release");
   CompareFileTree(testoutput_folder + "/testlayers.Debug",
     testinput_folder + "/TestLayers/ref/testlayers.Debug");
+}
+
+TEST_F(ProjMgrUnitTests, RunProjMgrLayers2) {
+  char* argv[4];
+
+  // convert -s solution.yml
+  const string& csolution = testinput_folder + "/TestLayers/testlayers.csolution.yml";
+  argv[1] = (char*)"convert";
+  argv[2] = (char*)"-s";
+  argv[3] = (char*)csolution.c_str();
+  EXPECT_EQ(0, RunProjMgr(4, argv));
+
+  // Check generated CPRJs
+  CompareFile(testinput_folder + "/TestLayers/testlayers.Debug.cprj",
+    testinput_folder + "/TestLayers/ref2/testlayers.Debug.cprj");
+  CompareFile(testinput_folder + "/TestLayers/testlayers.Release.cprj",
+    testinput_folder + "/TestLayers/ref2/testlayers.Release.cprj");
 }
 
 TEST_F(ProjMgrUnitTests, AccessSequences) {
@@ -733,7 +750,7 @@ TEST_F(ProjMgrUnitTests, GenerateCprj) {
   EXPECT_TRUE(m_generator.GenerateCprj(contexts->begin()->second, filenameOutput));
 
   CompareFile(testoutput_folder + "/GenerateCprjTest.cprj",
-    testinput_folder + "/TestProject/test.cprj");
+    testinput_folder + "/TestProject/GenerateCprjTest.cprj");
 }
 
 TEST_F(ProjMgrUnitTests, GetInstalledPacks) {
@@ -764,9 +781,9 @@ TEST_F(ProjMgrUnitTests, RunProjMgrSolution_processor) {
 
   // Check generated CPRJs
   CompareFile(testoutput_folder + "/test2.Debug+CM0/test2.Debug+CM0.cprj",
-    testinput_folder + "/TestSolution/TestProject2/test2.Debug+CM0_pname.cprj");
+    testinput_folder + "/TestSolution/ref/test2.Debug+CM0/test2.Debug+CM0_pname.cprj");
   CompareFile(testoutput_folder + "/test2.Debug+CM3/test2.Debug+CM3.cprj",
-    testinput_folder + "/TestSolution/TestProject2/test2.Debug+CM3_pname.cprj");
+    testinput_folder + "/TestSolution/ref/test2.Debug+CM3/test2.Debug+CM3_pname.cprj");
 }
 
 TEST_F(ProjMgrUnitTests, RunProjMgrLayers_pname) {
@@ -1115,11 +1132,11 @@ TEST_F(ProjMgrUnitTests, RunProjMgr_Board_No_Mounted_Devices) {
 }
 
 TEST_F(ProjMgrUnitTests, RunProjMgr_Board_Device_Info) {
-  // Test Project with board mounted device different than available devices
+  // Test Project with board mounted device different than selected devices
   char* argv[6];
   const string& cproject = testinput_folder +
-    "/TestProject/test.cproject_mounted_device_differs_available_device.yml";
-  const string& expected = "specified device 'RteTest_ARMCM0_Dual' and board mounted device 'RteTest_ARMCM0_Test' are different";
+    "/TestProject/test.cproject_mounted_device_differs_selected_device.yml";
+  const string& expected = "warning csolution: specified device 'RteTest_ARMCM0' and board mounted device 'RteTest_ARMCM0_Dual' are different";
   StdStreamRedirect streamRedirect;
 
   argv[1] = (char*)"convert";
@@ -1127,9 +1144,9 @@ TEST_F(ProjMgrUnitTests, RunProjMgr_Board_Device_Info) {
   argv[3] = (char*)cproject.c_str();
   argv[4] = (char*)"-o";
   argv[5] = (char*)testoutput_folder.c_str();
-  EXPECT_EQ(1, RunProjMgr(6, argv));
-  auto errStr = streamRedirect.GetErrorString();
-  EXPECT_NE(string::npos, errStr.find(expected));
+  EXPECT_EQ(0, RunProjMgr(6, argv));
+  auto warnStr = streamRedirect.GetErrorString();
+  EXPECT_NE(string::npos, warnStr.find(expected));
 }
 
 TEST_F(ProjMgrUnitTests, RunProjMgr_ListGenerators) {
@@ -1336,9 +1353,9 @@ TEST_F(ProjMgrUnitTests, RunProjMgrSolution_Pack_Selection) {
 
   // Check generated CPRJs
   CompareFile(testoutput_folder + "/test2.Debug+CM0/test2.Debug+CM0.cprj",
-    testinput_folder + "/TestSolution/TestProject2/test2.Debug+CM0_pack_selection.cprj");
+    testinput_folder + "/TestSolution/ref/test2.Debug+CM0/test2.Debug+CM0_pack_selection.cprj");
   CompareFile(testoutput_folder + "/test2.Debug+TestGen/test2.Debug+TestGen.cprj",
-    testinput_folder + "/TestSolution/TestProject2/test2.Debug+TestGen_pack_selection.cprj");
+    testinput_folder + "/TestSolution/ref/test2.Debug+TestGen/test2.Debug+TestGen.cprj");
 }
 
 TEST_F(ProjMgrUnitTests, RunProjMgrSolution_No_Packs) {
@@ -1470,9 +1487,9 @@ TEST_F(ProjMgrUnitTests, RunProjMgrSolution_List_Board_Pack) {
 
   // Check generated CPRJs
   CompareFile(testoutput_folder + "/test1.Debug+CM0/test1.Debug+CM0.cprj",
-    testinput_folder + "/TestSolution/TestProject1/test1.Debug+CM0_board_package.cprj");
+    testinput_folder + "/TestSolution/ref/test1.Debug+CM0/test1.Debug+CM0_board_package.cprj");
   CompareFile(testoutput_folder + "/test1.Release+CM0/test1.Release+CM0.cprj",
-    testinput_folder + "/TestSolution/TestProject1/test1.Release+CM0_board_package.cprj");
+    testinput_folder + "/TestSolution/ref/test1.Release+CM0/test1.Release+CM0_board_package.cprj");
 }
 
 TEST_F(ProjMgrUnitTests, RunProjMgrSolution_GetCdefaultFile1) {
