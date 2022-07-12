@@ -34,7 +34,7 @@ script="$2/AC5.5.6.7.cmake"
 sed -e "s|set(TOOLCHAIN_ROOT.*|set(TOOLCHAIN_ROOT \"${compiler5_default_path}\")|" "${script}" > temp.$$ && mv temp.$$ "${script}"
 sed -e "s|set(EXT.*|set(EXT ${extension})|" "${script}" > temp.$$ && mv temp.$$ "${script}"
 
-script="$2/GCC.10.2.1.cmake"
+script="$2/GCC.11.2.1.cmake"
 sed -e "s|set(TOOLCHAIN_ROOT.*|set(TOOLCHAIN_ROOT \"${gcc_default_path}\")|" "${script}" > temp.$$ && mv temp.$$ "${script}"
 sed -e "s|set(EXT.*|set(EXT ${extension})|" "${script}" > temp.$$ && mv temp.$$ "${script}"
 
