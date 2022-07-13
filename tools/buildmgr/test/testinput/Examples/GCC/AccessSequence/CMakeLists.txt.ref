@@ -16,7 +16,7 @@ set(SECURE Non-secure)
 set(MVE NO_MVE)
 set(BYTE_ORDER Little-endian)
 set(AS_FLAGS_GLOBAL "-AS-flag-C:/Users/user1/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0")
-set(CC_FLAGS_GLOBAL "-O -Wall -gdwarf-2 -mapcs-frame -mthumb -C-flag-C:/Users/user1/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0")
+set(CC_FLAGS_GLOBAL "-Wall -gdwarf-2 -mapcs-frame -mthumb -C-flag-C:/Users/user1/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0")
 set(LD_FLAGS_GLOBAL "--entry=Reset_Handler --specs=nosys.specs -mcpu=cortex-m3 -LD-flag-C:/Users/user1/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0")
 set(LD_SCRIPT "C:/Temp/devtools/tools/buildmgr/test/testinput/Examples/GCC/AccessSequence/RTE/Device/ARMCM3/gcc_arm.ld")
 
@@ -123,7 +123,7 @@ set(CXX_SRC_FILES
   "C:/Temp/devtools/tools/buildmgr/test/testinput/Examples/GCC/AccessSequence/File2.cpp"
 )
 
-set(CC_FLAGS_C:/Temp/devtools/tools/buildmgr/test/testinput/Examples/GCC/AccessSequence/File.c "-O -Wall -gdwarf-2 -mapcs-frame -mthumb -C-flag-C:/Users/user1/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0 -C-File-flag-C:/Users/user1/AppData/Local/Arm/Packs")
+set(CC_FLAGS_C:/Temp/devtools/tools/buildmgr/test/testinput/Examples/GCC/AccessSequence/File.c "-Wall -gdwarf-2 -mapcs-frame -mthumb -C-flag-C:/Users/user1/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0 -C-File-flag-C:/Users/user1/AppData/Local/Arm/Packs")
 set(CXX_FLAGS_C:/Temp/devtools/tools/buildmgr/test/testinput/Examples/GCC/AccessSequence/File2.cpp "-O3 -CXX-File-C:/Users/user1/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0")
 
 # Toolchain config map

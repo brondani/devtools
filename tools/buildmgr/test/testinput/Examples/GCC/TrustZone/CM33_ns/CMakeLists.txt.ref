@@ -15,7 +15,7 @@ set(TZ TZ)
 set(SECURE Non-secure)
 set(MVE NO_MVE)
 set(BYTE_ORDER Little-endian)
-set(CC_FLAGS_GLOBAL "-O -Wall -gdwarf-2 -mapcs-frame -mthumb")
+set(CC_FLAGS_GLOBAL "-Wall -gdwarf-2 -mapcs-frame -mthumb")
 set(LD_FLAGS_GLOBAL "--entry=Reset_Handler -mthumb --specs=nosys.specs")
 set(LD_SCRIPT "C:/reference/devtools/build/TestOutput/TestData/Examples/GCC/TrustZone/CM33_ns/RTE/Device/ARMCM33_DSP_FP_TZ/gcc_arm.ld")
 

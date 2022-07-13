@@ -15,7 +15,7 @@ set(TZ NO_TZ)
 set(SECURE Non-secure)
 set(MVE NO_MVE)
 set(BYTE_ORDER Little-endian)
-set(CC_FLAGS_GLOBAL "-O -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
+set(CC_FLAGS_GLOBAL "-Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
 set(LD_FLAGS_GLOBAL "--entry=Reset_Handler --specs=nosys.specs -mcpu=cortex-m0 -mthumb -mthumb-interwork")
 set(LD_SCRIPT "C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/RTE/Device/ARMCM0/gcc_arm.ld")
 
@@ -40,11 +40,11 @@ set(CC_SRC_FILES
   "C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/RTE/Device/ARMCM0/system_ARMCM0.c"
 )
 
-set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File0.c "-DGROUP0 -O -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
-set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File1.c "-DGROUP0 -DGROUP1 -O -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
-set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File2.c "-DGROUP0 -DGROUP2 -O -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
-set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File3.c "-DGROUP0 -DGROUP3 -O -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
-set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File4.c "-DGROUP0 -DGROUP3 -O -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
+set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File0.c "-DGROUP0 -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
+set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File1.c "-DGROUP0 -DGROUP1 -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
+set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File2.c "-DGROUP0 -DGROUP2 -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
+set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File3.c "-DGROUP0 -DGROUP3 -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
+set(CC_FLAGS_C:/sandbox/devtools/build/TestOutput/TestData/Examples/GCC/NestedGroups/File4.c "-DGROUP0 -DGROUP3 -Wall -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork")
 
 # Toolchain config map
 

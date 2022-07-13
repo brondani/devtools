@@ -15,7 +15,7 @@ set(TZ NO_TZ)
 set(SECURE Non-secure)
 set(MVE NO_MVE)
 set(BYTE_ORDER Little-endian)
-set(CC_FLAGS_GLOBAL "-O -Wall -gdwarf-2 -mapcs-frame -mthumb")
+set(CC_FLAGS_GLOBAL "-Wall -gdwarf-2 -mapcs-frame -mthumb")
 set(LD_FLAGS_GLOBAL "--entry=Reset_Handler --specs=nosys.specs -mcpu=cortex-m3 -mthumb")
 set(LD_SCRIPT "C:/Sandbox/devtools-external/build/testoutput/GCC/TranslationControl/Project1/RTE/Device/ARMCM3/gcc_arm.ld")
 

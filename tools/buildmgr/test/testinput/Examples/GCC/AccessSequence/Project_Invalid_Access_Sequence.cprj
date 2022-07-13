@@ -22,7 +22,7 @@
     <includes>./;$Bpack</includes>
     <defines>DEF1Target;DEF2Target;DEF3Target;DEF4Target</defines>
     <ldflags add="--entry=Reset_Handler --specs=nosys.specs -mcpu=cortex-m3 -LD-flag-$Bpack$" compiler="GCC" file="./RTE/Device/ARMCM3/gcc_arm.ld"/>
-    <cflags add="-O -Wall -gdwarf-2 -mapcs-frame -mthumb -C-flag-$Bpack$" compiler="GCC"/>
+    <cflags add="-Wall -gdwarf-2 -mapcs-frame -mthumb -C-flag-$Bpack$" compiler="GCC"/>
     <asflags add="-AS-flag-$Dpack$" compiler="GCC"/>
   </target>
 

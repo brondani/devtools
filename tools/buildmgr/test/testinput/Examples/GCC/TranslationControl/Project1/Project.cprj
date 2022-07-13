@@ -21,7 +21,7 @@
     <includes>./</includes>
     <defines>DEF1;DEF2=2;DEF3</defines>
     <ldflags add="--entry=Reset_Handler --specs=nosys.specs -mcpu=cortex-m3 -mthumb" compiler="GCC" file="./RTE/Device/ARMCM3/gcc_arm.ld"/>
-    <cflags add="-O -Wall -gdwarf-2 -mapcs-frame -mthumb" compiler="GCC"/>
+    <cflags add="-Wall -gdwarf-2 -mapcs-frame -mthumb" compiler="GCC"/>
     <asflags compiler="GCC"/>
   </target>
 

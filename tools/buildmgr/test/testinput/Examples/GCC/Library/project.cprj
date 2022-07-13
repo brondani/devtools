@@ -18,7 +18,7 @@
 
   <target Ddsp="NO_DSP" Dendian="Little-endian" Dfpu="NO_FPU" Dmve="NO_MVE" Dname="ARMCM3" Dsecure="Non-secure" Dtz="NO_TZ" Dvendor="ARM:82">
     <output name="Library" type="lib"/>
-    <cxxflags add="-O -Wall -ffunction-sections -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork" compiler="GCC"/>
+    <cxxflags add="-Wall -ffunction-sections -gdwarf-2 -mapcs-frame -mthumb -mthumb-interwork" compiler="GCC"/>
   </target>
 
   <components>
