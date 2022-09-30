@@ -22,6 +22,43 @@ static constexpr const char* SCHEMA_FILE = "PACK.xsd";    // XML schema file nam
 static constexpr const char* SCHEMA_VERSION = "1.7.2";    // XML schema version
 static const list<string> HEADER_EXT_DEFAULT = { ".h", ".hpp" };
 
+static constexpr const char* CMAKELISTS_HEADER = "\
+cmake_minimum_required(VERSION 3.18)\n\n\
+project(PackGen)\n\n\
+";
+
+static constexpr const char* CMAKELISTS_BODY = "\
+function(generate_interface_target_info)\n\
+  set(targets)\n\
+  iterate_over_all_targets_recursively(targets ${CMAKE_CURRENT_SOURCE_DIR})\n\
+endfunction()\n\n\
+macro(iterate_over_all_targets_recursively targets dir)\n\
+  get_property(subdirectories DIRECTORY ${dir} PROPERTY SUBDIRECTORIES)\n\
+  foreach(subdir ${subdirectories})\n\
+    iterate_over_all_targets_recursively(${targets} ${subdir})\n\
+  endforeach()\n\
+  get_property(current_targets DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)\n\
+  foreach(current_target ${current_targets})\n\
+    get_property(type TARGET ${current_target} PROPERTY TYPE)\n\
+    if (${type} STREQUAL INTERFACE_LIBRARY)\n\
+      get_property(includes TARGET ${current_target} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)\n\
+      set(content \"{\\\"compileGroups\\\":[{\\\"includes\\\":[{}]}],\\\"name\\\":{}}\")\n\
+      string(JSON content SET ${content} name \\\"${current_target}\\\")\n\
+      set(index 0)\n\
+      foreach(inc ${includes})\n\
+        string(JSON content SET ${content} compileGroups 0 includes ${index} {})\n\
+        string(JSON content SET ${content} compileGroups 0 includes ${index} path \\\"${inc}\\\")\n\
+        math(EXPR index \"${index}+1\")\n\
+      endforeach()\n\
+      cmake_path(SET filename ${CMAKE_BINARY_DIR}/.cmake/api/v1/custom/target-${current_target}.json)\n\
+      file(WRITE ${filename} ${content})\n\
+    endif()\n\
+  endforeach()\n\
+  list(APPEND ${targets} ${current_targets})\n\
+endmacro()\n\n\
+generate_interface_target_info()\n\
+";
+
 PackGen::PackGen(void) {
   // Reserved
 }
@@ -50,6 +87,7 @@ int PackGen::RunPackGen(int argc, char **argv) {
       ("o,output", "Output folder", cxxopts::value<string>())
       ("i,include", "PDSC file(s) for external dependency check", cxxopts::value<vector<string>>())
       ("r,regenerate", "Regenerate CMake targets", cxxopts::value<bool>()->default_value("false"))
+      ("x,extra", "Look for extra CMake targets info", cxxopts::value<bool>()->default_value("false"))
       ("v,verbose", "Verbose mode", cxxopts::value<bool>()->default_value("false"))
       ("c,nocheck", "Skip pack check", cxxopts::value<bool>()->default_value("false"))
       ("z,nozip", "Skip *.pack file creation", cxxopts::value<bool>()->default_value("false"))
@@ -62,6 +100,7 @@ int PackGen::RunPackGen(int argc, char **argv) {
     parseResult = options.parse(argc, argv);
     generator.m_verbose = parseResult["verbose"].as<bool>();
     generator.m_regenerate = parseResult["regenerate"].as<bool>();
+    generator.m_extra = parseResult["extra"].as<bool>();
     nocheck = parseResult["nocheck"].as<bool>();
     nozip = parseResult["nozip"].as<bool>();
     if (parseResult.count("include")) {
@@ -570,7 +609,7 @@ bool PackGen::ParseReply(void) {
   for (const auto& build : m_buildOptions) {
 
     const string& buildRoot = m_outputRoot + "/" + build.name;
-    const string& replyDir = buildRoot + "/.cmake/api/v1/reply";
+    const string& replyDir = buildRoot + "/.cmake/api/v1";
 
     if (fs::is_empty(replyDir, ec)) {
       fs::current_path(workingDir, ec);
@@ -1050,6 +1089,7 @@ bool PackGen::CreateQuery() {
     const string& buildRoot = m_outputRoot + "/" + build.name;
     const string& queryDir = buildRoot + "/.cmake/api/v1/query/client-cmsis";
     const string& replyDir = buildRoot + "/.cmake/api/v1/reply";
+    const string& srcDir = fs::path(m_manifest).parent_path().generic_string();
 
     error_code ec;
     if (fs::exists(replyDir, ec) && !m_regenerate) {
@@ -1064,8 +1104,19 @@ bool PackGen::CreateQuery() {
     fileStream << flush;
     fileStream.close();
 
+    // Create top-level CmakeLists to look for extra target info
+    if (m_extra) {
+      error_code ec;
+      ofstream cmakeStream(buildRoot + "/CMakeLists.txt");
+      cmakeStream << CMAKELISTS_HEADER;
+      cmakeStream << "add_subdirectory(" << fs::relative(srcDir, buildRoot, ec).generic_string() << " ./build)" << endl << endl;
+      cmakeStream << CMAKELISTS_BODY;
+      cmakeStream << flush;
+      cmakeStream.close();
+    }
+
     // Run CMake
-    const string cmd = build.options + " -S \"" + fs::path(m_manifest).parent_path().generic_string() + "\" -B \"" + buildRoot + "\"";
+    const string cmd = build.options + " -S \"" + (m_extra ? buildRoot : srcDir) + "\" -B \"" + buildRoot + "\"";
     PackGen::Result result = ExecCommand(cmd);
     if (result.second) {
       cerr << "packgen error: CMake failed\n" << result.first << endl;

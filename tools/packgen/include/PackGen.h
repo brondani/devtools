@@ -270,6 +270,7 @@ protected:
   std::vector<std::string> m_externalPdsc;
   bool m_verbose = false;
   bool m_regenerate = false;
+  bool m_extra = false;
   bool m_noComponents = true;
 
   XMLTree* m_pdscTree = NULL;
