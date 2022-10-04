@@ -75,7 +75,7 @@ cat ${install_config}
 
 # Run cbuild installer
 dos2unix ${install_config}
-"${installer}" ${args} < ${install_config}
+"${installer}" ${args} "-a "${CI_ARCH}" < ${install_config}
 if [ $? -ne 0 ]
   then
   exit 1

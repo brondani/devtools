@@ -82,7 +82,6 @@ jobs:
           arch: ${{ matrix.arch }}
 
       - name: Rename binary to be integrated to the installer
-        if: ${{ startsWith(matrix.runs_on, 'macos') || startsWith(matrix.runs_on, 'ubuntu') }}
         env:
           target: ${{ matrix.target }}
           binary_extension: ${{ matrix.binary_extension }}
@@ -294,6 +293,7 @@ jobs:
       CI_CBUILD_INSTALLER: ${{ github.workspace }}/cbuild_install.sh
       CI_PACK_ROOT: ${{ github.workspace }}/packs
       CI_GCC_TOOLCHAIN_ROOT: ${{ github.workspace }}/${{ matrix.toolchain_root }}
+      CI_ARCH: ${{ matrix.arch }}
     strategy:
       fail-fast: true
       matrix: ${{ fromJson(needs.matrix_prep.outputs.matrix) }}
