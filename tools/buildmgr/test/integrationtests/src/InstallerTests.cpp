@@ -68,8 +68,13 @@ void InstallerTests::CheckInstallationDir(const string& path, bool expect) {
 
 void InstallerTests::CheckExtractedDir(const string& path, bool expect) {
   vector<pair<string, vector<string>>> dirVec = {
-    { "bin", vector<string>{ "cbuild.sh", "cbuildgen.lin", "cbuildgen.exe",
-      "cpackget.lin", "cpackget.exe"} },
+    { "bin", vector<string>{ "cbuild.sh",
+    "cbuild.lin-amd64",    "cbuild.exe-amd64",    "cbuild.mac-amd64",
+    "cpackget.lin-amd64",  "cpackget.exe-amd64",  "cpackget.mac-amd64",
+    "cbuildgen.lin-amd64", "cbuildgen.exe-amd64", "cbuildgen.mac-amd64",
+    "cbuild.lin-arm64",   /*"cbuild.exe-arm64",    "cbuild.mac-arm64",*/
+    "cpackget.lin-arm64", /*"cpackget.exe-arm64",  "cpackget.mac-arm64",*/
+    "cbuildgen.lin-arm64",/*"cbuildgen.exe-arm64", "cbuildgen.mac-arm64",*/} },
     { "doc", vector<string>{ "index.html", "html"} },
     { "etc", vector<string>{"AC5.5.6.7.cmake", "AC6.6.18.0.cmake", "CPRJ.xsd",
       "GCC.11.2.1.cmake", "IAR.8.50.6.cmake", "setup"} }

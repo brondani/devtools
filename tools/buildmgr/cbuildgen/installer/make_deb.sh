@@ -117,6 +117,7 @@ export CMSIS_COMPILER_ROOT=/etc/${PACKAGE_NAME}
 EnvironmentVariables
 find . -type f -name "*.exe*" -exec rm {} ';'
 find . -type f -name "*.mac*" -exec rm {} ';'
+find . -type f -name "*.lin-arm64" -exec rm {} ';'
 find . -type f -name "*.lin-amd64" | sed -e 's/.lin-amd64//g' | xargs -I file mv file".lin-amd64" file
 find . -type f -name "*.cmake" -exec sed -i "s|set(TOOLCHAIN_ROOT.*|set(TOOLCHAIN_ROOT /usr/bin)|" {} ';'
 find usr/lib/${PACKAGE_NAME}/bin -type f -not -name "*.sh" | xargs -I file basename file | xargs -I util ln -s /usr/lib/${PACKAGE_NAME}/bin/util usr/bin/util
@@ -172,7 +173,7 @@ Maintainer: Daniel Brondani - Arm Ltd <daniel.brondani@arm.com>
 Section: devel
 Priority: optional
 Standards-Version: 3.9.2
-Build-Depends: debhelper (>= 9), python
+Build-Depends: debhelper (>= 9)
 Homepage: https://arm-software.github.io/CMSIS_5/Build/html/index.html
 
 Package: ${PACKAGE_NAME}
