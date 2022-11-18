@@ -290,7 +290,7 @@ void ProjMgrYamlCbuild::SetConstructedFilesNode(YAML::Node node, const ContextIt
 void ProjMgrYamlCbuild::SetOutputDirsNode(YAML::Node node, const ContextItem* context) {
   const DirectoriesItem& dirs = context->directories;
   map<const string, string> outputDirs = {
-    {YAML_OUTPUT_GENDIR, dirs.gendir},
+    {YAML_OUTPUT_GENDIR, context->csolution->directories.gendir.empty() ? "" : dirs.gendir},
     {YAML_OUTPUT_INTDIR, dirs.intdir},
     {YAML_OUTPUT_OUTDIR, dirs.outdir},
     {YAML_OUTPUT_RTEDIR, dirs.rte},

@@ -368,6 +368,9 @@ RteComponentInstance* RteProject::AddCprjComponent(RteItem* item, RteTarget* tar
   string rtePath = item->GetAttribute("rtedir");
   if (!rtePath.empty())
     ci->AddAttribute("rtedir", rtePath);
+  string genDir = item->GetAttribute("gendir");
+  if (!genDir.empty())
+    ci->AddAttribute("gendir", genDir);
   m_components[id] = ci;
   return ci;
 }
