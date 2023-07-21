@@ -1,0 +1,94 @@
+<mxfile host="Electron" modified="2023-07-20T15:42:13.646Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.1 Chrome/112.0.5615.204 Electron/24.6.1 Safari/537.36" etag="bpxbUEHNZqCfPsUAb9bH" version="21.6.1" type="device">
+  <diagram name="Page-1" id="lt_AyD8toXFIPzZnjtGi">
+    <mxGraphModel dx="1562" dy="917" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-55" value="&lt;b&gt;CMakeLists&lt;br&gt;Native Project&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="530" y="150" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-61" value="Use case:&lt;br&gt;add user&#39;s stand-alone&lt;br&gt;CMake based project" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="50" y="80" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-62" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="140" y="80" as="sourcePoint" />
+            <mxPoint x="210" y="79.66" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-68" value="&lt;b&gt;cbuild-idx.yml&lt;br&gt;cbuild.yml&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillStyle=solid;" parent="1" vertex="1">
+          <mxGeometry x="210" y="50" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-70" value="&lt;b&gt;&lt;font color=&quot;#ff3333&quot;&gt;CMakeLists&lt;br&gt;Generator Tool&lt;/font&gt;&lt;br&gt;&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="370" y="50" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-71" value="&lt;b style=&quot;border-color: var(--border-color);&quot;&gt;&lt;font color=&quot;#0000ff&quot;&gt;CMSIS&lt;br&gt;Build Plate&lt;br&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E0E5FF;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="580" width="100" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-72" value="&lt;b style=&quot;border-color: var(--border-color);&quot;&gt;&lt;font color=&quot;#0000ff&quot;&gt;Custom&lt;br&gt;Build Plate&lt;/font&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E0E5FF;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="550" y="200" width="95" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-73" value="&lt;font color=&quot;#009900&quot;&gt;&lt;b&gt;Solution&lt;br&gt;CMakeLists&lt;/b&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="535" y="50" width="125" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-75" value="&lt;b style=&quot;border-color: var(--border-color);&quot;&gt;&lt;font color=&quot;#ff3333&quot;&gt;Artifacts&lt;/font&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="700" y="110" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-76" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.493;entryY=0.04;entryDx=0;entryDy=0;strokeColor=#FF3333;entryPerimeter=0;" parent="1" target="Z-m9A5tDZ9pNQyHN4DDu-75" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="680" y="80" as="sourcePoint" />
+            <mxPoint x="540" y="210" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="730" y="80" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-79" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.243;entryY=0.001;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=#009900;dashed=1;" parent="1" source="Z-m9A5tDZ9pNQyHN4DDu-73" target="Z-m9A5tDZ9pNQyHN4DDu-55" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="550" y="120" as="sourcePoint" />
+            <mxPoint x="540" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-81" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="Z-m9A5tDZ9pNQyHN4DDu-68" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="480" y="130" as="sourcePoint" />
+            <mxPoint x="370" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-82" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="Z-m9A5tDZ9pNQyHN4DDu-73" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="510" y="79.86000000000001" as="sourcePoint" />
+            <mxPoint x="530" y="79.86000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z-m9A5tDZ9pNQyHN4DDu-86" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#FF3333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="Z-m9A5tDZ9pNQyHN4DDu-72" target="Z-m9A5tDZ9pNQyHN4DDu-75" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="90" as="sourcePoint" />
+            <mxPoint x="740" y="122" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="730" y="215" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H1yQ8RPIMEapRbpJHgw2-1" value="&lt;font color=&quot;#009900&quot;&gt;&lt;b&gt;Custom Solution CMakeLists Template&lt;/b&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;strokeColor=#82b366;fillColor=#d5e8d4;" vertex="1" parent="1">
+          <mxGeometry x="210" y="120" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H1yQ8RPIMEapRbpJHgw2-2" value="" style="endArrow=classic;html=1;rounded=0;entryX=-0.014;entryY=0.499;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=#009900;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="140" y="150" as="sourcePoint" />
+            <mxPoint x="210" y="149.67" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H1yQ8RPIMEapRbpJHgw2-3" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#009900;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="150" as="sourcePoint" />
+            <mxPoint x="440" y="110" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="440" y="150" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

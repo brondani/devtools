@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/main/tools/projmgr/schemas/cproject.schema.json
+
+project:
+  components:
+    - component: CORE
+    - component: Startup
+      for-context: .App
+      
+  groups:
+    - group: Libraries
+      files:
+        - file: $Compiler$/lib.c
+          add-path:
+            - ./$Compiler$
+      not-for-context: .App
+    - group: Application
+      files:
+        - file: main.c
+        - file: $lib(.AC6)$
+        - file: $lib(.GCC)$
+      for-context: .App
+
+  setups:
+    - setup: Libraries
+      output:
+        type: lib
+      not-for-context: .App
+    - setup: Application
+      output:
+        type: elf
+      for-context: .App
