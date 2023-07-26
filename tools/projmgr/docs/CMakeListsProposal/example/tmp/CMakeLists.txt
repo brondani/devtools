@@ -30,12 +30,6 @@ set(DIRS
   "project/ARMCM3/App"
 )
 
-set(TOOLCHAIN_ROOTS
-  "${AC6_TOOLCHAIN_6_19_0}"
-  "${GCC_TOOLCHAIN_12_2_1}"
-  "${AC6_TOOLCHAIN_6_19_0}"
-)
-
 set(CMAKE_TOOLCHAIN_FILES
   "${CMAKE_TOOLCHAIN_FILE_AC6}"
   "${CMAKE_TOOLCHAIN_FILE_GCC}"
@@ -118,9 +112,9 @@ add_custom_target(solution-prebuild ALL)
 add_custom_command(TARGET solution-prebuild PRE_BUILD
   COMMAND         echo "RUN solution prebuild step"
 )
-add_dependencies(project.AC6+ARMCM3-build solution-prebuild)
-add_dependencies(project.GCC+ARMCM3-build solution-prebuild)
-add_dependencies(project.App+ARMCM3-build solution-prebuild)
+add_dependencies(project.AC6+ARMCM3-prebuild solution-prebuild)
+add_dependencies(project.GCC+ARMCM3-prebuild solution-prebuild)
+add_dependencies(project.App+ARMCM3-prebuild solution-prebuild)
 
 # Solution post-build step
 add_custom_target(solution-postbuild ALL DEPENDS postbuild.stamp)

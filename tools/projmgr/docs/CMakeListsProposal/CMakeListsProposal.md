@@ -4,7 +4,7 @@ In csolution it is possible to describe several projects and build-types/target-
 
 - generating CMakeLists for inter-dependent multi-context solutions
 - handling multiple toolchains in the same solution
-- modular generation of CMake targets allowing its integration with other CMake based projects and/or build plates
+- modular generation of CMake targets allowing its integration with other CMake based projects and/or build plates (i.e. crossplatform toolchain specific handling)
 - integration of existing images (that are i.e. generated using CMake)​
 - pre/post-build steps
 
@@ -68,14 +68,51 @@ CMake targets describing components build information and user files build infor
 
 ## 7. Pre/post-build steps
 
-A build-run is inherently related to a context. In addition to solution level pre/post-build steps that run before/after all build-runs, individual context pre/post-build steps should be also accepted. Rather then placing `execute` nodes under `projects`, it sounds natural to specify them under the `context-set` node (TBD). 
+A build-run is inherently related to a context. In addition to solution level pre/post-build steps that run before/after all build-runs, individual context pre/post-build steps should be also accepted. Rather then placing `execute` nodes under `projects`, it sounds natural to specify them at solution or at context level. 
 Input and output files should be also considered for correctly triggering pre/post-build steps, unless they are intended for running always unconditionally. The `execute` node alongside a `file` has an obvious implicit output and can be omitted.
 
+`csolution.yml` example:
+``` yml
+solution:
+  executes:
+    - execute: Run solution prebuild
+      run: generate-keys.sh
+      always: true
+      output:
+        - generated/keys.h
+    
+    - execute: Run solution postbuild
+      run: zip-artifacts.sh
+      input:
+        - $elf(project.App+ARMCM3)$
+        - $lib(project.AC6+ARMCM3)$
+        - $lib(project.GCC+ARMCM3)$
+      output:
+        - archives/artifacts.zip
+```
+
+`cproject.yml` example:
+``` yml
+project:
+  executes:
+    - execute: Run context prebuild
+      run: generate-debug-src.sh
+      output:
+        - generated/Debug/$TargetType$.c
+      for-context: .Debug      
+    
+    - execute: Run context postbuild
+      run: sign-artifacts.sh
+      input:
+        - $lib()$
+      output:
+        - $OutDir()$/project.signed.lib
+```
 Examples of possible CMakeLists implementation:
-- [Example 1](example/tmp/CMakeLists.txt#L116): Solution level pre-build step, run always.
-- [Example 2](example/tmp/CMakeLists.txt#L126): Solution level post-build step, depends on all contexts build artifacts.
-- [Example 3](example/tmp/CMakeLists.txt#L96): Context level pre-build step, run always.
-- [Example 4](example/tmp/CMakeLists.txt#L101): Context level post-build step, depends on context build artifact.
+- [Example 1](example/tmp/CMakeLists.txt#L110): Solution level pre-build step, run always.
+- [Example 2](example/tmp/CMakeLists.txt#L119): Solution level post-build step, depends on all contexts build artifacts.
+- [Example 3](example/tmp/CMakeLists.txt#L90): Context level pre-build step, run always.
+- [Example 4](example/tmp/CMakeLists.txt#L95): Context level post-build step, depends on context build artifact.
 
 ## 8. CMake hooks - extra use cases
 
@@ -88,6 +125,19 @@ In the current proposal it can be added via custom templates or by extending the
 
 See [Using CMakeLists templates](#5-using-cmakelists-templates).
 
+`csolution.yml` example:
+``` yml
+solution:
+  projects:                                   
+    - project: ./CMakeGenericLibrary
+      cmake: generic # [standalone|generic]
+      input:
+        - $lib(AnotherLib)$
+      output:
+        - generic.lib
+      for-context: .Release
+```
+
 ### 8.2 Add stand-alone CMake based project
 
 Stand-alone CMake based projects are fully configured and don't need a build plate. Also in such cases it is possible to integrate it via custom templates or by extending the csolution specification.
@@ -96,9 +146,21 @@ Stand-alone CMake based projects are fully configured and don't need a build pla
 
 See [Using CMakeLists templates](#5-using-cmakelists-templates).
 
+`csolution.yml` example:
+``` yml
+solution:
+  projects:                                   
+    - project: ./CMakeStandaloneProject
+      cmake: standalone # [standalone|generic]
+      input:
+        - $OutDir(CMakeGenericLibrary.Release+ARMCM3)$/generic.lib
+      output:
+        - out/standalone.elf
+```
+
 ### 8.3 Add CMSIS components into stand-alone CMake based project
 
-In this use case CMSIS Components are integrated into existing stand-alone CMake base projects.
+In this use case CMSIS Components are integrated into existing stand-alone CMake based projects.
 The user's CMSIS components selection/configuration needs to be translated in csolution yml files that are then processed by the Project Manager, generating cbuild.yml files and finally the CMSIS generic build info is added to the stand-alone project.
 A proof-of-concept for such CMake Module has been developed:
 [CMSIS-Pack-Utils](https://github.com/brondani/cmsis-pack-utils). 
@@ -114,6 +176,7 @@ See [Generating decoupled CMSIS components build information](#6-generating-deco
 ## 10. Specification needs
 
 - The intermediate and output directory customization [`output-dirs`](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/blob/main/docs/YML-Input-Format.md#output-dirs) is targeted at context level. In particular the `intdir` would need to be amended: in the multi-context scenario a solution level intermediate directory is needed to store the top-level `CMakeLists.txt`.
+- Context inter-dependencies retrieved from context related [access sequences](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/blob/main/docs/YML-Input-Format.md#access-sequences) should be added to cbuild-idx.yml file. 
 - The `projects` references should accept external CMake based libraries and stand-alone projects.
 - The `execute` node should accept input and output files assignment.
 
