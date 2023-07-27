@@ -114,6 +114,10 @@ Examples of possible CMakeLists implementation:
 - [Example 3](example/tmp/CMakeLists.txt#L90): Context level pre-build step, run always.
 - [Example 4](example/tmp/CMakeLists.txt#L95): Context level post-build step, depends on context build artifact.
 
+If a special evaluation of the command's exit code is required as proposed in the [`execute` `stop`](https://github.com/ReinhardKeil/devtools/blob/main/tools/projmgr/docs/Manual/YML-Input-Format.md#execute) node, the CMake [`add_custom_command`](https://cmake.org/cmake/help/latest/command/add_custom_command.html) and the `COMMAND` option of [`ExternalProject_Add_Step`](https://cmake.org/cmake/help/latest/module/ExternalProject.html#command:externalproject_add_step) would not be suitable and the [`execute_process`](https://cmake.org/cmake/help/latest/command/execute_process.html) should be rather investigated.
+
+Another point to consider is handling a "pre-compile" step, i.e. a command to run before compiling any C/C++ source file (typically used for extensive syntax checkers such as MISRA tools).
+
 ## 8. CMake hooks - extra use cases
 
 ### 8.1 Add generic CMake based library

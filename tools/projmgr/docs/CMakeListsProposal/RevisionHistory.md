@@ -10,3 +10,6 @@
 - Added yml snippet examples for generic and stand-alone CMake based projects assignment
 - Added dependencies into specification needs
 - Updated CMakeLists example
+
+[0.9.2](https://github.com/brondani/devtools/blob/proposals/cmakelists/v0.9.2/tools/projmgr/docs/CMakeListsProposal/CMakeListsProposal.md)
+- Added considerations about `execute` `stop` node and "pre-compile" step.
