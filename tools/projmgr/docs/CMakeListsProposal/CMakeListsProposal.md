@@ -120,7 +120,7 @@ Another point to consider is handling a "pre-compile" step, i.e. a command to ru
 
 ## 8. CMake hooks - extra use cases
 
-### 8.1 Add generic CMake based library
+### 8.1. Add generic CMake based library
 
 A generic CMake based library does not bring a build plate, i.e. it does not have crossplatform settings for building it with any embedded toolchain in particular. It is expected to have a parent CMake project that configures the crossplatform environment.
 In the current proposal it can be added via custom templates or by extending the csolution specification to accept external projects.
@@ -142,7 +142,7 @@ solution:
       for-context: .Release
 ```
 
-### 8.2 Add stand-alone CMake based project
+### 8.2. Add stand-alone CMake based project
 
 Stand-alone CMake based projects are fully configured and don't need a build plate. Also in such cases it is possible to integrate it via custom templates or by extending the csolution specification.
 
@@ -162,7 +162,7 @@ solution:
         - out/standalone.elf
 ```
 
-### 8.3 Add CMSIS components into stand-alone CMake based project
+### 8.3. Add CMSIS components into stand-alone CMake based project
 
 In this use case CMSIS Components are integrated into existing stand-alone CMake based projects.
 The user's CMSIS components selection/configuration needs to be translated in csolution yml files that are then processed by the Project Manager, generating cbuild.yml files and finally the CMSIS generic build info is added to the stand-alone project.
@@ -187,3 +187,23 @@ See [Generating decoupled CMSIS components build information](#6-generating-deco
 ## 11. Test and development needs
 
 A test plan for the migration of integration test cases should be developed before the implementation of the new context-level CMakeLists, enabling its test-driven development.
+
+### 11.1. Executables
+
+The replacement for the `cbuildgen` executable could assume one of the following options:
+- Extend `csolution` to directly generate `CMakeLists.txt` files.
+  It simplifies intermediate processes but also lacks transparency between project and build management.
+- Create a new `cbuildgen` executable and extend the build orchestration by updating `cbuild` accordingly. The language for the new `cbuildgen` would be ideally chosen according to their advantages from our point of view:
+  - `C++`: The experience we have with `devtools` could be leveraged, even though there is no need for `RTE Model` libraries. It's used by CMake upstream.
+  - `golang`: The experience we have with `cbuild` and `cpackget` could be leveraged. It has good support for multiplatform releases, built-in test capabilities and short learning curve enabling more developers to actively contribute.
+
+### 11.2. Distributables
+
+The current `Build Manager` aka `CMSIS-Build` incorporates `cbuildgen`, `cpackget`, `csolution` and the front-end `cbuild`.
+Since now all the command line tools are distributed via `CMSIS-Toolbox`, the new `Build Manager` should contain only the new `cbuildgen` similarly to the `Project Manager` that brings only `csolution`.
+
+Unit and integration tests should be separately structured allowing faster test cycles when developing tools individually.
+
+### 11.3. Repositories and branches
+
+Considering the preferred development direction could be to implement the new `cbuildgen` tool in golang and to extend `cbuild`, creating a new repository for `cbuildgen` and branches for `cbuild`  and `cmsis-toolbox` would be recommended to keep the main product code untouched by the parallel development.  

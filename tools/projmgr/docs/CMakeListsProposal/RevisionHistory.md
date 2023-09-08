@@ -13,3 +13,6 @@
 
 [0.9.2](https://github.com/brondani/devtools/blob/proposals/cmakelists/v0.9.2/tools/projmgr/docs/CMakeListsProposal/CMakeListsProposal.md)
 - Added considerations about `execute` `stop` node and "pre-compile" step.
+
+[0.9.3](https://github.com/brondani/devtools/blob/proposals/cmakelists/v0.9.3/tools/projmgr/docs/CMakeListsProposal/CMakeListsProposal.md)
+- Added sub-sections under test and development needs
