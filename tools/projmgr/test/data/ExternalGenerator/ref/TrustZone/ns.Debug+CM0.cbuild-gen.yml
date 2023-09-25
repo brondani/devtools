@@ -1,0 +1,39 @@
+build-gen:
+  generated-by: csolution version 0.0.0+gf14e09a4
+  solution: ../../extgen.csolution.yml
+  project: ../../tz_ns/ns.cproject.yml
+  context: ns.Debug+CM0
+  compiler: AC6
+  device: RteTestGen_ARMCM0
+  processor:
+    trustzone: non-secure
+  packs:
+    - pack: ARM::RteTestGenerator@0.1.0
+      path: ${CMSIS_PACK_ROOT}/ARM/RteTestGenerator/0.1.0
+  define:
+    - _RTE_
+  add-path:
+    - ../../tz_ns/RTE/_Debug_CM0
+  output-dirs:
+    intdir: ../tmp/ns/CM0/Debug
+    outdir: ../out/ns/CM0/Debug
+    rtedir: RTE
+  output:
+    - type: elf
+      file: ns.axf
+  components:
+    - component: ARM::RteTestGenerator:Check Global Generator@0.9.0
+      from-pack: ARM::RteTestGenerator@0.1.0
+      selected-by: RteTestGenerator:Check Global Generator
+  linker:
+    script: ${CMSIS_COMPILER_ROOT}/ac6_linker_script.sct
+    regions: ../../tz_ns/RTE/Device/RteTestGen_ARMCM0/regions_RteTestGen_ARMCM0.h
+  constructed-files:
+    - file: ../../tz_ns/RTE/_Debug_CM0/RTE_Components.h
+      category: header
+  licenses:
+    - license: <unknown>
+      packs:
+        - pack: ARM::RteTestGenerator@0.1.0
+      components:
+        - component: ARM::RteTestGenerator:Check Global Generator@0.9.0

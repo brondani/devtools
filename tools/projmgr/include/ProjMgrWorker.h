@@ -7,6 +7,7 @@
 #ifndef PROJMGRWORKER_H
 #define PROJMGRWORKER_H
 
+#include "ProjMgrExtGenerator.h"
 #include "ProjMgrKernel.h"
 #include "ProjMgrParser.h"
 #include "ProjMgrUtils.h"
@@ -252,6 +253,7 @@ struct ContextTypesItem {
  *        output type,
  *        device selection,
  *        board selection,
+ *        device item struct,
  *        list of package requirements,
  *        map of required pdsc files and optionally its local path
  *        list of component requirements,
@@ -269,6 +271,7 @@ struct ContextTypesItem {
  *        valid connections,
  *        linker options,
  *        map of variables,
+ *        external generator directory,
  *        boolean processed precedences
 */
 struct ContextItem {
@@ -289,6 +292,7 @@ struct ContextItem {
   OutputTypes outputTypes;
   std::string device;
   std::string board;
+  DeviceItem deviceItem;
   std::vector<PackageItem> packRequirements;
   std::map<std::string, std::pair<std::string, std::string>> pdscFiles;
   std::vector<PackInfo>missingPacks;
@@ -310,6 +314,7 @@ struct ContextItem {
   std::vector<ConnectionsCollectionVec> validConnections;
   LinkerContextItem linker;
   std::map<std::string, std::string> variables;
+  StrMap extGenDir;
   bool precedences;
 };
 
@@ -362,7 +367,7 @@ public:
   /**
    * @brief class constructor
   */
-  ProjMgrWorker(void);
+  ProjMgrWorker(ProjMgrParser* parser, ProjMgrExtGenerator* extGenerator);
 
   /**
    * @brief class destructor
@@ -370,20 +375,14 @@ public:
   ~ProjMgrWorker(void);
 
   /**
-   * @brief set parser
-   * @param pointer to parser
-  */
-  void SetParser(ProjMgrParser* parser);
-
-  /**
    * @brief process context
    * @param reference to context
-   * @param loadGpdsc boolean automatically load gpdsc, default true
+   * @param loadGenFiles boolean automatically load generated files, default true
    * @param resolveDependencies boolean automatically resolve dependencies, default true
    * @param updateRteFiles boolean update RTE files, default true
    * @return true if executed successfully
   */
-  bool ProcessContext(ContextItem& context, bool loadGpdsc = true, bool resolveDependencies = true, bool updateRteFiles = true);
+  bool ProcessContext(ContextItem& context, bool loadGenFiles = true, bool resolveDependencies = true, bool updateRteFiles = true);
 
   /**
    * @brief list available packs
@@ -554,6 +553,8 @@ public:
   */
   bool ExecuteGenerator(std::string& generatorId);
 
+  bool ExecuteExtGenerator(std::string& generatorId);
+
   /**
    * @brief initialize model
    * @return true if executed successfully
@@ -605,10 +606,14 @@ public:
   */
   void PrintMissingFilters(void);
 
+  bool ProcessGlobalGenerators(ContextItem* selectedContext, const std::string& generatorId,
+    std::string& projectType, StrVec& siblings);
+
 protected:
   ProjMgrParser* m_parser = nullptr;
   ProjMgrKernel* m_kernel = nullptr;
   RteGlobalModel* m_model = nullptr;
+  ProjMgrExtGenerator* m_extGenerator = nullptr;
   std::list<RtePackage*> m_loadedPacks;
   std::vector<ToolchainItem> m_toolchains;
   StrVec m_toolchainConfigFiles;
@@ -640,7 +645,7 @@ protected:
   bool GetProjectSetup(ContextItem& context);
   bool InitializeTarget(ContextItem& context);
   bool SetTargetAttributes(ContextItem& context, std::map<std::string, std::string>& attributes);
-  bool ProcessPrecedences(ContextItem& context);
+  bool ProcessPrecedences(ContextItem& context, bool rerun = false);
   bool ProcessPrecedence(StringCollection& item);
   bool ProcessCompilerPrecedence(StringCollection& item, bool acceptRedefinition = false);
   bool ProcessDevice(ContextItem& context);
@@ -722,10 +727,13 @@ protected:
   void UpdatePartialReferencedContext(ContextItem& context, std::string& contextName);
   void ExpandAccessSequence(const ContextItem& context, const ContextItem& refContext, const std::string& sequence, std::string& item, bool withHeadingDot);
   bool GetGeneratorDir(const RteGenerator* generator, ContextItem& context, const std::string& layer, std::string& genDir);
+  bool GetGeneratorDir(const std::string& generatorId, ContextItem& context, const std::string& layer, std::string& genDir);
+  bool GetExtGeneratorDir(const std::string& generatorId, ContextItem& context, const std::string& layer, std::string& genDir);
   bool ParseContextLayers(ContextItem& context);
   bool AddPackRequirements(ContextItem& context, const std::vector<PackItem> packRequirements);
   void CheckTypeFilterSpelling(const TypeFilter& typeFilter);
   void CheckCompilerFilterSpelling(const std::string& compiler);
+  bool ProcessGeneratedLayers(ContextItem& context);
 };
 
 #endif  // PROJMGRWORKER_H

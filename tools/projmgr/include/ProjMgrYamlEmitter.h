@@ -33,12 +33,17 @@ public:
   */
   static bool GenerateCbuildIndex(ProjMgrParser& parser, const std::vector<ContextItem*> contexts, const std::string& outputDir);
 
+  static bool GenerateCbuildGenIndex(ProjMgrParser& parser, const std::vector<ContextItem*> siblings,
+    const std::string& type, const std::string& outputDir);
+
   /**
    * @brief generate cbuild.yml file
    * @param context pointer to the context
    * @return true if executed successfully
   */
   static bool GenerateCbuild(ContextItem* context);
+
+  static bool GenerateCbuildGen(ContextItem* context, const std::string& output);
 };
 
 #endif  // PROJMGRYAMLEMITTER_H

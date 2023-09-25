@@ -17,7 +17,7 @@ using namespace std;
 
 class ProjMgrWorkerUnitTests : public ProjMgrWorker, public ::testing::Test {
 protected:
-  ProjMgrWorkerUnitTests() {}
+  ProjMgrWorkerUnitTests() : ProjMgrWorker(nullptr, nullptr) {}
   virtual ~ProjMgrWorkerUnitTests() {}
 
   void SetCsolutionPacks(CsolutionItem* csolution, std::vector<std::string> packs, std::string targetType);

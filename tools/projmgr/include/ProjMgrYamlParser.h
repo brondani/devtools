@@ -21,11 +21,15 @@ static constexpr const char* YAML_BASE_DIR = "base-dir";
 static constexpr const char* YAML_BASE_NAME = "base-name";
 static constexpr const char* YAML_BOARD = "board";
 static constexpr const char* YAML_BUILD = "build";
+static constexpr const char* YAML_BUILD_GEN = "build-gen";
 static constexpr const char* YAML_BUILD_IDX = "build-idx";
+static constexpr const char* YAML_BUILD_GEN_IDX = "build-gen-idx";
 static constexpr const char* YAML_BUILDTYPES = "build-types";
 static constexpr const char* YAML_CATEGORY = "category";
 static constexpr const char* YAML_CBUILDS = "cbuilds";
 static constexpr const char* YAML_CBUILD = "cbuild";
+static constexpr const char* YAML_CBUILD_GENS = "cbuild-gens";
+static constexpr const char* YAML_CBUILD_GEN = "cbuild-gen";
 static constexpr const char* YAML_CDEFAULT = "cdefault";
 static constexpr const char* YAML_CLAYERS = "clayers";
 static constexpr const char* YAML_CLAYER = "clayer";
@@ -53,6 +57,7 @@ static constexpr const char* YAML_DEFINE = "define";
 static constexpr const char* YAML_DELPATH = "del-path";
 static constexpr const char* YAML_DESCRIPTION = "description";
 static constexpr const char* YAML_DEVICE = "device";
+static constexpr const char* YAML_DOWNLOAD_URL = "download-url";
 static constexpr const char* YAML_ENDIAN = "endian";
 static constexpr const char* YAML_FILE = "file";
 static constexpr const char* YAML_FILES = "files";
@@ -61,6 +66,7 @@ static constexpr const char* YAML_FORBOARD = "for-board";
 static constexpr const char* YAML_FORCOMPILER = "for-compiler";
 static constexpr const char* YAML_FORCONTEXT = "for-context";
 static constexpr const char* YAML_FORDEVICE = "for-device";
+static constexpr const char* YAML_FORPROJECTPART = "for-project-part";
 static constexpr const char* YAML_FPU = "fpu";
 static constexpr const char* YAML_GENERATED_BY = "generated-by";
 static constexpr const char* YAML_GENERATOR = "generator";
@@ -106,9 +112,11 @@ static constexpr const char* YAML_PATH = "path";
 static constexpr const char* YAML_PROCESSOR = "processor";
 static constexpr const char* YAML_PROJECT = "project";
 static constexpr const char* YAML_PROJECTS = "projects";
+static constexpr const char* YAML_PROJECT_TYPE = "project-type";
 static constexpr const char* YAML_PROVIDES = "provides";
 static constexpr const char* YAML_REGIONS = "regions";
 static constexpr const char* YAML_RTE = "rte";
+static constexpr const char* YAML_RUN = "run";
 static constexpr const char* YAML_SCOPE = "scope";
 static constexpr const char* YAML_SCRIPT = "script";
 static constexpr const char* YAML_SOLUTION = "solution";
@@ -116,6 +124,7 @@ static constexpr const char* YAML_SELECTED_BY = "selected-by";
 static constexpr const char* YAML_SETUPS = "setups";
 static constexpr const char* YAML_SETUP = "setup";
 static constexpr const char* YAML_SET = "set";
+static constexpr const char* YAML_SUB_DIR = "sub-dir";
 static constexpr const char* YAML_SWITCH = "switch";
 static constexpr const char* YAML_TARGETTYPES = "target-types";
 static constexpr const char* YAML_TRUSTZONE = "trustzone";
@@ -176,6 +185,15 @@ public:
   */
   bool ParseClayer(const std::string& input, std::map<std::string,
     ClayerItem>& clayers, bool checkSchema);
+
+  /**
+   * @brief parse global generator
+   * @param input generator.yml file
+   * @param reference to store parsed generator item
+   * @param checkSchema false to skip schema validation
+  */
+  bool ParseGlobalGenerator(const std::string& input,
+    std::map<std::string, GlobalGeneratorItem>& generators, bool checkSchema);
 
 protected:
   void ParseMisc(const YAML::Node& parent, std::vector<MiscItem>& misc);

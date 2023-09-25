@@ -140,12 +140,14 @@ struct TargetType {
  * @brief directories item containing
  *        intdir directory,
  *        outdir directory,
+ *        cbuild directory,
  *        cprj directory,
  *        rte directory,
 */
 struct DirectoriesItem {
   std::string intdir;
   std::string outdir;
+  std::string cbuild;
   std::string cprj;
   std::string rte;
 };
@@ -403,6 +405,20 @@ struct ClayerItem {
 };
 
 /**
+ * @brief global generator item containing
+ *        generator id,
+ *        download url,
+ *        bridge program,
+ *        output
+*/
+struct GlobalGeneratorItem {
+  std::string id;
+  std::string downloadUrl;
+  std::string run;
+  std::string output;
+};
+
+/**
  * @brief projmgr parser class for public interfacing
 */
 class ProjMgrParser {
@@ -449,6 +465,12 @@ public:
   bool ParseGenericClayer(const std::string& input, bool checkSchema);
 
   /**
+   * @brief parse global generator
+   * @param input generator.yml file
+  */
+  bool ParseGlobalGenerator(const std::string& input, bool checkSchema);
+
+  /**
    * @brief get cdefault
    * @return cdefault item
   */
@@ -478,12 +500,19 @@ public:
   */
   std::map<std::string, ClayerItem>& GetGenericClayers(void);
 
+  /**
+   * @brief get global generators
+   * @return global generators map
+  */
+  std::map<std::string, GlobalGeneratorItem>& GetGlobalGenerators(void);
+
 protected:
   CdefaultItem m_cdefault;
   CsolutionItem m_csolution;
   std::map<std::string, CprojectItem> m_cprojects;
   std::map<std::string, ClayerItem> m_clayers;
   std::map<std::string, ClayerItem> m_genericClayers;
+  std::map<std::string, GlobalGeneratorItem> m_globalGenerators;
 };
 
 #endif  // PROJMGRPARSER_H

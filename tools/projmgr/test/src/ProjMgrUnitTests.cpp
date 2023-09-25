@@ -3851,3 +3851,64 @@ warning csolution: compiler 'Ac6' is not supported\n\
   auto errStr = streamRedirect.GetErrorString();
   EXPECT_TRUE(errStr.find(expected) != string::npos);
 }
+
+TEST_F(ProjMgrUnitTests, ExternalGenerator) {
+  const string& srcGlobalGenerator = testinput_folder + "/ExternalGenerator/global.generator.yml";
+  const string& dstGlobalGenerator = testcmsiscompiler_folder + "/global.generator.yml";
+  RteFsUtils::CopyCheckFile(srcGlobalGenerator, dstGlobalGenerator, false);
+  
+  const string& srcBridgeTool = testinput_folder + "/ExternalGenerator/bridge.sh";
+  const string& dstBridgeTool = testcmsiscompiler_folder + "/bridge.sh";
+  RteFsUtils::CopyCheckFile(srcBridgeTool, dstBridgeTool, false);
+  
+  char* argv[7];
+  const string& csolution = testinput_folder + "/ExternalGenerator/extgen.csolution.yml";
+  argv[1] = (char*)csolution.c_str();
+  argv[2] = (char*)"list";
+  argv[3] = (char*)"generators";
+  EXPECT_EQ(0, RunProjMgr(4, argv, 0));
+  
+  argv[1] = (char*)csolution.c_str();
+  argv[2] = (char*)"run";
+  argv[3] = (char*)"-g";
+  argv[4] = (char*)"RteTestExternalGenerator";
+  argv[5] = (char*)"-c";
+  argv[6] = (char*)"core0.Debug+MultiCore";
+  EXPECT_EQ(0, RunProjMgr(7, argv, 0));
+
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/MultiCore/extgen.cbuild-gen-idx.yml",
+    testinput_folder + "/ExternalGenerator/ref/MultiCore/extgen.cbuild-gen-idx.yml");
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/MultiCore/core0.Debug+MultiCore.cbuild-gen.yml",
+    testinput_folder + "/ExternalGenerator/ref/MultiCore/core0.Debug+MultiCore.cbuild-gen.yml");
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/MultiCore/core1.Debug+MultiCore.cbuild-gen.yml",
+    testinput_folder + "/ExternalGenerator/ref/MultiCore/core1.Debug+MultiCore.cbuild-gen.yml");
+
+  argv[6] = (char*)"single-core.Debug+CM0";
+  EXPECT_EQ(0, RunProjMgr(7, argv, 0));
+
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/single/generated/extgen.cbuild-gen-idx.yml",
+    testinput_folder + "/ExternalGenerator/ref/SingleCore/extgen.cbuild-gen-idx.yml");
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/single/generated/single-core.Debug+CM0.cbuild-gen.yml",
+    testinput_folder + "/ExternalGenerator/ref/SingleCore/single-core.Debug+CM0.cbuild-gen.yml");
+
+  argv[6] = (char*)"ns.Debug+CM0";
+  EXPECT_EQ(0, RunProjMgr(7, argv, 0));
+
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/CM0/extgen.cbuild-gen-idx.yml",
+    testinput_folder + "/ExternalGenerator/ref/TrustZone/extgen.cbuild-gen-idx.yml");
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/CM0/ns.Debug+CM0.cbuild-gen.yml",
+    testinput_folder + "/ExternalGenerator/ref/TrustZone/ns.Debug+CM0.cbuild-gen.yml");
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/CM0/s.Debug+CM0.cbuild-gen.yml",
+    testinput_folder + "/ExternalGenerator/ref/TrustZone/s.Debug+CM0.cbuild-gen.yml");
+
+  argv[2] = (char*)"convert";
+  argv[3] = (char*)"-c";
+  argv[4] = (char*)"single-core.Debug+CM0";
+  EXPECT_EQ(0, RunProjMgr(5, argv, 0));
+
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/single/single-core.Debug+CM0.cbuild.yml",
+    testinput_folder + "/ExternalGenerator/ref/SingleCore/single-core.Debug+CM0.cbuild.yml");
+
+  RteFsUtils::RemoveFile(dstGlobalGenerator);
+  RteFsUtils::RemoveFile(dstBridgeTool);
+}
