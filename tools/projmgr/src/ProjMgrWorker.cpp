@@ -285,7 +285,6 @@ bool ProjMgrWorker::GetRequiredPdscFiles(ContextItem& context, const std::string
           + "' specified with 'path' must not have a version");
       }
       string packPath = packItem.path;
-      RteFsUtils::NormalizePath(packPath, context.csolution->directory + "/");
       if (!RteFsUtils::Exists(packPath)) {
         errMsgs.insert("pack path: " + packItem.path + " does not exist");
         break;
@@ -625,7 +624,7 @@ bool ProjMgrWorker::ProcessCandidateLayers(ContextItem& context, LayersDiscoveri
     for (const auto& clayer : clayers) {
       const ClayerItem& clayerItem = m_parser->GetGenericClayers()[clayer];
       if (!clayerItem.forBoard.empty() || !clayerItem.forDevice.empty()) {
-        packRequirements.insert(packRequirements.end(), clayerItem.packs.begin(), clayerItem.packs.end());
+        InsertPackRequirements(clayerItem.packs, packRequirements, clayerItem.directory);
       }
     }
   }
@@ -1259,6 +1258,8 @@ bool ProjMgrWorker::ProcessDevice(ContextItem& context) {
 
   context.packages.insert({ matchedDevice->GetPackageID(true), matchedDevice->GetPackage() });
   GetDeviceItem(context.device, context.deviceItem);
+  context.variables[ProjMgrUtils::AS_DNAME] = context.deviceItem.name;
+  context.variables[ProjMgrUtils::AS_PNAME] = context.deviceItem.pname;
   return true;
 }
 
@@ -1301,18 +1302,27 @@ bool ProjMgrWorker::ProcessPackages(ContextItem& context) {
 
   // Solution package requirements
   if (context.csolution) {
-    packRequirements.insert(packRequirements.end(), context.csolution->packs.begin(), context.csolution->packs.end());
+    InsertPackRequirements(context.csolution->packs, packRequirements, context.csolution->directory);
   }
   // Project package requirements
   if (context.cproject) {
-    packRequirements.insert(packRequirements.end(), context.cproject->packs.begin(), context.cproject->packs.end());
+    InsertPackRequirements(context.cproject->packs, packRequirements, context.cproject->directory);
   }
   // Layers package requirements
   for (const auto& [_, clayer] : context.clayers) {
-    packRequirements.insert(packRequirements.end(), clayer->packs.begin(), clayer->packs.end());
+    InsertPackRequirements(clayer->packs, packRequirements, clayer->directory);
   }
   AddPackRequirements(context, packRequirements);
   return true;
+}
+
+void ProjMgrWorker::InsertPackRequirements(const vector<PackItem>& src, vector<PackItem>& dst, string base) {
+  for (auto item : src) {
+    if (!item.path.empty()) {
+      RteFsUtils::NormalizePath(item.path, base);
+    }
+    dst.push_back(item);
+  }
 }
 
 bool ProjMgrWorker::AddPackRequirements(ContextItem& context, const vector<PackItem> packRequirements) {
@@ -2068,7 +2078,7 @@ bool ProjMgrWorker::ProcessPrecedences(ContextItem& context, bool rerun) {
   // after board, device and compiler precedences (due to $Bname$, $Dname$ and $Compiler$)
   // after output filenames (due to $Output$)
   // but before processing misc, defines and includes precedences
-  if (!ProcessSequencesRelatives(context)) {
+  if (!ProcessSequencesRelatives(context, rerun)) {
     return false;
   }
 
@@ -2377,16 +2387,16 @@ bool ProjMgrWorker::ProcessLinkerOptions(ContextItem& context, const LinkerItem&
   return true;
 }
 
-
-bool ProjMgrWorker::ProcessSequencesRelatives(ContextItem& context) {
-
-  // directories
-  const string ref = m_outputDir.empty() ? context.csolution->directory : RteFsUtils::AbsolutePath(m_outputDir).generic_string();
-  if (!ProcessSequenceRelative(context, context.directories.cprj) ||
+bool ProjMgrWorker::ProcessSequencesRelatives(ContextItem & context, bool rerun) {
+  if (!rerun) {
+    // directories
+    const string ref = m_outputDir.empty() ? context.csolution->directory : RteFsUtils::AbsolutePath(m_outputDir).generic_string();
+    if (!ProcessSequenceRelative(context, context.directories.cprj) ||
       !ProcessSequenceRelative(context, context.directories.rte, context.cproject->directory) ||
       !ProcessSequenceRelative(context, context.directories.outdir, ref) ||
       !ProcessSequenceRelative(context, context.directories.intdir, ref)) {
-    return false;
+      return false;
+    }
   }
 
   // project, solution, target-type and build-type translation controls
@@ -2510,6 +2520,9 @@ bool ProjMgrWorker::ProcessSequenceRelative(ContextItem& context, string& item, 
           auto& refContext = m_contexts.at(contextName);
           // process referenced context precedences if needed
           if (!refContext.precedences) {
+            if (!ParseContextLayers(refContext)) {
+              return false;
+            }
             if (!ProcessPrecedences(refContext)) {
               return false;
             }
@@ -3985,6 +3998,9 @@ bool ProjMgrWorker::ProcessGlobalGenerators(ContextItem* selectedContext, const 
       (context.type.target != selectedContext->type.target)) {
       continue;
     }
+    if (!ParseContextLayers(context)) {
+      return false;
+    }
     if (!ProcessContext(context, false, true, false)) {
       return false;
     }
@@ -4015,7 +4031,7 @@ bool ProjMgrWorker::ProcessGlobalGenerators(ContextItem* selectedContext, const 
           type = TYPE_MULTI_CORE;
         } else {
           const auto& trustzone = m_contexts[context].controls.processed.processor.trustzone;
-          type = trustzone.empty() ? TYPE_SINGLE_CORE : TYPE_TRUSTZONE;
+          type = (trustzone.empty() || trustzone == "off") ? TYPE_SINGLE_CORE : TYPE_TRUSTZONE;
         }
         projectTypeMap[type].push_back(context);
       }
@@ -4052,11 +4068,13 @@ bool ProjMgrWorker::ExecuteExtGenerator(std::string& generatorId) {
   }
 
   // Generate cbuild-gen files
-  if (!ProjMgrYamlEmitter::GenerateCbuildGenIndex(*m_parser, siblingContexts, projectType, genDir)) {
+  string cbuildgenOutput = selectedContext->directories.intdir;
+  RteFsUtils::NormalizePath(cbuildgenOutput, selectedContext->directories.cprj);
+  if (!ProjMgrYamlEmitter::GenerateCbuildGenIndex(*m_parser, siblingContexts, projectType, cbuildgenOutput, genDir)) {
     return false;
   }
   for (const auto& siblingContext : siblingContexts) {
-    if (!ProjMgrYamlEmitter::GenerateCbuildGen(siblingContext, genDir)) {
+    if (!ProjMgrYamlEmitter::GenerateCbuildGen(siblingContext, cbuildgenOutput)) {
       return false;
     }
   }
@@ -4064,7 +4082,7 @@ bool ProjMgrWorker::ExecuteExtGenerator(std::string& generatorId) {
   // Execute generator command
   string runCmd = m_extGenerator->GetGlobalGenRunCmd(generatorId);
   RteFsUtils::NormalizePath(runCmd, m_compilerRoot);
-  runCmd += " " + m_parser->GetCsolution().name + ".cbuild-gen-idx.yml";
+  runCmd += " " + fs::path(cbuildgenOutput).append(m_parser->GetCsolution().name + ".cbuild-gen-idx.yml").generic_string();
   error_code ec;
   const auto& workingDir = fs::current_path(ec);
   fs::current_path(genDir, ec);
@@ -4083,7 +4101,9 @@ bool ProjMgrWorker::ProcessGeneratedLayers(ContextItem& context) {
   if (m_extGenerator->GetCgen(context.name, cgen)) {
     context.clayers[cgen.path] = &cgen;
     if (cgen.packs.size() > 0) {
-      AddPackRequirements(context, cgen.packs);
+      vector<PackItem> packRequirements;
+      InsertPackRequirements(cgen.packs, packRequirements, cgen.directory);
+      AddPackRequirements(context, packRequirements);
       if (!LoadAllRelevantPacks() || !LoadPacks(context)) {
         return false;
       }

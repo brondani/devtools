@@ -2470,7 +2470,7 @@ TEST_F(ProjMgrUnitTests, RunProjMgrSolution_Local_Multiple_Pack_Files) {
 TEST_F(ProjMgrUnitTests, RunProjMgrSolution_Local_Pack_Path_Not_Found) {
   char* argv[7];
   StdStreamRedirect streamRedirect;
-  const string errExpected = "pack path: ./SolutionSpecificPack/ARM does not exist";
+  const string errExpected = "/SolutionSpecificPack/ARM does not exist";
   const string& csolution = testinput_folder + "/TestSolution/test_local_pack_path_not_found.csolution.yml";
 
   // convert --solution solution.yml
@@ -2488,7 +2488,7 @@ TEST_F(ProjMgrUnitTests, RunProjMgrSolution_Local_Pack_Path_Not_Found) {
 TEST_F(ProjMgrUnitTests, RunProjMgrSolution_Local_Pack_File_Not_Found) {
   char* argv[7];
   StdStreamRedirect streamRedirect;
-  const string errExpected = "pdsc file was not found in: ../SolutionSpecificPack/Device";
+  const string errExpected = "pdsc file was not found in: .*/SolutionSpecificPack/Device";
   const string& csolution = testinput_folder + "/TestSolution/test_local_pack_file_not_found.csolution.yml";
 
   // convert --solution solution.yml
@@ -2500,7 +2500,7 @@ TEST_F(ProjMgrUnitTests, RunProjMgrSolution_Local_Pack_File_Not_Found) {
   EXPECT_EQ(1, RunProjMgr(6, argv, 0));
 
   auto errStr = streamRedirect.GetErrorString();
-  EXPECT_NE(string::npos, errStr.find(errExpected));
+  EXPECT_TRUE(regex_search(errStr, regex(errExpected)));
 }
 
 TEST_F(ProjMgrUnitTests, RunProjMgrSolution_List_Board_Pack) {
@@ -3876,29 +3876,29 @@ TEST_F(ProjMgrUnitTests, ExternalGenerator) {
   argv[6] = (char*)"core0.Debug+MultiCore";
   EXPECT_EQ(0, RunProjMgr(7, argv, 0));
 
-  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/MultiCore/extgen.cbuild-gen-idx.yml",
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/tmp/core0/MultiCore/Debug/extgen.cbuild-gen-idx.yml",
     testinput_folder + "/ExternalGenerator/ref/MultiCore/extgen.cbuild-gen-idx.yml");
-  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/MultiCore/core0.Debug+MultiCore.cbuild-gen.yml",
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/tmp/core0/MultiCore/Debug/core0.Debug+MultiCore.cbuild-gen.yml",
     testinput_folder + "/ExternalGenerator/ref/MultiCore/core0.Debug+MultiCore.cbuild-gen.yml");
-  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/MultiCore/core1.Debug+MultiCore.cbuild-gen.yml",
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/tmp/core0/MultiCore/Debug/core1.Debug+MultiCore.cbuild-gen.yml",
     testinput_folder + "/ExternalGenerator/ref/MultiCore/core1.Debug+MultiCore.cbuild-gen.yml");
 
   argv[6] = (char*)"single-core.Debug+CM0";
   EXPECT_EQ(0, RunProjMgr(7, argv, 0));
 
-  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/single/generated/extgen.cbuild-gen-idx.yml",
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/tmp/single-core/CM0/Debug/extgen.cbuild-gen-idx.yml",
     testinput_folder + "/ExternalGenerator/ref/SingleCore/extgen.cbuild-gen-idx.yml");
-  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/single/generated/single-core.Debug+CM0.cbuild-gen.yml",
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/tmp/single-core/CM0/Debug/single-core.Debug+CM0.cbuild-gen.yml",
     testinput_folder + "/ExternalGenerator/ref/SingleCore/single-core.Debug+CM0.cbuild-gen.yml");
 
   argv[6] = (char*)"ns.Debug+CM0";
   EXPECT_EQ(0, RunProjMgr(7, argv, 0));
 
-  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/CM0/extgen.cbuild-gen-idx.yml",
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/tmp/ns/CM0/Debug/extgen.cbuild-gen-idx.yml",
     testinput_folder + "/ExternalGenerator/ref/TrustZone/extgen.cbuild-gen-idx.yml");
-  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/CM0/ns.Debug+CM0.cbuild-gen.yml",
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/tmp/ns/CM0/Debug/ns.Debug+CM0.cbuild-gen.yml",
     testinput_folder + "/ExternalGenerator/ref/TrustZone/ns.Debug+CM0.cbuild-gen.yml");
-  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/generated/CM0/s.Debug+CM0.cbuild-gen.yml",
+  ProjMgrTestEnv::CompareFile(testinput_folder + "/ExternalGenerator/tmp/ns/CM0/Debug/s.Debug+CM0.cbuild-gen.yml",
     testinput_folder + "/ExternalGenerator/ref/TrustZone/s.Debug+CM0.cbuild-gen.yml");
 
   argv[2] = (char*)"convert";

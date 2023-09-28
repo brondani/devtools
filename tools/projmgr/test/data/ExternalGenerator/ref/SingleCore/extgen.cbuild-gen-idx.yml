@@ -2,6 +2,7 @@ build-gen-idx:
   generated-by: csolution version 0.0.0+gf14e09a4
   generators:
     - id: RteTestExternalGenerator
+      output: ../../../../single/generated
       device: RteTestGen_ARMCM0
       project-type: single-core
       cbuild-gens:

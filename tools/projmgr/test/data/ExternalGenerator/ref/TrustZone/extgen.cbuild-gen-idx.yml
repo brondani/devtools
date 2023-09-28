@@ -2,6 +2,7 @@ build-gen-idx:
   generated-by: csolution version 0.0.0+gf14e09a4
   generators:
     - id: RteTestExternalGenerator
+      output: ../../../../generated/CM0
       device: RteTestGen_ARMCM0
       project-type: trustzone
       cbuild-gens:

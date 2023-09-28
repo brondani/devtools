@@ -34,7 +34,7 @@ public:
   static bool GenerateCbuildIndex(ProjMgrParser& parser, const std::vector<ContextItem*> contexts, const std::string& outputDir);
 
   static bool GenerateCbuildGenIndex(ProjMgrParser& parser, const std::vector<ContextItem*> siblings,
-    const std::string& type, const std::string& outputDir);
+    const std::string& type, const std::string& output, const std::string& gendir);
 
   /**
    * @brief generate cbuild.yml file

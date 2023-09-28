@@ -71,7 +71,7 @@ curl --retry 3 -L ${cpackget_base}_windows_arm64.zip   -o temp.zip && unzip -p t
 curl --retry 3 -L ${cpackget_base}_darwin_arm64.tar.gz -o - | tar xzfO - --wildcards    '*cpackget'     > ${distdir}/bin/cpackget.mac-arm64
 
 # Get csolution
-csolution_version="2.2.0-extgen0"
+csolution_version="2.2.0-extgen1"
 csolution_base=https://github.com/brondani/devtools/releases/download/tools%2Fprojmgr%2F${csolution_version}/projmgr.zip
 curl --retry 3 -L ${csolution_base} -o temp.zip && unzip -q -d temp temp.zip
 cp 'temp/bin/linux-amd64/csolution' ${distdir}/bin/csolution.lin-amd64

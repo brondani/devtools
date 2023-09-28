@@ -1,7 +1,7 @@
 build-gen:
-  generated-by: csolution version 0.0.0+gf14e09a4
-  solution: ../../extgen.csolution.yml
-  project: ../../tz_s/s.cproject.yml
+  generated-by: csolution version 0.0.0+g8b0e14a8
+  solution: ../../../../extgen.csolution.yml
+  project: ../../../../tz_s/s.cproject.yml
   context: s.Debug+CM0
   compiler: AC6
   device: RteTestGen_ARMCM0
@@ -13,7 +13,7 @@ build-gen:
   define:
     - _RTE_
   add-path:
-    - ../../tz_s/RTE/_Debug_CM0
+    - ../../../../tz_s/RTE/_Debug_CM0
   output-dirs:
     intdir: ../tmp/s/CM0/Debug
     outdir: ../out/s/CM0/Debug
@@ -29,9 +29,9 @@ build-gen:
       selected-by: RteTestGenerator:Check Global Generator
   linker:
     script: ${CMSIS_COMPILER_ROOT}/ac6_linker_script.sct
-    regions: ../../tz_s/RTE/Device/RteTestGen_ARMCM0/regions_RteTestGen_ARMCM0.h
+    regions: ../../../../tz_s/RTE/Device/RteTestGen_ARMCM0/regions_RteTestGen_ARMCM0.h
   constructed-files:
-    - file: ../../tz_s/RTE/_Debug_CM0/RTE_Components.h
+    - file: ../../../../tz_s/RTE/_Debug_CM0/RTE_Components.h
       category: header
   licenses:
     - license: <unknown>

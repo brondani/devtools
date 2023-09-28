@@ -128,6 +128,7 @@ static constexpr const char* YAML_SUB_DIR = "sub-dir";
 static constexpr const char* YAML_SWITCH = "switch";
 static constexpr const char* YAML_TARGETTYPES = "target-types";
 static constexpr const char* YAML_TRUSTZONE = "trustzone";
+static constexpr const char* YAML_CORE = "core";
 static constexpr const char* YAML_TYPE = "type";
 static constexpr const char* YAML_UNDEFINE = "undefine";
 static constexpr const char* YAML_VARIABLES = "variables";

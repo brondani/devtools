@@ -30,7 +30,7 @@ class ProjMgrYamlCbuild {
 private:
   friend class ProjMgrYamlEmitter;
   ProjMgrYamlCbuild(YAML::Node node, const vector<ContextItem*> processedContexts, ProjMgrParser& parser, const string& directory);
-  ProjMgrYamlCbuild(YAML::Node node, const vector<ContextItem*> siblings, const string& type, const string& directory);
+  ProjMgrYamlCbuild(YAML::Node node, const vector<ContextItem*> siblings, const string& type, const string& output, const string& gendir);
   ProjMgrYamlCbuild(YAML::Node node, const ContextItem* context);
   void SetContextNode(YAML::Node node, const ContextItem* context);
   void SetComponentsNode(YAML::Node node, const ContextItem* context);
@@ -46,7 +46,7 @@ private:
   void SetLinkerNode(YAML::Node node, const ContextItem* context);
   void SetLicenseInfoNode(YAML::Node node, const ContextItem* context);
   void SetControlsNode(YAML::Node Node, const ContextItem* context, const BuildType& controls);
-  void SetProcessorNode(YAML::Node node, const map<string, string>& targetAttributes);
+  void SetProcessorNode(YAML::Node node, const map<string, string>& targetAttributes, bool multiCore);
   void SetMiscNode(YAML::Node miscNode, const MiscItem& misc);
   void SetMiscNode(YAML::Node miscNode, const vector<MiscItem>& misc);
   void SetNodeValue(YAML::Node node, const string& value);
@@ -122,7 +122,7 @@ void ProjMgrYamlCbuild::SetContextNode(YAML::Node contextNode, const ContextItem
   SetNodeValue(contextNode[YAML_COMPILER], context->compiler);
   SetNodeValue(contextNode[YAML_BOARD], context->board);
   SetNodeValue(contextNode[YAML_DEVICE], context->device);
-  SetProcessorNode(contextNode[YAML_PROCESSOR], context->targetAttributes);
+  SetProcessorNode(contextNode[YAML_PROCESSOR], context->targetAttributes, !context->deviceItem.pname.empty());
   SetPacksNode(contextNode[YAML_PACKS], context);
   SetControlsNode(contextNode, context, context->controls.processed);
   vector<string> defines;
@@ -396,7 +396,7 @@ void ProjMgrYamlCbuild::SetControlsNode(YAML::Node node, const ContextItem* cont
   }
 }
 
-void ProjMgrYamlCbuild::SetProcessorNode(YAML::Node node, const map<string, string>& targetAttributes) {
+void ProjMgrYamlCbuild::SetProcessorNode(YAML::Node node, const map<string, string>& targetAttributes, bool multiCore) {
   if (targetAttributes.find("Dfpu") != targetAttributes.end()) {
     const string& attribute = targetAttributes.at("Dfpu");
     const string& value = (attribute == "NO_FPU") ? "off" : "on";
@@ -414,6 +414,10 @@ void ProjMgrYamlCbuild::SetProcessorNode(YAML::Node node, const map<string, stri
                           (attribute == "Non-secure") ? "non-secure" :
                           (attribute == "TZ-disabled") ? "off" : "";
     SetNodeValue(node[YAML_TRUSTZONE], value);
+  }
+  if (multiCore && targetAttributes.find("Dcore") != targetAttributes.end()) {
+    const string& core = targetAttributes.at("Dcore");
+    SetNodeValue(node[YAML_CORE], core);
   }
 }
 
@@ -579,26 +583,28 @@ bool ProjMgrYamlEmitter::GenerateCbuild(ContextItem* context) {
   return true;
 }
 
-bool ProjMgrYamlEmitter::GenerateCbuildGenIndex(ProjMgrParser& parser, const vector<ContextItem*> siblings, const string& type, const string& outputDir) {
+bool ProjMgrYamlEmitter::GenerateCbuildGenIndex(ProjMgrParser& parser, const vector<ContextItem*> siblings,
+  const string& type, const string& output, const string& gendir) {
   // generate cbuild-idx.yml
-  RteFsUtils::CreateDirectories(outputDir);
-  const string& filename = outputDir + "/" + parser.GetCsolution().name + ".cbuild-gen-idx.yml";
+  RteFsUtils::CreateDirectories(output);
+  const string& filename = output + "/" + parser.GetCsolution().name + ".cbuild-gen-idx.yml";
 
   YAML::Node rootNode;
-  ProjMgrYamlCbuild cbuild(rootNode[YAML_BUILD_GEN_IDX], siblings, type, outputDir);
+  ProjMgrYamlCbuild cbuild(rootNode[YAML_BUILD_GEN_IDX], siblings, type, output, gendir);
   if (!cbuild.WriteFile(filename, rootNode)) {
     return false;
   }
   return true;
 }
 
-ProjMgrYamlCbuild::ProjMgrYamlCbuild(YAML::Node node, const vector<ContextItem*> siblings, const string& type, const string& directory) {
+ProjMgrYamlCbuild::ProjMgrYamlCbuild(YAML::Node node, const vector<ContextItem*> siblings, const string& type, const string& output, const string& gendir) {
   error_code ec;
   SetNodeValue(node[YAML_GENERATED_BY], ORIGINAL_FILENAME + string(" version ") + VERSION_STRING);
   const auto& context = siblings.front();
   const auto& generator = context->extGenDir.begin();
   YAML::Node generatorNode;
   SetNodeValue(generatorNode[YAML_ID], generator->first);
+  SetNodeValue(generatorNode[YAML_OUTPUT], FormatPath(gendir, output));
   SetNodeValue(generatorNode[YAML_DEVICE], context->deviceItem.name);
   SetNodeValue(generatorNode[YAML_BOARD], context->board);
   SetNodeValue(generatorNode[YAML_PROJECT_TYPE], type);

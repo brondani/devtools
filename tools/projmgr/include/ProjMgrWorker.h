@@ -659,7 +659,7 @@ protected:
   bool ProcessConfigFiles(ContextItem& context);
   bool ProcessComponentFiles(ContextItem& context);
   bool ProcessGroups(ContextItem& context);
-  bool ProcessSequencesRelatives(ContextItem& context);
+  bool ProcessSequencesRelatives(ContextItem& context, bool rerun);
   bool ProcessSequencesRelatives(ContextItem& context, std::vector<std::string>& src, const std::string& ref = std::string(), bool withHeadingDot = false);
   bool ProcessSequencesRelatives(ContextItem& context, BuildType& build, const std::string& ref = std::string());
   bool ProcessSequenceRelative(ContextItem& context, std::string& item, const std::string& ref = std::string(), bool withHeadingDot = false);
@@ -731,6 +731,7 @@ protected:
   bool GetExtGeneratorDir(const std::string& generatorId, ContextItem& context, const std::string& layer, std::string& genDir);
   bool ParseContextLayers(ContextItem& context);
   bool AddPackRequirements(ContextItem& context, const std::vector<PackItem> packRequirements);
+  void InsertPackRequirements(const std::vector<PackItem>& src, std::vector<PackItem>& dst, std::string base);
   void CheckTypeFilterSpelling(const TypeFilter& typeFilter);
   void CheckCompilerFilterSpelling(const std::string& compiler);
   bool ProcessGeneratedLayers(ContextItem& context);
