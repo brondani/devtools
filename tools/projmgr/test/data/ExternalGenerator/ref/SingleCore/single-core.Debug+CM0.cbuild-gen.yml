@@ -5,6 +5,8 @@ build-gen:
   context: single-core.Debug+CM0
   compiler: AC6
   device: RteTestGen_ARMCM0
+  processor:
+    core: Cortex-M0
   packs:
     - pack: ARM::RteTestGenerator@0.1.0
       path: ${CMSIS_PACK_ROOT}/ARM/RteTestGenerator/0.1.0
@@ -13,9 +15,9 @@ build-gen:
   add-path:
     - ../../../../single/RTE/_Debug_CM0
   output-dirs:
-    intdir: ../tmp/single-core/CM0/Debug
-    outdir: ../out/single-core/CM0/Debug
-    rtedir: RTE
+    intdir: .
+    outdir: ../../../../out/single-core/CM0/Debug
+    rtedir: ../../../../single/RTE
   output:
     - type: elf
       file: single-core.axf

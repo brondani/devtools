@@ -46,7 +46,7 @@ private:
   void SetLinkerNode(YAML::Node node, const ContextItem* context);
   void SetLicenseInfoNode(YAML::Node node, const ContextItem* context);
   void SetControlsNode(YAML::Node Node, const ContextItem* context, const BuildType& controls);
-  void SetProcessorNode(YAML::Node node, const map<string, string>& targetAttributes, bool multiCore);
+  void SetProcessorNode(YAML::Node node, const map<string, string>& targetAttributes);
   void SetMiscNode(YAML::Node miscNode, const MiscItem& misc);
   void SetMiscNode(YAML::Node miscNode, const vector<MiscItem>& misc);
   void SetNodeValue(YAML::Node node, const string& value);
@@ -122,7 +122,7 @@ void ProjMgrYamlCbuild::SetContextNode(YAML::Node contextNode, const ContextItem
   SetNodeValue(contextNode[YAML_COMPILER], context->compiler);
   SetNodeValue(contextNode[YAML_BOARD], context->board);
   SetNodeValue(contextNode[YAML_DEVICE], context->device);
-  SetProcessorNode(contextNode[YAML_PROCESSOR], context->targetAttributes, !context->deviceItem.pname.empty());
+  SetProcessorNode(contextNode[YAML_PROCESSOR], context->targetAttributes);
   SetPacksNode(contextNode[YAML_PACKS], context);
   SetControlsNode(contextNode, context, context->controls.processed);
   vector<string> defines;
@@ -315,8 +315,9 @@ void ProjMgrYamlCbuild::SetOutputDirsNode(YAML::Node node, const ContextItem* co
     {YAML_OUTPUT_OUTDIR, dirs.outdir},
     {YAML_OUTPUT_RTEDIR, dirs.rte},
   };
-  for (const auto& [name, dirPath] : outputDirs) {
-    SetNodeValue(node[name], dirPath);
+  for (auto [name, dirPath] : outputDirs) {
+    RteFsUtils::NormalizePath(dirPath, context->directories.cprj);
+    SetNodeValue(node[name], FormatPath(dirPath, context->directories.cbuild));
   }
 }
 
@@ -396,7 +397,7 @@ void ProjMgrYamlCbuild::SetControlsNode(YAML::Node node, const ContextItem* cont
   }
 }
 
-void ProjMgrYamlCbuild::SetProcessorNode(YAML::Node node, const map<string, string>& targetAttributes, bool multiCore) {
+void ProjMgrYamlCbuild::SetProcessorNode(YAML::Node node, const map<string, string>& targetAttributes) {
   if (targetAttributes.find("Dfpu") != targetAttributes.end()) {
     const string& attribute = targetAttributes.at("Dfpu");
     const string& value = (attribute == "NO_FPU") ? "off" : "on";
@@ -415,7 +416,7 @@ void ProjMgrYamlCbuild::SetProcessorNode(YAML::Node node, const map<string, stri
                           (attribute == "TZ-disabled") ? "off" : "";
     SetNodeValue(node[YAML_TRUSTZONE], value);
   }
-  if (multiCore && targetAttributes.find("Dcore") != targetAttributes.end()) {
+  if (targetAttributes.find("Dcore") != targetAttributes.end()) {
     const string& core = targetAttributes.at("Dcore");
     SetNodeValue(node[YAML_CORE], core);
   }

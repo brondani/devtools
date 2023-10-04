@@ -20,9 +20,9 @@ build-gen:
     - ../../../../multi_0/RTE/_Debug_MultiCore
     - ${CMSIS_PACK_ROOT}/ARM/RteTest_DFP/0.2.0/Device/ARM/ARMCM0/Include
   output-dirs:
-    intdir: ../tmp/core0/MultiCore/Debug
-    outdir: ../out/core0/MultiCore/Debug
-    rtedir: RTE
+    intdir: .
+    outdir: ../../../../out/core0/MultiCore/Debug
+    rtedir: ../../../../multi_0/RTE
   output:
     - type: elf
       file: core0.axf

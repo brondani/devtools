@@ -7,6 +7,7 @@ build-gen:
   device: RteTestGen_ARMCM0
   processor:
     trustzone: secure
+    core: Cortex-M0
   packs:
     - pack: ARM::RteTestGenerator@0.1.0
       path: ${CMSIS_PACK_ROOT}/ARM/RteTestGenerator/0.1.0
@@ -15,9 +16,9 @@ build-gen:
   add-path:
     - ../../../../tz_s/RTE/_Debug_CM0
   output-dirs:
-    intdir: ../tmp/s/CM0/Debug
-    outdir: ../out/s/CM0/Debug
-    rtedir: RTE
+    intdir: ../../../s/CM0/Debug
+    outdir: ../../../../out/s/CM0/Debug
+    rtedir: ../../../../tz_s/RTE
   output:
     - type: elf
       file: s.axf
