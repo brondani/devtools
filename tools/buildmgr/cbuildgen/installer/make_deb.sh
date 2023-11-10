@@ -95,26 +95,26 @@ mkdir -p etc/${PACKAGE_NAME}
 mkdir -p etc/profile.d
 
 # Get cpackget
-cpackget_version="1.0.1"
+cpackget_version="1.1.0"
 cpackget_base=https://github.com/Open-CMSIS-Pack/cpackget/releases/download/v${cpackget_version}/cpackget_${cpackget_version}
 curl --retry 3 -L ${cpackget_base}_linux_amd64.tar.gz -o - | tar xzfO - --wildcards '*cpackget' > ${input}/bin/cpackget.lin-amd64
 
 # Get generator-bridge
-# cbridge_version="0.9.0"
-# cbridge_base=https://github.com/Open-CMSIS-Pack/generator-bridge/releases/download/${cbridge_version}/cbridge_${cbridge_version}
-# curl --retry 3 -L ${cbridge_base}_linux_amd64.tar.gz -o - | tar xzfO - --wildcards '*cpackget' > ${input}/bin/cbridge.lin-amd64
+cbridge_version="0.9.1"
+cbridge_base=https://github.com/Open-CMSIS-Pack/generator-bridge/releases/download/v${cbridge_version}/cbridge_${cbridge_version}
+curl --retry 3 -L ${cbridge_base}_linux_amd64.tar.gz -o - | tar xzfO - --wildcards '*cpackget' > ${input}/bin/cbridge.lin-amd64
 
 # Get csolution
-csolution_version="2.1.0"
-csolution_base=https://github.com/Open-CMSIS-Pack/devtools/releases/download/tools%2Fprojmgr%2F${csolution_version}/projmgr.zip
+csolution_version="2.2.0-dev0"
+csolution_base=https://github.com/brondani/devtools/releases/download/tools%2Fprojmgr%2F${csolution_version}/projmgr.zip
 curl --retry 3 -L ${csolution_base} -o temp.zip && unzip -q -d temp temp.zip
 cp 'temp/bin/linux-amd64/csolution' ${input}/bin/csolution.lin-amd64
 cp -r temp/etc/* etc/${PACKAGE_NAME}
 cp -r temp/etc/* usr/lib/${PACKAGE_NAME} && rm temp.zip && rm -rf temp
 
 # Get cbuild
-cbuild_version="2.1.0"
-cbuild_base=https://github.com/Open-CMSIS-Pack/cbuild/releases/download/v${cbuild_version}/cbuild_${cbuild_version}
+cbuild_version="2.2.0-dev0"
+cbuild_base=https://github.com/brondani/cbuild/releases/download/v${cbuild_version}/cbuild_${cbuild_version}
 curl --retry 3 -L ${cbuild_base}_linux_amd64.tar.gz  -o - | tar xzfO - --wildcards '*cbuild' > ${input}/bin/cbuild.lin-amd64
 
 cp -r ${input}/bin usr/lib/${PACKAGE_NAME}  # This should be in /usr/bin but cannot for the time being.
