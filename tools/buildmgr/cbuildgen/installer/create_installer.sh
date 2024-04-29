@@ -71,8 +71,8 @@ curl --retry 3 -L ${cpackget_base}_windows_arm64.zip   -o temp.zip && unzip -p t
 curl --retry 3 -L ${cpackget_base}_darwin_arm64.tar.gz -o - | tar xzfO - --wildcards    '*cpackget'     > ${distdir}/bin/cpackget.mac-arm64
 
 # Get cbuild2cmake
-cbuild2cmake_version="0.9.0"
-cbuild2cmake_base=https://github.com/Open-CMSIS-Pack/cbuild2cmake/releases/download/v${cbuild2cmake_version}/cbuild2cmake_${cbuild2cmake_version}
+cbuild2cmake_version="0.9.1-devint0"
+cbuild2cmake_base=https://github.com/brondani/cbuild2cmake/releases/download/v${cbuild2cmake_version}/cbuild2cmake_${cbuild2cmake_version}
 curl --retry 3 -L ${cbuild2cmake_base}_linux_amd64.tar.gz  -o - | tar xzfO - --wildcards    '*cbuild2cmake'     > ${distdir}/bin/cbuild2cmake.lin-amd64
 curl --retry 3 -L ${cbuild2cmake_base}_windows_amd64.zip   -o temp.zip && unzip -p temp.zip '*/cbuild2cmake.exe' > ${distdir}/bin/cbuild2cmake.exe-amd64 && rm temp.zip
 curl --retry 3 -L ${cbuild2cmake_base}_darwin_amd64.tar.gz -o - | tar xzfO - --wildcards    '*cbuild2cmake'     > ${distdir}/bin/cbuild2cmake.mac-amd64
@@ -91,8 +91,8 @@ curl --retry 3 -L ${cbridge_base}_windows_arm64.zip   -o temp.zip && unzip -p te
 curl --retry 3 -L ${cbridge_base}_darwin_arm64.tar.gz -o - | tar xzfO - --wildcards    '*cbridge'     > ${distdir}/bin/cbridge.mac-arm64
 
 # Get csolution
-csolution_version="2.3.0"
-csolution_base=https://github.com/Open-CMSIS-Pack/devtools/releases/download/tools%2Fprojmgr%2F${csolution_version}/projmgr.zip
+csolution_version="2.4.0-devint0"
+csolution_base=https://github.com/brondani/devtools/releases/download/tools%2Fprojmgr%2F${csolution_version}/projmgr.zip
 curl --retry 3 -L ${csolution_base} -o temp.zip && unzip -q -d temp temp.zip
 cp 'temp/bin/linux-amd64/csolution' ${distdir}/bin/csolution.lin-amd64
 cp 'temp/bin/windows-amd64/csolution.exe' ${distdir}/bin/csolution.exe-amd64
@@ -104,8 +104,8 @@ cp -r temp/etc/* ${distdir}/etc
 rm temp.zip && rm -rf temp
 
 # Get cbuild
-cbuild_version="2.3.0"
-cbuild_base=https://github.com/Open-CMSIS-Pack/cbuild/releases/download/v${cbuild_version}/cbuild_${cbuild_version}
+cbuild_version="2.4.0-devint0"
+cbuild_base=https://github.com/brondani/cbuild/releases/download/v${cbuild_version}/cbuild_${cbuild_version}
 curl --retry 3 -L ${cbuild_base}_linux_amd64.tar.gz  -o - | tar xzfO - --wildcards    '*cbuild'     > ${distdir}/bin/cbuild.lin-amd64
 curl --retry 3 -L ${cbuild_base}_windows_amd64.zip   -o temp.zip && unzip -p temp.zip '*/cbuild.exe' > ${distdir}/bin/cbuild.exe-amd64 && rm temp.zip
 curl --retry 3 -L ${cbuild_base}_darwin_amd64.tar.gz -o - | tar xzfO - --wildcards    '*cbuild'     > ${distdir}/bin/cbuild.mac-amd64
