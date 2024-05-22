@@ -109,8 +109,8 @@ curl --retry 3 -L ${cbridge_base}_darwin_arm64.tar.gz -o - | tar xzf - &&\
   rm -r cbridge_${cbridge_version}_darwin_arm64
 
 # Get csolution
-csolution_version="2.4.0"
-csolution_base=https://github.com/Open-CMSIS-Pack/devtools/releases/download/tools%2Fprojmgr%2F${csolution_version}/projmgr.zip
+csolution_version="2.5.0-devint0"
+csolution_base=https://github.com/brondani/devtools/releases/download/tools%2Fprojmgr%2F${csolution_version}/projmgr.zip
 curl --retry 3 -L ${csolution_base} -o temp.zip && unzip -q -d temp temp.zip
 cp 'temp/bin/linux-amd64/csolution' ${distdir}/bin/csolution.lin-amd64
 cp 'temp/bin/windows-amd64/csolution.exe' ${distdir}/bin/csolution.exe-amd64
