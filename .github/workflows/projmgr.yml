@@ -141,7 +141,7 @@ jobs:
     if: |
         github.event_name == 'release' &&
         startsWith(github.ref, 'refs/tags/tools/projmgr/')
-    needs: [ build, build-swig, unittest, coverage ]
+    needs: [ build, build-swig, unittest ]
     runs-on: ubuntu-22.04
     timeout-minutes: 15
 
