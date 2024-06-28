@@ -100,12 +100,12 @@ cpackget_base=https://github.com/Open-CMSIS-Pack/cpackget/releases/download/v${c
 curl --retry 3 -L ${cpackget_base}_linux_amd64.tar.gz -o - | tar xzfO - --wildcards '*cpackget' > ${input}/bin/cpackget.lin-amd64
 
 # Get cbuild2cmake
-cbuild2cmake_version="0.9.1"
-cbuild2cmake_base=https://github.com/Open-CMSIS-Pack/cbuild2cmake/releases/download/v${cbuild2cmake_version}/cbuild2cmake_${cbuild2cmake_version}
+cbuild2cmake_version="0.9.2-devint3"
+cbuild2cmake_base=https://github.com/brondani/cbuild2cmake/releases/download/v${cbuild2cmake_version}/cbuild2cmake_${cbuild2cmake_version}
 curl --retry 3 -L ${cbuild2cmake_base}_linux_amd64.tar.gz  -o - | tar xzfO - --wildcards '*cbuild2cmake' > ${distdir}/bin/cbuild2cmake.lin-amd64
 
 # Get generator-bridge
-cbridge_version="0.9.5"
+cbridge_version="0.9.7"
 cbridge_base=https://github.com/Open-CMSIS-Pack/generator-bridge/releases/download/v${cbridge_version}/cbridge_${cbridge_version}
 curl --retry 3 -L ${cbridge_base}_linux_amd64.tar.gz -o - | tar xzf - &&\
   cp cbridge_${cbridge_version}_linux_amd64/cbridge ${distdir}/bin/cbridge.lin-amd64 &&\
@@ -113,16 +113,16 @@ curl --retry 3 -L ${cbridge_base}_linux_amd64.tar.gz -o - | tar xzf - &&\
   rm -r cbridge_${cbridge_version}_linux_amd64
 
 # Get csolution
-csolution_version="2.4.0"
-csolution_base=https://github.com/Open-CMSIS-Pack/devtools/releases/download/tools%2Fprojmgr%2F${csolution_version}/projmgr.zip
+csolution_version="2.5.0-devint3"
+csolution_base=https://github.com/brondani/devtools/releases/download/tools%2Fprojmgr%2F${csolution_version}/projmgr.zip
 curl --retry 3 -L ${csolution_base} -o temp.zip && unzip -q -d temp temp.zip
 cp 'temp/bin/linux-amd64/csolution' ${input}/bin/csolution.lin-amd64
 cp -r temp/etc/* etc/${PACKAGE_NAME}
 cp -r temp/etc/* usr/lib/${PACKAGE_NAME} && rm temp.zip && rm -rf temp
 
 # Get cbuild
-cbuild_version="2.4.0"
-cbuild_base=https://github.com/Open-CMSIS-Pack/cbuild/releases/download/v${cbuild_version}/cbuild_${cbuild_version}
+cbuild_version="2.5.0-devint3"
+cbuild_base=https://github.com/brondani/cbuild/releases/download/v${cbuild_version}/cbuild_${cbuild_version}
 curl --retry 3 -L ${cbuild_base}_linux_amd64.tar.gz  -o - | tar xzfO - --wildcards '*cbuild' > ${input}/bin/cbuild.lin-amd64
 
 cp -r ${input}/bin usr/lib/${PACKAGE_NAME}  # This should be in /usr/bin but cannot for the time being.
