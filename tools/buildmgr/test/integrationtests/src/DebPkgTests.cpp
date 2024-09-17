@@ -93,7 +93,7 @@ TEST_F(DebPkgTests, CheckMetadata) {
   string cmd, del = ", ", substr;
   set<string> deplist;
   set<string> expectDep = {
-    "cmake", "ninja-build",
+    "cmake (>= 3.27)", "ninja-build",
     "curl", "libxml2-utils",
     "dos2unix", "unzip" };
 
