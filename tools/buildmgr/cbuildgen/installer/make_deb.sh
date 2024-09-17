@@ -197,7 +197,7 @@ Homepage: https://arm-software.github.io/CMSIS_5/Build/html/index.html
 
 Package: ${PACKAGE_NAME}
 Architecture: amd64
-Depends: \${shlibs:Depends}, \${misc:Depends}, cmake, ninja-build, curl, libxml2-utils, dos2unix, unzip
+Depends: \${shlibs:Depends}, \${misc:Depends}, cmake (>= 3.27), ninja-build, curl, libxml2-utils, dos2unix, unzip
 Description: CMSIS-Build is a set of tools, software frameworks, and workflows that improve productivity
 PackageDetails
 # Copyright
