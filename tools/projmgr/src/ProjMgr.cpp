@@ -23,6 +23,7 @@ Usage:\n\
   csolution <command> [<name>.csolution.yml] [options]\n\n\
 Commands:\n\
   convert                       Convert user input *.yml files to *.cprj files\n\
+  ipc                           Run csolution as inter-process server\n\
   list boards                   Print list of available board names\n\
   list configs                  Print list of configuration files\n\
   list contexts                 Print list of contexts in a <name>.csolution.yml\n\
@@ -63,6 +64,7 @@ ProjMgr::ProjMgr() :
   m_extGenerator(&m_parser),
   m_worker(&m_parser, &m_extGenerator),
   m_emitter(&m_parser, &m_worker),
+  m_ipcServer(),
   m_checkSchema(false),
   m_missingPacks(false),
   m_updateRteFiles(true),
@@ -180,6 +182,7 @@ int ProjMgr::ParseCommandLine(int argc, char** argv) {
     {"list layers",       { false, {context, contextSet, debug, load, clayerSearchPath, quiet, schemaCheck, toolchain, verbose, updateIdx}}},
     {"list toolchains",   { false, {context, contextSet, debug, quiet, toolchain, verbose}}},
     {"list environment",  { true,  {}}},
+    {"ipc",               { true,  {}}},
   };
 
   try {
@@ -401,6 +404,11 @@ int ProjMgr::ProcessCommands() {
   } else if (m_command == "run") {
     // Process 'run' command
     if (!RunCodeGenerator()) {
+      return ErrorCode::ERROR;
+    }
+  } else if (m_command == "ipc") {
+    // Run 'ipc' server
+    if (!m_ipcServer.Run(this)) {
       return ErrorCode::ERROR;
     }
   } else {
