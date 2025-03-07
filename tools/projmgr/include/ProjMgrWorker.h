@@ -794,6 +794,10 @@ public:
   */
   bool CheckRteErrors(void);
 
+  bool LoadPacks(ContextItem& context);
+  bool SetTargetAttributes(ContextItem& context, std::map<std::string, std::string>& attributes);
+  const std::list<RtePackage*>& GetLoadedPacks(void) { return m_loadedPacks; };
+
 protected:
   ProjMgrParser* m_parser = nullptr;
   ProjMgrKernel* m_kernel = nullptr;
@@ -833,7 +837,6 @@ protected:
   bool m_undefCompiler = false;
   std::map<std::string, FileNode> m_missingFiles;
 
-  bool LoadPacks(ContextItem& context);
   bool CheckMissingPackRequirements(const std::string& contextName);
   void CheckMissingLinkerScript(ContextItem& context);
   bool CollectRequiredPdscFiles(ContextItem& context, const std::string& packRoot);
@@ -844,7 +847,6 @@ protected:
   bool GetTypeContent(ContextItem& context);
   bool GetProjectSetup(ContextItem& context);
   bool InitializeTarget(ContextItem& context);
-  bool SetTargetAttributes(ContextItem& context, std::map<std::string, std::string>& attributes);
   bool ProcessPrecedences(ContextItem& context, BoardOrDevice process = BoardOrDevice::None, bool rerun = false);
   bool ProcessPrecedence(StringCollection& item);
   bool ProcessCompilerPrecedence(StringCollection& item, bool acceptRedefinition = false);

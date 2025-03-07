@@ -158,7 +158,7 @@ apply_patch(${CMAKE_CURRENT_SOURCE_DIR}/external/xerces-c)
 apply_patch(${CMAKE_CURRENT_SOURCE_DIR}/external/yaml-cpp)
 
 # Google Test Framework
-set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+set(INSTALL_GTEST ON CACHE BOOL "" FORCE)
 add_subdirectory(external/googletest)
 
 set_property(TARGET gtest PROPERTY

@@ -16,23 +16,34 @@ SET(PROJMGR_SOURCE_FILES ProjMgr.cpp ProjMgrKernel.cpp ProjMgrCallback.cpp
   ProjMgrYamlEmitter.cpp ProjMgrUtils.cpp ProjMgrExtGenerator.cpp
   ProjMgrCbuildBase.cpp ProjMgrCbuild.cpp ProjMgrCbuildIdx.cpp
   ProjMgrCbuildGenIdx.cpp ProjMgrCbuildPack.cpp ProjMgrCbuildSet.cpp
-  ProjMgrCbuildRun.cpp ProjMgrRunDebug.cpp
+  ProjMgrCbuildRun.cpp ProjMgrRunDebug.cpp ProjMgrIpcServer.cpp
 )
 SET(PROJMGR_HEADER_FILES ProjMgr.h ProjMgrKernel.h ProjMgrCallback.h
   ProjMgrParser.h ProjMgrWorker.h ProjMgrGenerator.h ProjMgrXmlParser.h
   ProjMgrYamlParser.h ProjMgrLogger.h ProjMgrYamlSchemaChecker.h
   ProjMgrYamlEmitter.h ProjMgrUtils.h ProjMgrExtGenerator.h
-  ProjMgrCbuildBase.h ProjMgrRunDebug.h
+  ProjMgrCbuildBase.h ProjMgrRunDebug.h ProjMgrIpcServer.h
 )
 
 list(TRANSFORM PROJMGR_SOURCE_FILES PREPEND src/)
 list(TRANSFORM PROJMGR_HEADER_FILES PREPEND include/)
 
+# cproto-lib
+include(FetchContent)
+FetchContent_Declare(
+  cproto-lib
+  GIT_REPOSITORY https://github.com/brondani/cproto.git
+  GIT_TAG        main
+  EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(cproto-lib)
+
+# projmgrlib
 add_library(projmgrlib OBJECT ${PROJMGR_SOURCE_FILES} ${PROJMGR_HEADER_FILES})
 target_link_libraries(projmgrlib
   PUBLIC
   CrossPlatform RteFsUtils RteUtils XmlTree XmlTreeSlim XmlReader
-  RteModel cxxopts yaml-cpp YmlSchemaChecker)
+  RteModel cxxopts yaml-cpp YmlSchemaChecker cproto-lib)
 target_include_directories(projmgrlib PRIVATE include ${PROJECT_BINARY_DIR})
 
 if(SWIG_LIBS)

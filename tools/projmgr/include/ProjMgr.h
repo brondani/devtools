@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2024 Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -12,6 +12,7 @@
 #include "ProjMgrGenerator.h"
 #include "ProjMgrYamlEmitter.h"
 #include "ProjMgrRunDebug.h"
+#include "ProjMgrIpcServer.h"
 
 #include <cxxopts.hpp>
 
@@ -50,6 +51,17 @@ public:
   */
   static int RunProjMgr(int argc, char **argv, char** envp);
 
+  /**
+   * @brief get worker object
+   * @return reference to m_worker
+  */
+  ProjMgrWorker& GetWorker() { return m_worker; };
+
+
+  void SetContextSet(bool value) { m_contextSet = value; }
+  void SetSolutionFile(const std::string& file) { m_csolutionFile = file; }
+  void SetRootDir(const std::string& dir) { m_rootDir = dir; }
+  bool RunConvert();
 
 protected:
   /**
@@ -89,12 +101,6 @@ protected:
   ProjMgrParser& GetParser() { return m_parser; };
 
   /**
-   * @brief get worker object
-   * @return reference to m_worker
-  */
-  ProjMgrWorker& GetWorker() { return m_worker; };
-
-  /**
    * @brief get generator object
    * @return reference to m_generator
   */
@@ -130,6 +136,7 @@ protected:
   ProjMgrGenerator m_generator;
   ProjMgrYamlEmitter m_emitter;
   ProjMgrRunDebug m_runDebug;
+  ProjMgrIpcServer m_ipcServer;
 
   std::string m_csolutionFile;
   std::string m_cdefaultFile;
@@ -163,7 +170,6 @@ protected:
   std::set<std::string> m_failedContext;
 
   bool RunConfigure();
-  bool RunConvert();
   bool RunCodeGenerator();
   bool RunListPacks();
   bool RunListBoards();
