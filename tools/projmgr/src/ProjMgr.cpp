@@ -35,6 +35,7 @@ Commands:\n\
   list packs                    Print list of used packs from the pack repository\n\
   list toolchains               Print list of supported toolchains\n\
   run                           Run code generator\n\
+  rpc                           Run remote procedure call server\n\
   update-rte                    Create/update configuration files and validate solution\n\n\
 Options:\n\
   -c, --context arg [...]       Input context names [<project-name>][.<build-type>][+<target-type>]\n\
@@ -63,6 +64,7 @@ ProjMgr::ProjMgr() :
   m_extGenerator(&m_parser),
   m_worker(&m_parser, &m_extGenerator),
   m_emitter(&m_parser, &m_worker),
+  m_rpcServer(this),
   m_checkSchema(false),
   m_missingPacks(false),
   m_updateRteFiles(true),
@@ -162,6 +164,7 @@ int ProjMgr::ParseCommandLine(int argc, char** argv) {
   cxxopts::Option updateIdx("update-idx", "Update cbuild-idx file with layer info", cxxopts::value<bool>()->default_value("false"));
   cxxopts::Option quiet("q,quiet", "Run silently, printing only error messages", cxxopts::value<bool>()->default_value("false"));
   cxxopts::Option cbuildgen("cbuildgen", "Generate legacy *.cprj files", cxxopts::value<bool>()->default_value("false"));
+  cxxopts::Option contentLength("content-length", "Prepend 'Content-Length' header to JSON RPC requests and responses", cxxopts::value<bool>()->default_value("false"));
 
   // command options dictionary
   map<string, std::pair<bool, vector<cxxopts::Option>>> optionsDict = {
@@ -180,6 +183,7 @@ int ProjMgr::ParseCommandLine(int argc, char** argv) {
     {"list layers",       { false, {context, contextSet, debug, load, clayerSearchPath, quiet, schemaCheck, toolchain, verbose, updateIdx}}},
     {"list toolchains",   { false, {context, contextSet, debug, quiet, toolchain, verbose}}},
     {"list environment",  { true,  {}}},
+    {"rpc",               { true,  {contentLength}}},
   };
 
   try {
@@ -188,7 +192,7 @@ int ProjMgr::ParseCommandLine(int argc, char** argv) {
       solution, context, contextSet, filter, generator,
       load, clayerSearchPath, missing, schemaCheck, noUpdateRte, output, outputAlt,
       help, version, verbose, debug, dryRun, exportSuffix, toolchain, ymlOrder,
-      relativePaths, frozenPacks, updateIdx, quiet, cbuildgen
+      relativePaths, frozenPacks, updateIdx, quiet, cbuildgen, contentLength
     });
     options.parse_positional({ "positional" });
 
@@ -215,6 +219,7 @@ int ProjMgr::ParseCommandLine(int argc, char** argv) {
     m_cbuildgen = parseResult.count("cbuildgen");
     m_worker.SetCbuild2Cmake(!m_cbuildgen);
     ProjMgrLogger::m_quiet = parseResult.count("quiet");
+    m_rpcServer.SetContentLengthHeader(parseResult.count("content-length"));
 
     vector<string> positionalArguments;
     if (parseResult.count("positional")) {
@@ -401,6 +406,11 @@ int ProjMgr::ProcessCommands() {
   } else if (m_command == "run") {
     // Process 'run' command
     if (!RunCodeGenerator()) {
+      return ErrorCode::ERROR;
+    }
+  } else if (m_command == "rpc") {
+    // Launch 'rpc' server
+    if (!m_rpcServer.Run()) {
       return ErrorCode::ERROR;
     }
   } else {

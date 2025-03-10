@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2024 Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -12,6 +12,7 @@
 #include "ProjMgrGenerator.h"
 #include "ProjMgrYamlEmitter.h"
 #include "ProjMgrRunDebug.h"
+#include "ProjMgrRpcServer.h"
 
 #include <cxxopts.hpp>
 
@@ -50,6 +51,11 @@ public:
   */
   static int RunProjMgr(int argc, char **argv, char** envp);
 
+  /**
+   * @brief get worker object
+   * @return reference to m_worker
+  */
+  ProjMgrWorker& GetWorker() { return m_worker; };
 
 protected:
   /**
@@ -89,12 +95,6 @@ protected:
   ProjMgrParser& GetParser() { return m_parser; };
 
   /**
-   * @brief get worker object
-   * @return reference to m_worker
-  */
-  ProjMgrWorker& GetWorker() { return m_worker; };
-
-  /**
    * @brief get generator object
    * @return reference to m_generator
   */
@@ -130,6 +130,7 @@ protected:
   ProjMgrGenerator m_generator;
   ProjMgrYamlEmitter m_emitter;
   ProjMgrRunDebug m_runDebug;
+  ProjMgrRpcServer m_rpcServer;
 
   std::string m_csolutionFile;
   std::string m_cdefaultFile;

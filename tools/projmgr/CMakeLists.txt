@@ -16,13 +16,13 @@ SET(PROJMGR_SOURCE_FILES ProjMgr.cpp ProjMgrKernel.cpp ProjMgrCallback.cpp
   ProjMgrYamlEmitter.cpp ProjMgrUtils.cpp ProjMgrExtGenerator.cpp
   ProjMgrCbuildBase.cpp ProjMgrCbuild.cpp ProjMgrCbuildIdx.cpp
   ProjMgrCbuildGenIdx.cpp ProjMgrCbuildPack.cpp ProjMgrCbuildSet.cpp
-  ProjMgrCbuildRun.cpp ProjMgrRunDebug.cpp
+  ProjMgrCbuildRun.cpp ProjMgrRunDebug.cpp ProjMgrRpcServer.cpp
 )
 SET(PROJMGR_HEADER_FILES ProjMgr.h ProjMgrKernel.h ProjMgrCallback.h
   ProjMgrParser.h ProjMgrWorker.h ProjMgrGenerator.h ProjMgrXmlParser.h
   ProjMgrYamlParser.h ProjMgrLogger.h ProjMgrYamlSchemaChecker.h
   ProjMgrYamlEmitter.h ProjMgrUtils.h ProjMgrExtGenerator.h
-  ProjMgrCbuildBase.h ProjMgrRunDebug.h
+  ProjMgrCbuildBase.h ProjMgrRunDebug.h ProjMgrRpcServer.h
 )
 
 list(TRANSFORM PROJMGR_SOURCE_FILES PREPEND src/)
@@ -32,8 +32,12 @@ add_library(projmgrlib OBJECT ${PROJMGR_SOURCE_FILES} ${PROJMGR_HEADER_FILES})
 target_link_libraries(projmgrlib
   PUBLIC
   CrossPlatform RteFsUtils RteUtils XmlTree XmlTreeSlim XmlReader
-  RteModel cxxopts yaml-cpp YmlSchemaChecker)
-target_include_directories(projmgrlib PRIVATE include ${PROJECT_BINARY_DIR})
+  RteModel cxxopts yaml-cpp YmlSchemaChecker
+)
+target_include_directories(projmgrlib PRIVATE include ${PROJECT_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}/external/json
+  ${CMAKE_SOURCE_DIR}/external/json-rpc-cxx/include
+)
 
 if(SWIG_LIBS)
   # projmgr swig
