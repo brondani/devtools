@@ -199,12 +199,6 @@ jobs:
           name: projmgr-windows-amd64
           path: tools/projmgr/distribution/bin/windows-amd64/
 
-      - name: Download projmgr windows-arm64
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
-        with:
-          name: projmgr-windows-arm64
-          path: tools/projmgr/distribution/bin/windows-arm64/
-
       - name: Download projmgr-swig-python linux-amd64
         uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         with:

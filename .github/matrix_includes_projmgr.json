@@ -43,14 +43,5 @@
         "runOn": "always",
         "pyswig": true,
         "goswig": false
-    },
-    {
-        "runs_on":"windows-2019",
-        "target":"windows",
-        "arch": "arm64",
-        "binary": "csolution.exe",
-        "runOn": "always",
-        "pyswig": false,
-        "goswig": false
     }
 ]
