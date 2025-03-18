@@ -64,7 +64,7 @@ ProjMgr::ProjMgr() :
   m_extGenerator(&m_parser),
   m_worker(&m_parser, &m_extGenerator),
   m_emitter(&m_parser, &m_worker),
-  m_rpcServer(this),
+  m_rpcServer(*this),
   m_checkSchema(false),
   m_missingPacks(false),
   m_updateRteFiles(true),
@@ -409,7 +409,8 @@ int ProjMgr::ProcessCommands() {
       return ErrorCode::ERROR;
     }
   } else if (m_command == "rpc") {
-    // Launch 'rpc' server
+    // Launch 'rpc' server over stdin/stdout
+    ProjMgrLogger::m_silent = true;
     if (!m_rpcServer.Run()) {
       return ErrorCode::ERROR;
     }
@@ -598,31 +599,8 @@ bool ProjMgr::Configure() {
     ProjMgrLogger::Get().Error(errMsg);
   }
 
-  // Get context pointers
-  map<string, ContextItem>* contexts = nullptr;
-  m_worker.GetContexts(contexts);
-
-  vector<string> orderedContexts;
-  m_worker.GetYmlOrderedContexts(orderedContexts);
-
   // Process contexts
-  bool error = false;
-  m_allContexts.clear();
-  m_processedContexts.clear();
-  m_failedContext.clear();
-  for (auto& contextName : orderedContexts) {
-    auto& contextItem = (*contexts)[contextName];
-    m_allContexts.push_back(&contextItem);
-    if (!m_worker.IsContextSelected(contextName)) {
-      continue;
-    }
-    if (!m_worker.ProcessContext(contextItem, true, true, false)) {
-      ProjMgrLogger::Get().Error("processing context '" + contextName + "' failed", contextName);
-      m_failedContext.insert(contextItem.name);
-      error = true;
-    }
-    m_processedContexts.push_back(&contextItem);
-  }
+  bool error = !ProcessContexts();
 
   if (m_worker.HasToolchainErrors()) {
     error = true;
@@ -661,6 +639,35 @@ bool ProjMgr::Configure() {
   }
 
   return !error;
+}
+
+bool ProjMgr::ProcessContexts() {
+  // Get context pointers
+  map<string, ContextItem>* contexts = nullptr;
+  m_worker.GetContexts(contexts);
+
+  vector<string> orderedContexts;
+  m_worker.GetYmlOrderedContexts(orderedContexts);
+
+  // Process contexts
+  bool success = true;
+  m_allContexts.clear();
+  m_processedContexts.clear();
+  m_failedContext.clear();
+  for (auto& contextName : orderedContexts) {
+    auto& contextItem = (*contexts)[contextName];
+    m_allContexts.push_back(&contextItem);
+    if (!m_worker.IsContextSelected(contextName)) {
+      continue;
+    }
+    if (!m_worker.ProcessContext(contextItem, true, true, false)) {
+      ProjMgrLogger::Get().Error("processing context '" + contextName + "' failed", contextName);
+      m_failedContext.insert(contextItem.name);
+      success = false;
+    }
+    m_processedContexts.push_back(&contextItem);
+  }
+  return success;
 }
 
 bool ProjMgr::UpdateRte() {
@@ -1124,4 +1131,31 @@ string ProjMgr::GetToolboxVersion(const string& toolboxDir) {
   smatch matchResult;
   regex_match(manifestFile, matchResult, regEx);
   return matchResult[1].str();
+}
+
+bool ProjMgr::LoadSolution(std::string csolution) {
+  if (!m_csolutionFile.empty()) {
+    m_parser.Clear();
+    m_extGenerator.Clear();
+    m_worker.Clear();
+    m_runDebug.Clear();
+    ProjMgrLogger::Get().Clear();
+  }
+
+  m_csolutionFile = csolution;
+  m_rootDir = RteUtils::ExtractFilePath(m_csolutionFile, false);
+
+  m_contextSet = true;
+  m_updateRteFiles = false;
+
+  if (!PopulateContexts()) {
+    return false;
+  }
+  if (!ParseAndValidateContexts()) {
+    return false;
+  }
+  if (!ProcessContexts()) {
+    return false;
+  }
+  return true;
 }

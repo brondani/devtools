@@ -57,6 +57,13 @@ public:
   */
   ProjMgrWorker& GetWorker() { return m_worker; };
 
+  /**
+   * @brief load solution
+   * @param path to <solution>.csolution.yml file
+   * @return processing status
+  */
+  bool LoadSolution(std::string csolution);
+
 protected:
   /**
    * @brief parse command line options
@@ -185,6 +192,7 @@ protected:
   bool GenerateYMLConfigurationFiles(bool previousResult);
   bool UpdateRte();
   bool ParseAndValidateContexts();
+  bool ProcessContexts();
 };
 
 #endif  // PROJMGR_H

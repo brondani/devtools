@@ -23,7 +23,7 @@ public:
   /**
    * @brief class constructor
   */
-  ProjMgrRpcServer(ProjMgr* manager);
+  ProjMgrRpcServer(ProjMgr& manager);
 
   /**
    * @brief class destructor
@@ -38,9 +38,9 @@ public:
 
   /**
    * @brief get parser object
-   * @return pointer to m_manager
+   * @return reference to m_manager
   */
-  ProjMgr* GetManager() { return m_manager; };
+  ProjMgr& GetManager() { return m_manager; };
 
   /**
    * @brief set m_shutdown flag
@@ -55,7 +55,7 @@ public:
   void SetContentLengthHeader(bool value) { m_contextLength = value; };
 
 protected:
-  ProjMgr* m_manager;
+  ProjMgr& m_manager;
   bool m_shutdown = false;
   bool m_contextLength = false;
   const std::string GetRequestFromStdinWithLength(void);

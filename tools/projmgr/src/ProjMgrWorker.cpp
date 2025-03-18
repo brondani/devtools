@@ -409,9 +409,8 @@ bool ProjMgrWorker::InitializeModel() {
   return m_kernel->Init();
 }
 
-bool ProjMgrWorker::LoadAllRelevantPacks() {
-  // Get required pdsc files
-  std::list<std::string> pdscFiles;
+bool ProjMgrWorker::CollectAllRequiredPdscFiles() {
+  // Check and collect requirements
   if (m_selectedContexts.empty()) {
     for (const auto& [context,_] : m_contexts) {
       m_selectedContexts.push_back(context);
@@ -425,6 +424,15 @@ bool ProjMgrWorker::LoadAllRelevantPacks() {
       success &= false;
       continue;
     }
+  }
+  return success;
+}
+
+bool ProjMgrWorker::LoadAllRelevantPacks() {
+  // Get required pdsc files
+  std::list<std::string> pdscFiles;
+  for (const auto& context : m_selectedContexts) {
+    auto& contextItem = m_contexts.at(context);
     for (const auto& [pdscFile, pathVer] : contextItem.pdscFiles) {
       const string& path = pathVer.first;
       if (!path.empty()) {
@@ -438,9 +446,6 @@ bool ProjMgrWorker::LoadAllRelevantPacks() {
         CollectionUtils::PushBackUniquely(pdscFiles, pdscFile);
       }
     }
-  }
-  if (!success) {
-    return false;
   }
   // Check load packs policy
   if (pdscFiles.empty() && (m_loadPacksPolicy == LoadPacksPolicy::REQUIRED)) {
@@ -483,8 +488,11 @@ bool ProjMgrWorker::LoadPacks(ContextItem& context) {
   if (!InitializeTarget(context)) {
     return false;
   }
-  if (m_loadedPacks.empty() && !LoadAllRelevantPacks()) {
+  if (!CollectAllRequiredPdscFiles()) {
     PrintContextErrors(context.name);
+    return false;
+  }
+  if (m_loadedPacks.empty() && !LoadAllRelevantPacks()) {
     return false;
   }
   // Filter context specific packs
@@ -5082,6 +5090,10 @@ bool ProjMgrWorker::ProcessGeneratedLayers(ContextItem& context) {
       vector<PackItem> packRequirements;
       InsertPackRequirements(cgen->packs, packRequirements, cgen->directory);
       AddPackRequirements(context, packRequirements);
+      if (!CollectAllRequiredPdscFiles()) {
+        PrintContextErrors(context.name);
+        return false;
+      }
       if (!LoadAllRelevantPacks() || !LoadPacks(context)) {
         PrintContextErrors(context.name);
         return false;

@@ -682,6 +682,15 @@ public:
   */
   CbuildSetItem& GetCbuildSetItem(void);
 
+  void Clear() {
+    m_cdefault = {};
+    m_csolution = {};
+    m_cbuildSet = {};
+    m_cprojects.clear();
+    m_clayers.clear();
+    m_genericClayers.clear();
+  }
+
 protected:
   CdefaultItem m_cdefault;
   CsolutionItem m_csolution;

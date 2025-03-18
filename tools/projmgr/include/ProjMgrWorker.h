@@ -794,6 +794,62 @@ public:
   */
   bool CheckRteErrors(void);
 
+  /**
+   * @brief load packs
+   * @param context item
+   * @return true if there is no error
+  */
+  bool LoadPacks(ContextItem& context);
+
+  /**
+   * @brief set target attributes
+   * @param context item
+   * @param map of attributes
+   * @return true if there is no error
+  */
+  bool SetTargetAttributes(ContextItem& context, std::map<std::string, std::string>& attributes);
+
+  /**
+   * @brief add required components
+   * @param context item
+   * @return true if there is no error
+  */
+  bool AddRequiredComponents(ContextItem& context);
+
+  /**
+   * @brief validate context
+   * @param context item
+   * @return true if there is no error
+  */
+  bool ValidateContext(ContextItem& context);
+
+  /**
+   * @brief clear worker members for reloading a solution
+   * @return true if there is no error
+  */
+  void Clear() {
+    for (auto context : m_contexts) {
+      for (auto componentItem : context.second.components) {
+        delete componentItem.second.instance;
+      }
+    }
+    m_contexts.clear();
+    m_ymlOrderedContexts.clear();
+    m_contextsPtr->clear();
+    m_contextErrMap.clear();
+    m_selectedContexts.clear();
+    m_outputDir.clear();
+    m_selectedToolchain.clear();
+    m_rootDir.clear();
+    m_undefLayerVars.clear();
+    m_packMetadata.clear();
+    m_executes.clear();
+    m_toolchainErrors.clear();
+    m_selectableCompilers.clear();
+    m_missingFiles.clear();
+    m_types = {};
+  };
+
 protected:
   ProjMgrParser* m_parser = nullptr;
   ProjMgrKernel* m_kernel = nullptr;
@@ -833,7 +889,6 @@ protected:
   bool m_undefCompiler = false;
   std::map<std::string, FileNode> m_missingFiles;
 
-  bool LoadPacks(ContextItem& context);
   bool CheckMissingPackRequirements(const std::string& contextName);
   void CheckMissingLinkerScript(ContextItem& context);
   bool CollectRequiredPdscFiles(ContextItem& context, const std::string& packRoot);
@@ -844,7 +899,6 @@ protected:
   bool GetTypeContent(ContextItem& context);
   bool GetProjectSetup(ContextItem& context);
   bool InitializeTarget(ContextItem& context);
-  bool SetTargetAttributes(ContextItem& context, std::map<std::string, std::string>& attributes);
   bool ProcessPrecedences(ContextItem& context, BoardOrDevice process = BoardOrDevice::None, bool rerun = false);
   bool ProcessPrecedence(StringCollection& item);
   bool ProcessCompilerPrecedence(StringCollection& item, bool acceptRedefinition = false);
@@ -871,7 +925,6 @@ protected:
   bool ProcessLinkerOptions(ContextItem& context, const LinkerItem& linker, const std::string& ref);
   bool ProcessProcessorOptions(ContextItem& context);
   void AddContext(ContextDesc& descriptor, const TypePair& type, ContextItem& parentContext);
-  bool ValidateContext(ContextItem& context);
   bool FormatValidationResults(std::set<std::string>& results, const ContextItem& context);
   void UpdateMisc(std::vector<MiscItem>& vec, const std::string& compiler);
   void AddMiscUniquely(MiscItem& dst, std::vector<std::vector<MiscItem>*>& srcVec);
@@ -879,7 +932,6 @@ protected:
   bool AddGroup(const GroupNode& src, std::vector<GroupNode>& dst, ContextItem& context, const std::string root);
   bool AddFile(const FileNode& src, std::vector<FileNode>& dst, ContextItem& context, const std::string root);
   bool AddComponent(const ComponentItem& src, const std::string& layer, std::vector<std::pair<ComponentItem, std::string>>& dst, TypePair type, ContextItem& context);
-  bool AddRequiredComponents(ContextItem& context);
   void GetDeviceItem(const std::string& element, DeviceItem& device) const;
   void GetBoardItem (const std::string& element, BoardItem& board) const;
   bool GetPrecedentValue(std::string& outValue, const std::string& element) const;
@@ -941,6 +993,7 @@ protected:
   StrVec CollectSelectableCompilers();
   void ProcessTmpDir(std::string& tmpdir, const std::string& base);
   bool IsCreatedByExecute(const std::string file, const std::string dir);
+  bool CollectAllRequiredPdscFiles();
 };
 
 #endif  // PROJMGRWORKER_H
