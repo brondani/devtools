@@ -42,20 +42,23 @@ public:
   */
   ProjMgr& GetManager() { return m_manager; };
 
+  void SetDebug(bool debug) { m_debug = debug; }
+
   /**
    * @brief set m_shutdown flag
    * @param boolean value
   */
-  void SetShutdown(bool value) { m_shutdown = value; };
+  void SetShutdown(bool value) { m_shutdown = value; }
 
   /**
    * @brief set m_contextLength flag
    * @param boolean value
   */
-  void SetContentLengthHeader(bool value) { m_contextLength = value; };
+  void SetContentLengthHeader(bool value) { m_contextLength = value; }
 
 protected:
   ProjMgr& m_manager;
+  bool m_debug = false;
   bool m_shutdown = false;
   bool m_contextLength = false;
   const std::string GetRequestFromStdinWithLength(void);

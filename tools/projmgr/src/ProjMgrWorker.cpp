@@ -1631,6 +1631,7 @@ bool ProjMgrWorker::AddPackRequirements(ContextItem& context, const vector<PackI
         // Cbuild pack content matches, so use it
         for (const auto& resolvedPackId : matchedPackIds) {
           PackageItem package;
+          package.origin = packageEntry.origin;
           ProjMgrUtils::ConvertToPackInfo(resolvedPackId, package.pack);
           context.userInputToResolvedPackIdMap[packageEntry.pack].insert(resolvedPackId);
           context.packRequirements.push_back(package);
@@ -1638,6 +1639,7 @@ bool ProjMgrWorker::AddPackRequirements(ContextItem& context, const vector<PackI
       } else {
         // Not matching cbuild pack, add it unless a wildcard entry
         PackageItem package;
+        package.origin = packageEntry.origin;
         ProjMgrUtils::ConvertToPackInfo(packageEntry.pack, package.pack);
 
         // Resolve version range using installed/local packs
@@ -1664,6 +1666,7 @@ bool ProjMgrWorker::AddPackRequirements(ContextItem& context, const vector<PackI
     } else {
       // Project local pack - add as-is
       PackageItem package;
+      package.origin = packageEntry.origin;
       package.path = packageEntry.path;
       RteFsUtils::NormalizePath(package.path, context.csolution->directory + "/");
       if (!RteFsUtils::Exists(package.path)) {
@@ -1685,6 +1688,7 @@ bool ProjMgrWorker::AddPackRequirements(ContextItem& context, const vector<PackI
   // Add wildcard entries last so that they can be re-expanded if needed
   for (const auto& packageEntry : packages) {
     PackageItem package;
+    package.origin = packageEntry.origin;
     package.path = packageEntry.path;
     ProjMgrUtils::ConvertToPackInfo(packageEntry.pack, package.pack);
 
@@ -2551,21 +2555,26 @@ bool ProjMgrWorker::ValidateContext(ContextItem& context) {
   map<const RteItem*, RteDependencyResult> results;
   context.rteActiveTarget->GetDepsResult(results, context.rteActiveTarget);
 
-  for (const auto& [component, result] : results) {
-    RteItem::ConditionResult validationResult = result.GetResult();
-    const auto& componentID = component->GetComponentID(true);
-    const auto& depResults = result.GetResults();
-    const auto& aggregates = result.GetComponentAggregates();
+  for (const auto& [item, result] : results) {
+    ValidationResult validation;
+    validation.result = result.GetResult();
+    validation.id = item->ConstructComponentID(true);
 
-    set<string> aggregatesSet;
-    for (const auto& aggregate : aggregates) {
-      aggregatesSet.insert(aggregate->GetComponentAggregateID());
+    for (const auto& aggregate : result.GetComponentAggregates()) {
+      validation.aggregates.insert(aggregate->ConstructComponentID(true));
     }
-    set<string> expressionsSet;
-    for (const auto& [item, _] : depResults) {
-      expressionsSet.insert(item->GetDependencyExpressionID());
+
+    const auto& depResults = result.GetResults();
+    for (const auto& [item, result] : depResults) {
+      ValidationCondition condition;
+      condition.expression = item->GetDependencyExpressionID();
+      for (const auto& aggregate : result.GetComponentAggregates()) {
+        condition.aggregates.insert(aggregate->ConstructComponentID(true));
+      }
+      validation.conditions.push_back(condition);
     }
-    context.validationResults.push_back({ validationResult, componentID, expressionsSet, aggregatesSet });
+
+    context.validationResults.push_back(validation);
   }
 
   if (context.validationResults.empty()) {
@@ -4038,10 +4047,10 @@ bool ProjMgrWorker::ListDependencies(vector<string>& dependencies, const string&
       return false;
     }
     if (!ValidateContext(context)) {
-      for (const auto& [result, component, expressions, _] : context.validationResults) {
-        if ((result == RteItem::MISSING) || (result == RteItem::SELECTABLE)) {
-          for (const auto& expression : expressions) {
-            dependenciesSet.insert(component + " " + expression);
+      for (const auto& validation : context.validationResults) {
+        if ((validation.result == RteItem::MISSING) || (validation.result == RteItem::SELECTABLE)) {
+          for (const auto& condition : validation.conditions) {
+            dependenciesSet.insert(validation.id + " " + condition.expression);
           }
         }
       }
@@ -4062,13 +4071,16 @@ bool ProjMgrWorker::ListDependencies(vector<string>& dependencies, const string&
 }
 
 bool ProjMgrWorker::FormatValidationResults(set<string>& results, const ContextItem& context) {
-  for (const auto& [result, component, expressions, aggregates] : context.validationResults) {
-    string resultStr = RteItem::ConditionResultToString(result) + " " + component;
-    for (const auto& expression : expressions) {
-      resultStr += "\n  " + expression;
+  for (const auto& validation : context.validationResults) {
+    string resultStr = RteItem::ConditionResultToString(validation.result) + " " + validation.id;
+    for (const auto& condition : validation.conditions) {
+      resultStr += "\n  " + condition.expression;
+      for (const auto& id : condition.aggregates) {
+        resultStr += "\n  " + id;
+      }
     }
-    for (const auto& aggregate : aggregates) {
-      resultStr += "\n  " + aggregate;
+    for (const auto& id : validation.aggregates) {
+      resultStr += "\n  " + id;
     }
     results.insert(resultStr);
   }

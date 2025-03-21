@@ -94,11 +94,13 @@ struct ToolchainItem {
 /**
  * @brief package item containing
  *        pack information pack,
- *        path to pack     path
+ *        path to pack path,
+ *        origin file,
 */
 struct PackageItem {
   PackInfo    pack;
   std::string path;
+  std::string origin;
 };
 
 /**
@@ -243,6 +245,30 @@ struct ContextTypesItem {
 };
 
 /**
+ * @brief validation condition item containing
+ *        expression (accept/deny/require ...)
+ *        related aggregates
+*/
+struct ValidationCondition {
+  std::string expression;
+  StrSet aggregates;
+};
+
+/**
+ * @brief validation result containing
+ *        result according to enum ConditionResult
+ *        component/api identifier
+ *        direct related aggregates
+ *        conditions (expressions and related identifiers)
+*/
+struct ValidationResult {
+  RteItem::ConditionResult result;
+  std::string id;
+  StrSet aggregates;
+  std::vector<ValidationCondition> conditions;
+};
+
+/**
  * @brief project context item containing
  *        pointer to csolution,
  *        pointer to cproject,
@@ -336,7 +362,7 @@ struct ContextItem {
   std::map<std::string, std::pair<RteApi*, std::vector<std::string>>> apis;
   std::map<std::string, SelectedComponentItem> bootstrapComponents;
   StrMap bootstrapMap;
-  std::vector<std::tuple<RteItem::ConditionResult, std::string, std::set<std::string>, std::set<std::string>>> validationResults;
+  std::vector<ValidationResult> validationResults;
   std::map<std::string, std::map<std::string, RteFileInstance*>> configFiles;
   std::map<std::string, std::string> plmStatus;
   std::map<std::string, std::vector<ComponentFileItem>> componentFiles;

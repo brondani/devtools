@@ -75,11 +75,13 @@ struct MiscItem {
  *        pack name
  *        pack path
  *        type filter
+ *        origin file
 */
 struct PackItem {
   std::string pack;
   std::string path;
   TypeFilter type;
+  std::string origin;
 };
 
 /**

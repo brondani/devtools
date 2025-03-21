@@ -220,6 +220,7 @@ int ProjMgr::ParseCommandLine(int argc, char** argv) {
     m_worker.SetCbuild2Cmake(!m_cbuildgen);
     ProjMgrLogger::m_quiet = parseResult.count("quiet");
     m_rpcServer.SetContentLengthHeader(parseResult.count("content-length"));
+    m_rpcServer.SetDebug(m_debug);
 
     vector<string> positionalArguments;
     if (parseResult.count("positional")) {
