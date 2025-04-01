@@ -5,6 +5,7 @@
  */
 
 #include "ProjMgrRpcServer.h"
+#include "ProjMgrLogger.h"
 #include "ProjMgr.h"
 #include "ProductInfo.h"
 #include <RteFsUtils.h>
@@ -176,6 +177,18 @@ namespace Args {
   void to_json(nlohmann::json& j, const Results& r) {
     to_json(j, "validation" , r.validation);
   }
+
+  // GetLogMessages
+  struct LogMessages {
+    optional<vector<string>> info;
+    optional<vector<string>> errors;
+    optional<vector<string>> warnings;
+  };
+  void to_json(nlohmann::json& j, const LogMessages& m) {
+    to_json(j, "info", m.info);
+    to_json(j, "errors", m.errors);
+    to_json(j, "warnings", m.warnings);
+  }
 }
 
 class RpcHandler {
@@ -192,6 +205,7 @@ public:
   const Args::PacksInfo GetPacksInfo(const string& context);
   const Args::ComponentsInfo GetComponentsInfo(const string& context);
   const Args::Results ValidateComponents(const string& context, const StrVec& components);
+  const Args::LogMessages GetLogMessages(void);
 
 protected:
   enum Exception
@@ -231,6 +245,7 @@ bool ProjMgrRpcServer::Run(void) {
   jsonServer.Add("GetPacksInfo"         , GetHandle(&RpcHandler::GetPacksInfo         , handler), { "context"               });
   jsonServer.Add("GetComponentsInfo"    , GetHandle(&RpcHandler::GetComponentsInfo    , handler), { "context"               });
   jsonServer.Add("ValidateComponents"   , GetHandle(&RpcHandler::ValidateComponents   , handler), { "context", "components" });
+  jsonServer.Add("GetLogMessages"       , GetHandle(&RpcHandler::GetLogMessages       , handler));
 
   while (!m_shutdown && !cin.fail()) {
     // Get request
@@ -475,4 +490,36 @@ const Args::Results RpcHandler::ValidateComponents(const string& context, const 
     }
   }
   return results;
+}
+
+const Args::LogMessages RpcHandler::GetLogMessages(void) {
+  StrVec infoVec;
+  for (const auto& [_, info] : ProjMgrLogger::Get().GetInfos()) {
+    for (const auto& msg : info) {
+      CollectionUtils::PushBackUniquely(infoVec, msg);
+    }
+  }
+  StrVec errorsVec;
+  for (const auto& [_, errors] : ProjMgrLogger::Get().GetErrors()) {
+    for (const auto& msg : errors) {
+      CollectionUtils::PushBackUniquely(errorsVec, msg);
+    }
+  }
+  StrVec warningsVec;
+  for (const auto& [_, warnings] : ProjMgrLogger::Get().GetWarns()) {
+    for (const auto& msg : warnings) {
+      CollectionUtils::PushBackUniquely(warningsVec, msg);
+    }
+  }
+  Args::LogMessages messages;
+  if (!infoVec.empty()) {
+    messages.info = infoVec;
+  }
+  if (!errorsVec.empty()) {
+    messages.errors = errorsVec;
+  }
+  if (!warningsVec.empty()) {
+    messages.warnings = warningsVec;
+  }
+  return messages;
 }
