@@ -119,8 +119,14 @@ namespace Args {
     optional<string> description;
     optional<string> doc;
   };
+  struct Bundle {
+    string id;
+    optional<string> description;
+    optional<string> doc;
+  };
   struct ComponentsInfo {
     vector<Api> apis;
+    vector<Bundle> bundles;
     vector<Component> components;
     vector<Taxonomy> taxonomy;
   };
@@ -144,8 +150,14 @@ namespace Args {
     to_json(j, "description" , t.description);
     to_json(j, "doc"         , t.doc);
   }
+  void to_json(nlohmann::json& j, const Bundle& t) {
+    to_json(j, "id"          , t.id);
+    to_json(j, "description" , t.description);
+    to_json(j, "doc"         , t.doc);
+  }
   void to_json(nlohmann::json& j, const ComponentsInfo& info) {
     to_json(j, "apis"        , info.apis);
+    to_json(j, "bundles"     , info.bundles);
     to_json(j, "components"  , info.components);
     to_json(j, "taxonomy"    , info.taxonomy);
   }
@@ -438,6 +450,19 @@ const Args::ComponentsInfo RpcHandler::GetComponentsInfo(const string& context) 
       t.doc = doc;
     }
     componentsInfo.taxonomy.push_back(t);
+  }
+  for (auto& [bundle, bundleItem] : m_globalContext.rteActiveTarget->GetFilteredModel()->GetBundles()) {
+    Args::Bundle b;
+    b.id = bundle;
+    const auto& description = bundleItem->GetDescription();
+    if (!description.empty()) {
+      b.description = description;
+    }
+    const auto& doc = bundleItem->GetDocFile();
+    if (!doc.empty()) {
+      b.doc = doc;
+    }
+    componentsInfo.bundles.push_back(b);
   }
   return componentsInfo;
 }
