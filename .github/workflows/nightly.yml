@@ -9,27 +9,27 @@ on:
 jobs:
   buildmgr:
     if: github.repository == 'brondani/devtools'
-    uses: brondani/devtools/.github/workflows/buildmgr.yml@main
+    uses: Open-CMSIS-Pack/devtools/.github/workflows/buildmgr.yml@main
     secrets: inherit
   packchk:
     needs: [buildmgr]
-    uses: brondani/devtools/.github/workflows/packchk.yml@main
+    uses: Open-CMSIS-Pack/devtools/.github/workflows/packchk.yml@main
     secrets: inherit
   packgen:
     needs: [packchk]
-    uses: brondani/devtools/.github/workflows/packgen.yml@main
+    uses: Open-CMSIS-Pack/devtools/.github/workflows/packgen.yml@main
     secrets: inherit
   projmgr:
     needs: [packgen]
-    uses: brondani/devtools/.github/workflows/projmgr.yml@main
+    uses: brondani/devtools/.github/workflows/projmgr.yml@devdrop
     secrets: inherit
   svdconv:
     needs: [projmgr]
-    uses: brondani/devtools/.github/workflows/svdconv.yml@main
+    uses: Open-CMSIS-Pack/devtools/.github/workflows/svdconv.yml@main
     secrets: inherit
   test_libs:
     needs: [svdconv]
-    uses: brondani/devtools/.github/workflows/test_libs.yml@main
+    uses: Open-CMSIS-Pack/devtools/.github/workflows/test_libs.yml@main
   coverage:
     runs-on: ubuntu-22.04
     needs: [ buildmgr, packchk, packgen, projmgr, svdconv, test_libs ]
