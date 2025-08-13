@@ -112,6 +112,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive projmgr schemas
+        if: matrix.arch == 'amd64' && matrix.target == 'linux'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: projmgr-schemas
@@ -120,6 +121,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive projmgr templates
+        if: matrix.arch == 'amd64' && matrix.target == 'linux'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: projmgr-templates
