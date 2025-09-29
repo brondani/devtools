@@ -601,7 +601,8 @@
         "target-set":   { "$ref": "#/definitions/TargetSetsType" },
         "undefine":     { "$ref": "#/definitions/UndefinesType" },
         "variables":    { "$ref": "#/definitions/VariablesType" },
-        "warnings":     { "$ref": "#/definitions/WarningsType" }
+        "warnings":     { "$ref": "#/definitions/WarningsType" },
+        "west-defs":    { "$ref": "#/definitions/WestDefsType" }
       },
       "additionalProperties": false,
       "required" : [ "type"]
@@ -638,7 +639,8 @@
         "processor":    { "$ref": "#/definitions/ProcessorType" },
         "undefine":     { "$ref": "#/definitions/UndefinesType" },
         "variables":    { "$ref": "#/definitions/VariablesType" },
-        "warnings":     { "$ref": "#/definitions/WarningsType" }
+        "warnings":     { "$ref": "#/definitions/WarningsType" },
+        "west-defs":    { "$ref": "#/definitions/WestDefsType" }
       },
       "additionalProperties": false,
       "required" : [ "type"]
@@ -660,13 +662,13 @@
           "pattern": "^.*[/]([^.+]*\\.cproject\\.(yml|yaml))$|^([^.+]+)\\.cproject\\.(yml|yaml)$",
           "description": "Path to the valid project file."
         },
+        "west": { "$ref": "#/definitions/WestProjectType" },
         "for-context":     { "$ref": "#/definitions/ForContext" },
         "not-for-context": { "$ref": "#/definitions/NotForContext" }
       },
-      "additionalProperties": false,
-      "allOf": [
-        { "$ref": "#/definitions/TypeListMutualExclusion"},
-        { "required": [ "project" ] }
+      "additionalProperties": true,
+      "oneOf": [
+        { "$ref": "#/definitions/TypeListMutualExclusion"}
       ]
     },
     "ProcessorTrustzone": {
@@ -1274,6 +1276,7 @@
       "type": "object",
       "properties": {
         "cbuild": { "type": "string", "description": "Path to <context>.cbuild.yml file." },
+        "west": { "type": "boolean" },
         "project": { "type": "string", "description": "Project name." },
         "configuration": { "$ref": "#/definitions/BuildContext" },
         "depends-on": {
@@ -1427,7 +1430,8 @@
         "licenses": {
           "type": "array",
           "items": { "$ref": "#/definitions/LicenseInfoType" }
-        }
+        },
+        "west": { "$ref": "#/definitions/WestProjectType" }
       },
       "additionalProperties": false
     },
@@ -2398,6 +2402,15 @@
       "title": "optimize:\nDocumentation: https://open-cmsis-pack.github.io/cmsis-toolbox/YML-Input-Format/#load",
       "description": "Specifies the load mode for the project output or image file.",
       "enum": [ "image+symbols", "symbols", "image", "none" ]
+    },
+    "WestProjectType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "WestDefsType": {
+      "type": "array",
+      "minItems": 1,
+      "items": {}
     }
   }
 }

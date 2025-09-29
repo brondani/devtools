@@ -84,16 +84,26 @@ void ProjMgrWorker::AddImageOnlyContext() {
 }
 
 bool ProjMgrWorker::AddContexts(ProjMgrParser& parser, ContextDesc& descriptor, const string& cprojectFile) {
-  error_code ec;
   ContextItem context;
+  context.cdefault = &parser.GetCdefault();
+  context.csolution = &parser.GetCsolution();
   std::map<std::string, CprojectItem>& cprojects = parser.GetCprojects();
   if (cprojects.find(cprojectFile) == cprojects.end()) {
     ProjMgrLogger::Get().Error("cproject not parsed, adding context failed", "", cprojectFile);
     return false;
   }
   context.cproject = &cprojects.at(cprojectFile);
-  context.cdefault = &parser.GetCdefault();
-  context.csolution = &parser.GetCsolution();
+
+  // west app
+  if (!descriptor.west.app.empty()) {
+    context.west = descriptor.west;
+    RteFsUtils::NormalizePath(context.west.app, context.csolution->directory);
+    context.imageOnly = true;
+    //context.cproject = &cprojects[westApp];
+    context.cproject->output.baseName = "zephyr";
+    context.cproject->name = context.west.projectId;
+    context.cproject->output.type = { "elf", "hex" };
+  } 
 
   // No build/target-types
   if (context.csolution->buildTypes.empty() && context.csolution->targetTypes.empty()) {
@@ -2204,7 +2214,7 @@ bool ProjMgrWorker::ProcessConfigFiles(ContextItem& context) {
     }
   }
   // Linker script
-  if (context.outputTypes.elf.on) {
+  if (context.outputTypes.elf.on && !context.imageOnly) {
     if (context.linker.autoGen) {
       if (!context.linker.script.empty()) {
         ProjMgrLogger::Get().Warn("conflict: automatic linker script generation overrules specified script '" + context.linker.script + "'", context.name);
@@ -2863,6 +2873,10 @@ bool ProjMgrWorker::ProcessPrecedences(ContextItem& context, BoardOrDevice proce
     error |= true;
   }
 
+  if (!context.west.device.empty()) {
+    context.cproject->target.device = context.west.device;
+  }
+
   StringCollection device = {
     &context.device,
     {
@@ -2901,7 +2915,7 @@ bool ProjMgrWorker::ProcessPrecedences(ContextItem& context, BoardOrDevice proce
   if (!ProcessCompilerPrecedence(compiler, true)) {
     error |= true;
   }
-  if (!context.imageOnly && !ProcessToolchain(context)) {
+  if ((!context.imageOnly || !context.west.app.empty()) && !ProcessToolchain(context)) {
     error |= true;
   }
 
@@ -2914,6 +2928,9 @@ bool ProjMgrWorker::ProcessPrecedences(ContextItem& context, BoardOrDevice proce
   context.variables[RteConstants::AS_PNAME] = deviceItem.pname;
   context.variables[RteConstants::AS_BNAME] = boardItem.name;
   context.variables[RteConstants::AS_COMPILER] = context.toolchain.name;
+  context.variables.insert({ WEST_BOARD, ProjMgrUtils::GetWestBoard(boardItem.name) });
+  context.west.board = context.west.board.empty() ? context.variables.at(WEST_BOARD) :
+    RteUtils::ExpandAccessSequences(context.west.board, context.variables);
 
   // Add cdefault misc into csolution
   if (context.cdefault) {
@@ -3128,6 +3145,10 @@ bool ProjMgrWorker::ProcessPrecedences(ContextItem& context, BoardOrDevice proce
   for (auto& setup : context.controls.setups) {
     CollectionUtils::AddStringItemsUniquely(definesAsmRef, setup.definesAsm);
   }
+
+  // Merge west defines
+  CollectionUtils::AddStringItemsUniquely(context.west.westDefs, context.controls.target.westDefs);
+  CollectionUtils::AddStringItemsUniquely(context.west.westDefs, context.controls.build.westDefs);
 
   // Includes
   vector<string> projectAddPaths, projectDelPaths;

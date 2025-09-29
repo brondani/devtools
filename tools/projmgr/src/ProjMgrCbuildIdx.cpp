@@ -44,7 +44,7 @@ ProjMgrCbuildIdx::ProjMgrCbuildIdx(YAML::Node node,
   SetNodeValue(node[YAML_OUTPUT_TMPDIR], FormatPath(parser->GetCsolution().directories.tmpdir, directory));
 
   // Image Only flag
-  if (!processedContexts.empty() && processedContexts.front()->imageOnly) {
+  if (!processedContexts.empty() && processedContexts.front()->imageOnly && parser->GetCsolution().westApps.empty()) {
     node[YAML_IMAGE_ONLY] = true;
   }
 
@@ -134,8 +134,11 @@ ProjMgrCbuildIdx::ProjMgrCbuildIdx(YAML::Node node,
       const string& filename = context->directories.cprj + "/" + context->name + ".cbuild.yml";
       const string& relativeFilename = fs::relative(filename, directory, ec).generic_string();
       SetNodeValue(cbuildNode[YAML_CBUILD], relativeFilename);
+      if (!context->west.app.empty()) {
+        cbuildNode[YAML_WEST] = true;
+      }
       if (context->cproject) {
-        if (!context->imageOnly) {
+        if (!context->imageOnly || !context->west.app.empty()) {
           SetNodeValue(cbuildNode[YAML_PROJECT], context->cproject->name);
         }
         SetNodeValue(cbuildNode[YAML_CONFIGURATION],
