@@ -100,9 +100,10 @@ bool ProjMgrWorker::AddContexts(ProjMgrParser& parser, ContextDesc& descriptor, 
     RteFsUtils::NormalizePath(context.west.app, context.csolution->directory);
     context.imageOnly = true;
     //context.cproject = &cprojects[westApp];
-    context.cproject->output.baseName = "zephyr";
+    context.cproject->output.baseName = "zephyr/zephyr";
     context.cproject->name = context.west.projectId;
     context.cproject->output.type = { "elf", "hex" };
+    CollectionUtils::PushBackUniquely(context.west.westDefs, "CONFIG_BUILD_OUTPUT_HEX=y");
   } 
 
   // No build/target-types
