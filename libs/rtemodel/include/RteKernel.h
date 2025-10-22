@@ -8,7 +8,7 @@
 */
 /******************************************************************************/
 /*
- * Copyright (c) 2020-2021 Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -381,6 +381,9 @@ protected:
   std::string m_cmsisToolboxDir;
   std::map<std::string, RteItem*> m_externalGeneratorFiles;
   std::map<std::string, RteGenerator*> m_externalGenerators;
+
+  // map of installed pdscs from pack repository file tree
+  std::map<std::string, std::map<std::string, std::string, VersionCmp::Greater>> m_installedPdscsNoCase;
 
 };
 #endif // RteKernel_H

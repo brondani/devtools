@@ -8,7 +8,7 @@
 */
 /******************************************************************************/
 /*
- * Copyright (c) 2020-2024 Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -31,7 +31,14 @@ private:
   RteFsUtils() {};
 
 public:
+  /**
+  * @brief vector of fs paths
+  */
   typedef std::vector<fs::path> PathVec;
+  /**
+  * @brief map of pdscs in the format map[vendor::name][version] = pdsc
+  */
+  typedef std::map<std::string, std::map<std::string, std::string, VersionCmp::Greater>> PdscsNoCase;
   /**
    * @brief make path canonical
    * @param path given path to be canonicalized
@@ -400,6 +407,15 @@ public:
    * @return true if file is found successfully, false otherwise
   */
   static bool FindFileWithPattern(const std::string& searchPath, const std::string& pattern, std::string& file);
+
+  /**
+   * @brief classify installed pdscs from pack root file tree
+   *        format map[vendor::name][version] = pdsc as reported by filesystem iterator
+   *        pack vendor and name are lower-case, versions are ordered starting from the greatest one
+   * @param cmsis pack root
+   * @param reference to classified map of installed pdscs
+  */
+  static void GetInstalledPdscsNoCase(const std::string& root, PdscsNoCase& pdscs);
 };
 
 #endif // RteFsUtils_H

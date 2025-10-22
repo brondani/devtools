@@ -1846,3 +1846,17 @@ TEST_F(ProjMgrWorkerUnitTests, GetToolchainConfig) {
       "Failed to validate for name: " + name + ", version: " + version;
   }
 }
+
+TEST_F(ProjMgrWorkerUnitTests, LoadPacksCaseInsensitive) {
+  const string cmsisPackRoot = CrossPlatformUtils::GetEnv("CMSIS_PACK_ROOT");
+  CrossPlatformUtils::SetEnv("CMSIS_PACK_ROOT", testinput_folder + "/packs-case-insensitive");
+  
+  CsolutionItem csolution;
+  SetCsolutionPacks(&csolution, { "Arm::RteTest_DFP@0.2.0" }, "Test");
+  ContextItem context;
+  EXPECT_TRUE(LoadPacks(context));
+  EXPECT_EQ(1, m_loadedPacks.size());
+  EXPECT_EQ("ARM::RteTest_DFP@0.2.0", (*m_loadedPacks.begin())->GetPackageID());
+
+  CrossPlatformUtils::SetEnv("CMSIS_PACK_ROOT", cmsisPackRoot);
+}

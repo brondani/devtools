@@ -6,7 +6,7 @@
 */
 /******************************************************************************/
 /*
- * Copyright (c) 2020-2021 Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -15,6 +15,7 @@
 #include "RteFsUtils.h"
 
 #include "CrossPlatformUtils.h"
+#include "RteConstants.h"
 #include "RteUtils.h"
 #include "WildCards.h"
 
@@ -885,6 +886,26 @@ bool RteFsUtils::FindFileWithPattern(const std::string& searchDir,
     // do nothing, anyway it is false
   }
   return false; // No matching file found
+}
+
+void RteFsUtils::GetInstalledPdscsNoCase(const string& root, PdscsNoCase& pdscs) {
+  error_code ec;
+  for (fs::recursive_directory_iterator it(root, ec), end; it != end; ++it) {
+    if (it.depth() >= 3) {
+      it.disable_recursion_pending();
+      if (it->is_regular_file() && RteUtils::ToLower(it->path().extension().generic_string()) == ".pdsc") {
+        // the pdsc path must be in the format root/vendor/name/version/vendor.name.pdsc
+        const auto& vendor = RteUtils::ToLower(it->path().parent_path().parent_path().parent_path().filename().generic_string());
+        const auto& name = RteUtils::ToLower(it->path().parent_path().parent_path().filename().generic_string());
+        const auto& pdscFilename = RteUtils::ToLower(it->path().stem().generic_string());
+        if ((vendor + RteConstants::DOT_STR + name) == pdscFilename) {
+          const auto& version = it->path().parent_path().filename().generic_string();
+          // the map entry has the format map[vendor::name][version] = pdsc
+          pdscs[vendor + RteConstants::SUFFIX_PACK_VENDOR + name][version] = it->path().generic_string();
+        }
+      }
+    }
+  }
 }
 
 // End of RteFsUtils.cpp

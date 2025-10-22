@@ -527,6 +527,8 @@ bool ProjMgrWorker::LoadAllRelevantPacks() {
     ProjMgrLogger::Get().Error("failed to load and insert packs");
     return CheckRteErrors();
   }
+  // Required packs are loaded: update pack-ids in 'userInputToResolvedPackIdMap'
+  FormatResolvedPackIds();
   if (!m_model->Validate()) {
     RtePrintErrorVistior visitor(m_kernel->GetCallback());
     m_model->AcceptVisitor(&visitor);
@@ -5948,3 +5950,25 @@ bool ProjMgrWorker::ElaborateVariablesConfigurations() {
   }
   return configurationFound;
 }
+
+void ProjMgrWorker::FormatResolvedPackIds() {
+  StrMap realPackIds;
+  for (const auto& loadedPack : m_loadedPacks) {
+    const auto& realPackId = loadedPack->GetPackageID();
+    realPackIds[RteUtils::ToLower(realPackId)] = realPackId;
+  }
+  for (auto& contextName : m_selectedContexts) {
+    auto& contextItem = m_contexts[contextName];
+    for (auto& [_, resolvedPackIds] : contextItem.userInputToResolvedPackIdMap) {
+      StrSet formattedPackIds;
+      for (auto& resolvedPackId : resolvedPackIds) {
+        const auto& lowerCasePackId = RteUtils::ToLower(resolvedPackId);
+        const auto& packId = realPackIds.find(lowerCasePackId) != realPackIds.end() ?
+          realPackIds.at(lowerCasePackId) : resolvedPackId;
+        formattedPackIds.insert(packId);
+      }
+      resolvedPackIds = formattedPackIds;
+    }
+  }
+}
+

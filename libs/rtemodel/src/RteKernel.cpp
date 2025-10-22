@@ -6,7 +6,7 @@
 */
 /******************************************************************************/
 /*
- * Copyright (c) 2020-2021 Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -80,6 +80,7 @@ bool RteKernel::SetCmsisPackRoot(const string& cmsisPackRoot)
   if (m_cmsisPackRoot == cmsisPackRoot)
     return false;
   m_cmsisPackRoot = cmsisPackRoot;
+  RteFsUtils::GetInstalledPdscsNoCase(m_cmsisPackRoot, m_installedPdscsNoCase);
   return true;
 }
 
@@ -493,13 +494,28 @@ pair<string, string> RteKernel::GetInstalledPdscFile(const XmlItem& attributes) 
   const string& name = attributes.GetAttribute("name");
   const string& vendor = attributes.GetAttribute("vendor");
   if(!name.empty() && !vendor.empty()) {
-    string path = GetCmsisPackRoot() + '/' + vendor + '/' + name;
     const string& versionRange = attributes.GetAttribute("version");
-    string installedVersion = RteFsUtils::GetInstalledPackVersion(path, versionRange);
-    if(!installedVersion.empty()) {
-      string packId = RtePackage::ComposePackageID(vendor, name, installedVersion);
-      path += '/' + installedVersion + '/' + vendor + '.' + name + ".pdsc";
-      return make_pair(packId, path);
+    // search for lowered-case pack vendor and pack name among the installed packs
+    const auto match = m_installedPdscsNoCase.find(RteUtils::ToLower(vendor + RteConstants::SUFFIX_PACK_VENDOR + name));
+    if (match != m_installedPdscsNoCase.end()) {
+      const auto& versions = match->second;
+      StrPair installed;
+      if (versionRange.empty()) {
+        // required version range is empty = get greatest installed version
+        installed = *versions.begin();
+      } else {
+        for (const auto& version : versions) {
+          // find the greatest installed version in the required version range
+          if (VersionCmp::RangeCompare(version.first, versionRange) == 0) {
+            installed = version;
+            break;
+          }
+        }
+      }
+      const auto& pdsc = installed.second;
+      if (!pdsc.empty()) {
+        return make_pair(RtePackage::PackIdFromPath(pdsc), pdsc);
+      }
     }
   }
   return make_pair(RteUtils::EMPTY_STRING, RteUtils::EMPTY_STRING);
