@@ -1335,13 +1335,13 @@ public:
 
   /**
    * @brief get collection of effective pdscs
-   * @return const map of installed pdscs
+   * @return const map of effective pdscs
   */
   const std::map<std::string, std::string, RtePackageComparator>& GetPdscMap() const { return m_pdscMap; }
 
   /**
    * @brief set collection of effective pdscs
-   * @param map of installed pdscs
+   * @param map of effective pdscs
   */
   void SetPdscMap(const std::map<std::string, std::string, RtePackageComparator>& pdscMap) { m_pdscMap = pdscMap; }
 

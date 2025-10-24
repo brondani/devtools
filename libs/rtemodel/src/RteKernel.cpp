@@ -501,7 +501,6 @@ pair<string, string> RteKernel::GetEffectivePdscFile(const XmlItem& attributes) 
   const string& name = attributes.GetAttribute("name");
   const string& vendor = attributes.GetAttribute("vendor");
   if (!name.empty() && !vendor.empty()) {
-    const string& versionRange = attributes.GetAttribute("version");
     const string& packId = RteUtils::ToLower(vendor + RteConstants::SUFFIX_PACK_VENDOR + name);
     // get map of effective pdscs with lower-case ids
     map<string, string, RtePackageComparator> pdscMap;
@@ -514,24 +513,25 @@ pair<string, string> RteKernel::GetEffectivePdscFile(const XmlItem& attributes) 
       }
     }
     if (!pdscs.empty()) {
-      StrPair installed;
+      const string& versionRange = attributes.GetAttribute("version");
+      StrPair effectivePdsc;
       if (versionRange.empty()) {
-        // required version range is empty = get greatest installed version
-        installed = *pdscs.begin();
+        // required version range is empty = get greatest effective version
+        effectivePdsc = *pdscs.begin();
       } else {
         for (const auto& pdsc : pdscs) {
-          // find the greatest installed version in the required version range
+          // find the greatest effective version in the required version range
           if (VersionCmp::RangeCompare(RtePackage::VersionFromId(pdsc.first), versionRange) == 0) {
-            installed = pdsc;
+            effectivePdsc = pdsc;
             break;
           }
         }
       }
-      const auto& pdsc = installed.second;
-      const auto& version = RtePackage::VersionFromId(installed.first);
-      if (!pdsc.empty()) {
-        return make_pair(vendor + RteConstants::SUFFIX_PACK_VENDOR + name +
-          RteConstants::PREFIX_PACK_VERSION + version, pdsc);
+      auto& id = effectivePdsc.first;
+      if (!id.empty()) {
+        // preserve name::vendor as given in input attributes
+        id = RtePackage::ComposePackageID(vendor, name, RtePackage::VersionFromId(id));
+        return effectivePdsc;
       }
     }
   }
