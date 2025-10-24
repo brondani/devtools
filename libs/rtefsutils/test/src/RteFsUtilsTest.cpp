@@ -1239,31 +1239,4 @@ TEST_F(RteFsUtilsTest, FindFileWithPattern_InvalidSearchPath) {
   RteFsUtils::RemoveDir(testdir);
   EXPECT_TRUE(discoveredFile.empty());
 }
-
-TEST_F(RteFsUtilsTest, GetInstalledPdscsNoCase) {
-  string packsCaseInsensitive = RteFsUtils::GetCurrentFolder() + "packs-case-insensitive";
-
-  // create dummy pdscs
-  RteFsUtils::CreateTextFile(packsCaseInsensitive + "/Arm/RteTest_Dfp/0.1.0/ARM.rtetest_dfp.Pdsc", "");
-  RteFsUtils::CreateTextFile(packsCaseInsensitive + "/ARM/RTETEST_DFP/0.2.0/ARM.RTETEST_DFP.PDSC", "");
-  RteFsUtils::CreateTextFile(packsCaseInsensitive + "/arm/rtetest_dfp/0.1.1/arm.rtetest_dfp.pdsc", "");
-
-  RteFsUtils::PdscsNoCase installedPdscsNoCase;
-  RteFsUtils::GetInstalledPdscsNoCase(packsCaseInsensitive, installedPdscsNoCase);
-
-  // check all entries are classified under the same vendor::name and versions are in correct order
-  EXPECT_EQ("arm::rtetest_dfp", installedPdscsNoCase.begin()->first);
-  auto it = installedPdscsNoCase.begin()->second.begin();
-  EXPECT_EQ("0.2.0", it->first);
-  EXPECT_TRUE(RteFsUtils::Exists(it->second));
-  advance(it, 1);
-  EXPECT_EQ("0.1.1", it->first);
-  EXPECT_TRUE(RteFsUtils::Exists(it->second));
-  advance(it, 1);
-  EXPECT_EQ("0.1.0", it->first);
-  EXPECT_TRUE(RteFsUtils::Exists(it->second));
-
-  RteFsUtils::RemoveDir(packsCaseInsensitive);
-}
-
 // end of RteFsUtilsTest.cpp

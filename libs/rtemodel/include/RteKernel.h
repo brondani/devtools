@@ -242,21 +242,6 @@ public:
   void GetInstalledPdscFiles(std::map<std::string, std::string, RtePackageComparator>& pdscMap) const;
 
   /**
-   * @brief getter for pdsc file determined by pack ID, pack path and pack attributes
-   * @param attributes pack attributes
-   * @param packId pack ID
-   * @return pair of pack ID to pdsc file
-  */
-   std::pair<std::string, std::string> GetInstalledPdscFile(const XmlItem& attributes) const;
-
-  /**
-   * @brief getter for pdsc file pointed by the local repository index and determined by pack attributes, pack path and pack ID.
-   * @param attributes pack attributes
-   * @return pair of pack ID to pdsc file
-  */
-  std::pair<std::string, std::string> GetLocalPdscFile(const XmlItem& attributes) const;
-
-  /**
    * @brief get local or installed pdsc file corresponding to supplied pack ID, pack path and pack attributes
    * @param attributes pack attributes
    * @return pair of pack ID to pdsc file
@@ -381,9 +366,6 @@ protected:
   std::string m_cmsisToolboxDir;
   std::map<std::string, RteItem*> m_externalGeneratorFiles;
   std::map<std::string, RteGenerator*> m_externalGenerators;
-
-  // map of installed pdscs from pack repository file tree
-  std::map<std::string, std::map<std::string, std::string, VersionCmp::Greater>> m_installedPdscsNoCase;
 
 };
 #endif // RteKernel_H

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2024 Arm Limited. All rights reserved.
+ * Copyright (c) 2020-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -1852,11 +1852,10 @@ TEST_F(ProjMgrWorkerUnitTests, LoadPacksCaseInsensitive) {
   CrossPlatformUtils::SetEnv("CMSIS_PACK_ROOT", testinput_folder + "/packs-case-insensitive");
   
   CsolutionItem csolution;
-  SetCsolutionPacks(&csolution, { "Arm::RteTest_DFP@0.2.0" }, "Test");
-  ContextItem context;
-  EXPECT_TRUE(LoadPacks(context));
+  SetCsolutionPacks(&csolution, { "Arm::RTETest_Dfp@0.1.1" }, "Test");
+  EXPECT_TRUE(LoadPacks(m_contexts["Test"]));
   EXPECT_EQ(1, m_loadedPacks.size());
-  EXPECT_EQ("ARM::RteTest_DFP@0.2.0", (*m_loadedPacks.begin())->GetPackageID());
+  EXPECT_EQ("ARM::RteTest_DFP@0.1.1", (*m_loadedPacks.begin())->GetPackageID());
 
   CrossPlatformUtils::SetEnv("CMSIS_PACK_ROOT", cmsisPackRoot);
 }

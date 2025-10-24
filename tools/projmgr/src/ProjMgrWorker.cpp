@@ -453,7 +453,9 @@ string ProjMgrWorker::GetPackRoot() {
 
 bool ProjMgrWorker::InitializeModel() {
   if(m_kernel) {
-    return true; // already initialized
+    // kernel is already initialized, clear pdsc map
+    m_kernel->GetPackRegistry()->ClearPdscMap();
+    return true;
   }
   m_packRoot = GetPackRoot();
   m_kernel = ProjMgrKernel::Get();
