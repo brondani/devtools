@@ -21,6 +21,10 @@ target_include_directories(SvdConvIntegTests
                             PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
                             PRIVATE ../../SVDConv/include)
 
+include(GoogleTest)
 add_test(NAME SvdConvIntegTests
          COMMAND SvdConvIntegTests --gtest_output=xml:test_reports/svdconvintegtests-${SYSTEM}-${CPU_ARCH}$<$<BOOL:${COVERAGE}>:_cov>.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(SvdConvIntegTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

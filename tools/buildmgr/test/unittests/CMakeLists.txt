@@ -23,6 +23,10 @@ add_definitions(-DCMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}/")
 
 target_link_libraries(CbuildUnitTests PUBLIC cbuildgenlib gtest_main)
 
+include(GoogleTest)
 add_test(NAME CbuildUnitTests
          COMMAND CbuildUnitTests --gtest_output=xml:test_reports/cbuildunittests-report-${SYSTEM}-${CPU_ARCH}.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(CbuildUnitTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

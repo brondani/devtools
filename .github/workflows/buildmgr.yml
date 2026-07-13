@@ -441,7 +441,7 @@ jobs:
 
       - name: Run CbuildUnitTests
         if: matrix.arch != 'arm64'
-        run: ctest -V -R CbuildUnitTests
+        run: ctest -V -R "^CbuildUnitTests$"
         working-directory: build
 
       - name: Archive unittest

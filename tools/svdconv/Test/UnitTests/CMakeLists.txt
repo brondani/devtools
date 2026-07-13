@@ -15,6 +15,10 @@ set_property(TARGET SVDConvUnitTests PROPERTY
 
 target_link_libraries(SVDConvUnitTests PUBLIC SVDModel SVDGenerator gtest_main)
 
+include(GoogleTest)
 add_test(NAME SVDConvUnitTests
          COMMAND SVDConvUnitTests --gtest_output=xml:test_reports/svdconvunittests-report-${SYSTEM}-${CPU_ARCH}$<$<BOOL:${COVERAGE}>:_cov>.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(SVDConvUnitTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

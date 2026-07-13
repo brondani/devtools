@@ -1,0 +1,51 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CMake: Configure Default Debug",
+      "type": "shell",
+      "command": "cmake",
+      "args": ["--preset", "linux-ninja-debug"],
+      "windows": {
+        "args": ["--preset", "windows-vs2022-x64"]
+      },
+      "osx": {
+        "args": ["--preset", "macos-ninja-debug"]
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "CMake: Build Default Debug",
+      "type": "shell",
+      "command": "cmake",
+      "args": ["--build", "${workspaceFolder}/out/build/linux-ninja-debug"],
+      "windows": {
+        "args": ["--build", "${workspaceFolder}/out/build/windows-vs2022-x64", "--config", "Debug"]
+      },
+      "osx": {
+        "args": ["--build", "${workspaceFolder}/out/build/macos-ninja-debug"]
+      },
+      "dependsOn": "CMake: Configure Default Debug",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$msCompile", "$gcc"]
+    },
+    {
+      "label": "CMake: Test Default Debug",
+      "type": "shell",
+      "command": "ctest",
+      "args": ["--test-dir", "${workspaceFolder}/out/build/linux-ninja-debug", "--output-on-failure"],
+      "windows": {
+        "args": ["--test-dir", "${workspaceFolder}/out/build/windows-vs2022-x64", "-C", "Debug", "--output-on-failure"]
+      },
+      "osx": {
+        "args": ["--test-dir", "${workspaceFolder}/out/build/macos-ninja-debug", "--output-on-failure"]
+      },
+      "dependsOn": "CMake: Build Default Debug",
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

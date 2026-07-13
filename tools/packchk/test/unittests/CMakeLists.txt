@@ -14,6 +14,10 @@ set_property(TARGET PackChkUnitTests PROPERTY
 
 target_link_libraries(PackChkUnitTests PUBLIC packchklib gmock_main)
 
+include(GoogleTest)
 add_test(NAME PackChkUnitTests
          COMMAND PackChkUnitTests --gtest_output=xml:test_reports/packchkunittests-report-${SYSTEM}-${CPU_ARCH}.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(PackChkUnitTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

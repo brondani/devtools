@@ -372,7 +372,7 @@ jobs:
       - name: Run projmgr unit tests
         if: (matrix.arch != 'arm64')
         run: |
-          ctest -V -C Debug -R ProjMgrUnitTests
+          ctest -V -C Debug -R "^ProjMgrUnitTests$"
         working-directory: ./build
 
       - name: Archive unit tests results
@@ -434,7 +434,7 @@ jobs:
 
       - name: Run ProjMgrUnitTests
         run: |
-          ctest -V -C Debug -R ProjMgrUnitTests
+          ctest -V -C Debug -R "^ProjMgrUnitTests$"
         working-directory: ./build
 
       - name: Get retention days

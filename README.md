@@ -69,7 +69,7 @@ Note that some of the required tools are platform dependent:
 - A toolchain for your platform
   - **Windows:**
     - [GIT Bash](https://gitforwindows.org/)
-    - Visual Studio 2019 with "Desktop development with C++"
+    - Visual Studio 2019 or newer with "Desktop development with C++"
     - CMake (minimum recommended version **3.22**)
     - *optional* make or Ninja
 
@@ -142,6 +142,47 @@ This is a three step process:
 
 As usual, the actual build steps vary by platform.
 
+The repository also provides `CMakePresets.json` for command-line, VS Code,
+and agent-driven workflows. Presets generate build trees under
+`out/build/<preset-name>` and are the preferred entry point for local
+development.
+
+- **Windows native Debug:**
+
+  ```bash
+  cmake --preset windows-vs2022-x64
+  ```
+
+  Use `windows-vs2019-x64` instead when Visual Studio 2019 is the installed
+  compiler environment.
+
+- **Linux native Debug:**
+
+  ```bash
+  cmake --preset linux-ninja-debug
+  ```
+
+- **macOS native Debug:**
+
+  ```bash
+  cmake --preset macos-ninja-debug
+  ```
+
+- **Linux cross-compiling aarch64 Release:**
+
+  ```bash
+  cmake --preset linux-aarch64-release
+  ```
+
+- **Windows cross-compiling win32 Release:**
+
+  ```bash
+  cmake --preset windows-ninja-win32-release
+  ```
+
+The manual commands below remain valid when a custom build tree or generator is
+required.
+
 - **Linux/MacOS amd64**:\
     On Linux or MacOS use the following commands：
 
@@ -180,6 +221,20 @@ As usual, the actual build steps vary by platform.
 ### Run build
 
 One can trigger a build for all CMake targets or specific targets from the command line.
+
+When using presets, build the default native Debug configuration with:
+
+```bash
+cmake --build --preset windows-debug
+# or
+cmake --build --preset linux-debug
+# or
+cmake --build --preset macos-debug
+```
+
+Release presets are also available as `windows-release`, `linux-release`, and
+`macos-release`. Visual Studio 2019 alternatives are available as
+`windows-vs2019-debug` and `windows-vs2019-release`.
 
 ```txt
 ☑️ Note:
@@ -274,6 +329,22 @@ Follow the respective commands:
 
 One can directly run the tests from command line.
 
+When using presets, run the default native Debug tests with:
+
+```bash
+ctest --preset windows-debug
+# or
+ctest --preset linux-debug
+# or
+ctest --preset macos-debug
+```
+
+To run a subset, append the normal CTest regex filter, for example:
+
+```bash
+ctest --preset windows-debug -R CbuildUnitTests
+```
+
 - Using `ctest`:\
   Use the command below to trigger the tests.
   - `ctest -C <config>`           : Run all registered tests (Note: Running all the tests can take a while)
@@ -299,6 +370,49 @@ One can directly run the tests from command line.
     cd build
     ./tools/buildmgr/test/integrationtests/windows64/Debug/CbuildIntegTests.exe
     ```
+
+## Develop with VS Code
+
+The repository includes shared VS Code configuration in `.vscode`:
+
+- Recommended extensions are listed in `.vscode/extensions.json`.
+- CMake Tools uses `CMakePresets.json` and provides target selection,
+  configure, build, test, and debug integration.
+- The C/C++ extension consumes compile configuration from CMake Tools.
+- TestMate C++ is recommended only as an optional local Testing view adapter.
+  It can show GoogleTest suites and cases as a tree, while CMake Tools and
+  CTest remain the authoritative build, test, and CI path.
+- The default VS Code build task configures and builds the native Debug preset
+  for the current platform.
+- The default VS Code test task builds first, then runs CTest for the native
+  Debug preset.
+
+Typical VS Code flow:
+
+1. Open the repository root in VS Code and install the recommended extensions.
+2. Select the host preset in CMake Tools, for example `windows-vs2022-x64`,
+  `windows-vs2019-x64`, `linux-ninja-debug`, or `macos-ninja-debug`.
+3. Run **CMake: Configure**.
+4. Build all targets, or select a specific target from CMake Tools.
+5. Run tests from CMake Tools, Test Explorer, or the **CMake: Test Default
+  Debug** task. The CMake Tools `CTest` provider lists the CTest cases used by
+  CI; TestMate C++ can be used locally when a GoogleTest tree view is more
+  convenient.
+6. Select a launch target in CMake Tools and start the CMake Tools debug
+  command. The C/C++ extension supplies the Windows Visual Studio debugger and
+  GDB/LLDB debugger integration used by that flow.
+
+Integration tests still require the environment variables listed above when
+they depend on pack roots or external toolchains. On Windows, prefer the Visual
+Studio preset for native builds; GCC/Clang MSYS2 builds are not supported for
+this project.
+
+## Agent and Codex workflows
+
+Agent-readable workflow notes live under `.agents/skills`. They describe the
+supported CMake presets, CMake Tools build and test actions, CTest filters, and
+debugging conventions so automated coding agents can validate changes with the
+same CMake/CTest path used by CI.
 
 ### Note
 

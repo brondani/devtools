@@ -16,6 +16,10 @@ target_link_libraries(YmlSchemaChkTests
   PUBLIC YmlSchemaChecker YmlTree RteFsUtils gtest_main)
 target_include_directories(YmlSchemaChkTests PUBLIC ../src)
 
+include(GoogleTest)
 add_test(NAME YmlSchemaChkTests
          COMMAND YmlSchemaChkTests --gtest_output=xml:test_reports/ymlschemachktests-report-${SYSTEM}-${CPU_ARCH}.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(YmlSchemaChkTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

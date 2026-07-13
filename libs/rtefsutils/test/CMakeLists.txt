@@ -9,7 +9,11 @@ set_property(TARGET RteFsUtilsUnitTests PROPERTY
 
 target_link_libraries(RteFsUtilsUnitTests PUBLIC RteFsUtils RteUtils gtest_main)
 
+include(GoogleTest)
 add_test(NAME RteFsUtilsUnitTests
          COMMAND RteFsUtilsUnitTests --gtest_output=xml:test_reports/rtefsutilsunittests-report-${SYSTEM}-${CPU_ARCH}.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(RteFsUtilsUnitTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
 

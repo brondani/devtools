@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "ms-vscode.cmake-tools",
+    "ms-vscode.cpptools",
+    "ms-vscode.cpptools-extension-pack",
+    "matepek.vscode-catch2-test-adapter"
+  ]
+}

@@ -17,6 +17,10 @@ add_definitions(-DTEST_FOLDER="${CMAKE_CURRENT_SOURCE_DIR}/")
 add_definitions(-DCMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}/")
 add_definitions(-DPROJMGRUNITTESTS_BIN_PATH="$<TARGET_FILE_DIR:ProjMgrUnitTests>")
 
+include(GoogleTest)
 add_test(NAME ProjMgrUnitTests
          COMMAND ProjMgrUnitTests --gtest_output=xml:test_reports/projmgrunittests-report-${SYSTEM}-${CPU_ARCH}.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(ProjMgrUnitTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

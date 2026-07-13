@@ -12,6 +12,10 @@ add_definitions(-DPACKXSD_FOLDER="${CMAKE_SOURCE_DIR}/external/open-cmsis-pack-s
 
 target_link_libraries(XmlValidatorUnitTests PUBLIC XmlValidator gtest_main)
 
+include(GoogleTest)
 add_test(NAME XmlValidatorUnitTests
         COMMAND XmlValidatorUnitTests --gtest_output=xml:test_reports/xmlvalidatorunittests-report-${SYSTEM}${ARCH}-${CPU_ARCH}.xml
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(XmlValidatorUnitTests
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

@@ -8,6 +8,10 @@ target_include_directories(PackGenUnitTests PUBLIC ../include ./src)
 
 add_definitions(-DTEST_FOLDER="${CMAKE_CURRENT_SOURCE_DIR}/")
 
+include(GoogleTest)
 add_test(NAME PackGenUnitTests
          COMMAND PackGenUnitTests --gtest_output=xml:test_reports/packgenunittests-report-${SYSTEM}-${CPU_ARCH}.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(PackGenUnitTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

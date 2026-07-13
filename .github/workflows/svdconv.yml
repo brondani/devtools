@@ -172,7 +172,7 @@ jobs:
       - name: Run svdconv unit tests
         if: (matrix.arch != 'arm64')
         run: |
-          ctest -V -R SVDConvUnitTests
+          ctest -V -R "^SVDConvUnitTests$"
         working-directory: ./build
 
       # https://github.com/Open-CMSIS-Pack/devtools-build-action
@@ -186,7 +186,7 @@ jobs:
       - name: Run svdconv integ tests
         if: matrix.arch != 'arm64'
         run: |
-          ctest -V -R SvdConvIntegTests
+          ctest -V -R "^SvdConvIntegTests$"
         working-directory: ./build
 
       - name: Archive unit test results
@@ -257,8 +257,8 @@ jobs:
 
       - name: Run svdconv tests
         run: |
-          ctest -V -C Debug -R SVDConvUnitTests
-          ctest -V -C Debug -R SvdConvIntegTests
+          ctest -V -C Debug -R "^SVDConvUnitTests$"
+          ctest -V -C Debug -R "^SvdConvIntegTests$"
         working-directory: ./build
 
       - name: Get retention days

@@ -210,7 +210,7 @@ jobs:
       - name: Run packgen unit tests
         if: (matrix.arch != 'arm64')
         run: |
-          ctest -C Debug -R PackGenUnitTests
+          ctest -C Debug -R "^PackGenUnitTests$"
         working-directory: ./build
 
       - name: Archive unit tests results
@@ -263,7 +263,7 @@ jobs:
 
       - name: Run PackGenUnitTests
         run: |
-          ctest -V -C Debug -R PackGenUnitTests
+          ctest -V -C Debug -R "^PackGenUnitTests$"
         working-directory: ./build
 
       - name: Get retention days

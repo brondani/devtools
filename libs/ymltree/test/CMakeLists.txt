@@ -9,7 +9,11 @@ set_property(TARGET YmlTreeUnitTests PROPERTY
 
 target_link_libraries(YmlTreeUnitTests PUBLIC YmlTree RteFsUtils RteUtils gtest_main)
 
+include(GoogleTest)
 add_test(NAME YmlTreeUnitTests
          COMMAND YmlTreeUnitTests --gtest_output=xml:test_reports/YmlTreeUnitTests-report-${SYSTEM}-${CPU_ARCH}.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(YmlTreeUnitTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
 

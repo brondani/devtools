@@ -47,6 +47,8 @@ project. This folder will contain the unit test source code (in this example
 I have adopted a convention that names all unit tests as `<TestName>UnitTests`
 which allows them to be easily identified and executed together by
 `ctest -R UnitTests`
+or discovered as individual GoogleTest cases when registered with CMake's
+GoogleTest integration.
 
 * Write a basic unit test that is guaranteed to fail:
 
@@ -69,9 +71,18 @@ which allows them to be easily identified and executed together by
       # Link it with the library code under test
       target_link_libraries(MyAppUnitTests MyAppLib gtest_main)
 
-       # Register this application as a test in the system so that ctest can
-        find it
-       add_test(MyAppUnitTests MyAppUnitTests)
+                  # Keep an aggregate CTest entry for CI report generation
+                  include(GoogleTest)
+                  add_test(NAME MyAppUnitTests
+                                           COMMAND MyAppUnitTests --gtest_output=xml:test_reports/myappunittests-report-${SYSTEM}-${CPU_ARCH}.xml
+                                           WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+
+                  # Register individual GoogleTest cases so CTest and VS Code can select
+                  # them separately. Do not pass --gtest_output here; the aggregate test
+                  # above owns the CI report file.
+                  gtest_discover_tests(MyAppUnitTests
+                        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                  )
 
 ## Update the top-level CMakeLists.txt file
 
@@ -94,3 +105,7 @@ are linked together. For example
 ## Building and running
 
 Employ the usual sequence [described here](../README.md) to build and run.
+Prefer the checked-in CMake presets for new local workflows, for example
+`cmake --preset windows-vs2022-x64` followed by
+`ctest --preset windows-debug -R MyAppUnitTests` on Windows, or the matching
+`linux-debug`/`macos-debug` presets on Linux and macOS.

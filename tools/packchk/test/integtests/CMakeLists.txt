@@ -19,6 +19,10 @@ set_property(TARGET PackChkIntegTests PROPERTY
 
 target_link_libraries(PackChkIntegTests PUBLIC RteFsUtils packchklib gtest_main)
 
+include(GoogleTest)
 add_test(NAME PackChkIntegTests
          COMMAND PackChkIntegTests --gtest_output=xml:test_reports/packchkintegtests-report-${SYSTEM}-${CPU_ARCH}.xml
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+gtest_discover_tests(PackChkIntegTests
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

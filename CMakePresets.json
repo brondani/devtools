@@ -1,0 +1,254 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 22,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "windows-vs2022-x64",
+      "displayName": "Windows Visual Studio 2022 x64",
+      "description": "Configure the full project with the Visual Studio 2022 x64 generator.",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "windows-vs2019-x64",
+      "displayName": "Windows Visual Studio 2019 x64",
+      "description": "Configure the full project with the Visual Studio 2019 x64 generator.",
+      "generator": "Visual Studio 16 2019",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "windows-ninja-win32-release",
+      "displayName": "Windows Ninja win32 Release",
+      "description": "Cross-compile win32 tools on Windows using the existing POSIX toolchain file.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/TC-win32-posix.cmake"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "linux-ninja-debug",
+      "displayName": "Linux Ninja Debug",
+      "description": "Configure the full project with Ninja and Debug flags on Linux.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-ninja-release",
+      "displayName": "Linux Ninja Release",
+      "description": "Configure the full project with Ninja and Release flags on Linux.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-aarch64-release",
+      "displayName": "Linux aarch64 Release",
+      "description": "Cross-compile Linux aarch64 tools using the existing aarch64 toolchain file.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/TC-linux-aarch64.cmake"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "macos-ninja-debug",
+      "displayName": "macOS Ninja Debug",
+      "description": "Configure the full project with Ninja and Debug flags on macOS.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "macos-ninja-release",
+      "displayName": "macOS Ninja Release",
+      "description": "Configure the full project with Ninja and Release flags on macOS.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows-debug",
+      "displayName": "Windows Debug",
+      "configurePreset": "windows-vs2022-x64",
+      "configuration": "Debug"
+    },
+    {
+      "name": "windows-release",
+      "displayName": "Windows Release",
+      "configurePreset": "windows-vs2022-x64",
+      "configuration": "Release"
+    },
+    {
+      "name": "windows-vs2019-debug",
+      "displayName": "Windows VS 2019 Debug",
+      "configurePreset": "windows-vs2019-x64",
+      "configuration": "Debug"
+    },
+    {
+      "name": "windows-vs2019-release",
+      "displayName": "Windows VS 2019 Release",
+      "configurePreset": "windows-vs2019-x64",
+      "configuration": "Release"
+    },
+    {
+      "name": "windows-win32-release",
+      "displayName": "Windows win32 Release",
+      "configurePreset": "windows-ninja-win32-release"
+    },
+    {
+      "name": "linux-debug",
+      "displayName": "Linux Debug",
+      "configurePreset": "linux-ninja-debug"
+    },
+    {
+      "name": "linux-release",
+      "displayName": "Linux Release",
+      "configurePreset": "linux-ninja-release"
+    },
+    {
+      "name": "linux-aarch64-release",
+      "displayName": "Linux aarch64 Release",
+      "configurePreset": "linux-aarch64-release"
+    },
+    {
+      "name": "macos-debug",
+      "displayName": "macOS Debug",
+      "configurePreset": "macos-ninja-debug"
+    },
+    {
+      "name": "macos-release",
+      "displayName": "macOS Release",
+      "configurePreset": "macos-ninja-release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "windows-debug",
+      "displayName": "Windows Debug Tests",
+      "configurePreset": "windows-vs2022-x64",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-release",
+      "displayName": "Windows Release Tests",
+      "configurePreset": "windows-vs2022-x64",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-vs2019-debug",
+      "displayName": "Windows VS 2019 Debug Tests",
+      "configurePreset": "windows-vs2019-x64",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-vs2019-release",
+      "displayName": "Windows VS 2019 Release Tests",
+      "configurePreset": "windows-vs2019-x64",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-debug",
+      "displayName": "Linux Debug Tests",
+      "configurePreset": "linux-ninja-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-release",
+      "displayName": "Linux Release Tests",
+      "configurePreset": "linux-ninja-release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "macos-debug",
+      "displayName": "macOS Debug Tests",
+      "configurePreset": "macos-ninja-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "macos-release",
+      "displayName": "macOS Release Tests",
+      "configurePreset": "macos-ninja-release",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

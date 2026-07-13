@@ -1,0 +1,8 @@
+{
+    "cmake.useCMakePresets": "always",
+    "cmake.configureOnOpen": false,
+    "cmake.buildDirectory": "${workspaceFolder}/out/build/${presetName}",
+    "cmake.ctest.parallelJobs": 0,
+    "cmake.ctest.outputOnFailure": true,
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+}
