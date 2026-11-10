@@ -183,12 +183,12 @@ jobs:
         working-directory: ./build/tools/buildmgr/docs/doxygen/output/html/
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
+        if: ${{ github.repository == 'Open-CMSIS-Pack/devtools' && (github.event_name == 'push' || github.event_name == 'release') }}
         with:
           ref: gh-pages
 
       - name: Publish main branch documentation
-        if: ${{ !github.event.repository.private && github.event_name == 'push' }}
+        if: ${{ github.repository == 'Open-CMSIS-Pack/devtools' && !github.event.repository.private && github.event_name == 'push' }}
         run: |
           BRANCH=${GITHUB_REF##refs/heads/}
           rm -rf buildmgr/${BRANCH}
@@ -203,7 +203,7 @@ jobs:
           git push
 
       - name: Publish release documentation
-        if: ${{ !github.event.repository.private && github.event_name == 'release' }}
+        if: ${{ github.repository == 'Open-CMSIS-Pack/devtools' && !github.event.repository.private && github.event_name == 'release' }}
         run: |
           VERSION=$(git show-ref ${{ github.ref }} | awk -F/ '{print $NF}')
           rm -rf buildmgr/${VERSION}
@@ -601,7 +601,7 @@ jobs:
         working-directory: ./build/tools/buildmgr
 
       - name: Upload Report to Codecov
-        if: ${{ !github.event.repository.private }}
+        if: ${{ github.repository == 'Open-CMSIS-Pack/devtools' && !github.event.repository.private }}
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: ./build/tools/buildmgr/coverage_buildmgr.info

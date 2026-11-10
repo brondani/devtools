@@ -384,7 +384,7 @@ jobs:
         working-directory: ./build/tools/ctrace
 
       - name: Upload Report to Codecov
-        if: ${{ !github.event.repository.private }}
+        if: ${{ github.repository == 'Open-CMSIS-Pack/devtools' && !github.event.repository.private }}
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: ./build/tools/ctrace/coverage_ctrace_codecov.info
